@@ -1,20 +1,22 @@
 // /app/index.tsx
-import { useTranslation } from "react-i18next";
-import { Text, View } from "react-native";
+import { useAuth } from "@/lib/auth/AuthContext";
+import { Redirect } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 
 export default function Index() {
+    const { user, isLoading } = useAuth();
 
-    const { t } = useTranslation("home");
+    if (isLoading) {
+        return (
+            <View className="flex-1 items-center justify-center">
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text className="bg-blue-500 text-white p-4 rounded"> {t("welcome")}</Text>
-    </View>
-  );
+    if (!user) {
+        return <Redirect href="/(auth)/auth" />;
+    }
+
+    return <Redirect href="/(app)" />;
 }
