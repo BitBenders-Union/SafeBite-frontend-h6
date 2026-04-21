@@ -1,0 +1,8 @@
+@react-native-async-storage/async-storage
+- Bruges til at gemme brugerens valg (fx sprog og login state)
+
+expo-localization
+- Henter enhedens sprog automatisk
+
+i18next + react-i18next
+- Håndterer oversættelser og sprogskift i appen
