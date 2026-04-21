@@ -14,7 +14,7 @@ export default function Index() {
         alignItems: "center",
       }}
     >
-      <Text>{t("welcome")}</Text>
+      <Text className="bg-blue-500 text-white p-4 rounded"> {t("welcome")}</Text>
     </View>
   );
 }
