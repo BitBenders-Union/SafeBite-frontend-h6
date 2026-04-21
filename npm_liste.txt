@@ -6,3 +6,9 @@ expo-localization
 
 i18next + react-i18next
 - Håndterer oversættelser og sprogskift i appen
+
+nativewind + tailwindcss
+- Gør det muligt at bruge Tailwind CSS
+
+expo-checkbox
+-Anvendes til at vise og håndtere checkbox-input i appen, fx til valg og bekræftelser fra brugeren.
