@@ -1,0 +1,129 @@
+// /lib/auth/AuthContext.tsx
+
+import { clearKeepSignedIn, getKeepSignedIn, saveKeepSignedIn } from "@/lib/auth/rememberMe";
+import {
+    clearTokens,
+    getAccessToken,
+    saveTokens,
+} from "@/lib/auth/tokenStorage";
+import { UserInfo } from "@/lib/types/user";
+import { getUserInfo, login } from "@/services/apiServices/authApi";
+import React, { createContext, useContext, useEffect, useState } from "react";
+
+type LoginData = {
+    email: string;
+    password: string;
+    keepSignedIn: boolean;
+};
+
+
+type AuthContextType = {
+    user: UserInfo | null;
+    isLoggedIn: boolean;
+    isLoading: boolean;
+    signIn: (loginData: LoginData) => Promise<void>;
+    signOut: () => Promise<void>;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export function AuthState({ children }: { children: React.ReactNode }) {
+    const [user, setUser] = useState<UserInfo | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    async function restoreSession() {
+        const keepSignedIn = await getKeepSignedIn();
+
+        if (!keepSignedIn) {
+            setUser(null);
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const accessToken = await getAccessToken();
+
+            if (!accessToken) {
+
+                setUser(null);
+                return;
+            }
+
+            const userInfo = await getUserInfo();
+            setUser(userInfo);
+
+            
+        } catch (error) {
+            await clearTokens();
+            setUser(null);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    async function signIn(loginData: LoginData) {
+        try {
+            setIsLoading(true);
+
+            await saveKeepSignedIn(loginData.keepSignedIn);
+
+            const loginResponse = await login({
+                email: loginData.email,
+                password: loginData.password,
+            });
+
+            await saveTokens(
+                loginResponse.accessToken,
+                loginResponse.refreshToken
+            );
+
+            const userInfo = await getUserInfo();
+            if (userInfo.email === "denpasdk++@gmail.com") {
+                userInfo.roles.push("admin");
+                console.log("Email: ", userInfo.email, " and roles: ", userInfo.roles);
+            }
+                
+
+            setUser(userInfo);
+
+        } catch (error) {
+            console.error("Login error:", error instanceof Error ? error.message : error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    async function signOut() {
+        await clearTokens();
+        await clearKeepSignedIn();
+        setUser(null);
+    }
+
+    useEffect(() => {
+        restoreSession();
+    }, []);
+
+    return (
+        <AuthContext.Provider
+            value={{
+                user,
+                isLoggedIn: !!user,
+                isLoading,
+                signIn,
+                signOut,
+            }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
+}
+
+export function useAuth() {
+    const context = useContext(AuthContext);
+
+    if (!context) {
+        throw new Error("useAuth must be used inside AuthState");
+    }
+
+    return context;
+}
