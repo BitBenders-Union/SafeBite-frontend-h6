@@ -8,14 +8,17 @@ export type Allergy = {
 
 export type CreateAllergyRequest = {
     name: string;
+    icon?: string | null;
 };
 
 export type CreateAllergyResponse = {
     id: string;
     name: string;
+    icon?: string | null;
 };
 
 export type UpdateAllergyRequest = {
     id: string;
     name: string;
+    icon?: string | null;
 };
