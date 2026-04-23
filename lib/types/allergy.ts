@@ -22,3 +22,14 @@ export type UpdateAllergyRequest = {
     name: string;
     icon?: string | null;
 };
+
+export type CustomAllergy = {
+    id: number;
+    name: string;
+};
+
+export type AllergyUser = {
+    userId: string;
+    allergyId: string;
+    allergyName: string;
+};
