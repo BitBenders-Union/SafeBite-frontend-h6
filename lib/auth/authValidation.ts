@@ -3,8 +3,6 @@
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 type SignupValidationErrors = {
-    firstNameError: string;
-    lastNameError: string;
     emailError: string;
     passwordError: string;
     confirmPasswordError: string;
@@ -16,27 +14,16 @@ type LoginValidationErrors = {
 };
 
 export function validateSignupForm(
-    firstName: string,
-    lastName: string,
     email: string,
     password: string,
     confirmPassword: string
 ): SignupValidationErrors {
-    const errors: SignupValidationErrors = {
-        firstNameError: "",
-        lastNameError: "",
+    const errors: SignupValidationErrors = {    
         emailError: "",
         passwordError: "",
         confirmPasswordError: "",
     };
 
-    if (!firstName.trim()) {
-        errors.firstNameError = "inputFirstNameError";
-    }
-
-    if (!lastName.trim()) {
-        errors.lastNameError = "inputLastNameError";
-    }
 
     if (!email.trim()) {
         errors.emailError = "inputEmailError";
@@ -59,8 +46,6 @@ export function validateSignupForm(
 
 export function hasSignupErrors(errors: SignupValidationErrors) {
     return (
-        !!errors.firstNameError ||
-        !!errors.lastNameError ||
         !!errors.emailError ||
         !!errors.passwordError ||
         !!errors.confirmPasswordError

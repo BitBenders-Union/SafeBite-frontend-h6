@@ -5,6 +5,7 @@ import {
     LoginResponse,
     RefreshResponse,
     ResetPasswordRequest,
+    SignupRequest,
 } from "@/lib/types/auth";
 import { UserInfo } from "@/lib/types/user";
 import { apiClient } from "./apiClient";
@@ -43,3 +44,8 @@ export async function resetPassword(
     const response = await apiClient.post("/auth/resetPassword", resetPasswordData);
     return response.data;
 }
+
+export async function signUp(signupData: SignupRequest) {
+    const response = await apiClient.post("/auth/register", signupData);
+    return response.data;
+} 

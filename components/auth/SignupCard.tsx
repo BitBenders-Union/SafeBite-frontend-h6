@@ -1,8 +1,9 @@
 import { AuthCard } from "@/components/Shared/AuthCard";
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { hasSignupErrors, validateSignupForm } from "@/lib/auth/authValidation";
-import { signUp } from "@/lib/auth/MockAuth";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { SignupRequest } from "@/lib/types/auth";
 import { Checkbox } from "expo-checkbox";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,6 +14,7 @@ import {
     View
 } from "react-native";
 import { TosModal } from "../Shared/TosModal";
+
 
 type Props = {
     onRequestLogin: () => void;
@@ -27,17 +29,15 @@ export function SignupCard({
 }: Props) {
 
     const { theme } = useAppTheme();
-
     const { t } = useTranslation("auth");
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const { signUp } = useAuth();
+   
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [firstNameError, setFirstNameError] = useState("");
-    const [lastNameError, setLastNameError] = useState("");
+
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const [confirmPasswordError, setConfirmPasswordError] = useState("");
@@ -54,17 +54,14 @@ export function SignupCard({
 
         if (isDisabled) return;
 
-        setFirstNameError("");
-        setLastNameError("");
+      
         setEmailError("");
         setPasswordError("");
         setConfirmPasswordError("");
         setTosError("");
 
-        const errors = validateSignupForm(firstName, lastName, email, password, confirmPassword);
+        const errors = validateSignupForm(email, password, confirmPassword);
 
-        setFirstNameError(errors.firstNameError ? t(errors.firstNameError) : "");
-        setLastNameError(errors.lastNameError ? t(errors.lastNameError) : "");
         setEmailError(errors.emailError ? t(errors.emailError) : "");
         setPasswordError(errors.passwordError ? t(errors.passwordError) : "");
         setConfirmPasswordError(
@@ -84,12 +81,12 @@ export function SignupCard({
 
             setIsLoading(true);
 
-            await signUp({
-                firstName,
-                lastName,
+            const signupData: SignupRequest = {
                 email,
                 password,
-            });
+            };
+
+            await signUp(signupData);
 
             Alert.alert(t("AccountCreatedSuccessfully"));
             onRequestLogin();
@@ -120,7 +117,7 @@ export function SignupCard({
             </View>
 
             {/* First/last name row */}
-            <View className="flex-row gap-3 mb-4  ">
+            {/* <View className="flex-row gap-3 mb-4  ">
                 <View className="flex-1">
                     <TextInput
                         value={firstName}
@@ -168,7 +165,7 @@ export function SignupCard({
                         ) : null}
                     </View>
                 </View>
-            </View>
+            </View> */}
 
             {/* Email */}
             <View className="mb-4">
