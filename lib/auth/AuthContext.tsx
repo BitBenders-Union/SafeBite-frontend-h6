@@ -7,7 +7,7 @@ import {
     saveTokens,
 } from "@/lib/auth/tokenStorage";
 import { UserInfo } from "@/lib/types/user";
-import { getUserInfo, login, signUp as signUpApi } from "@/services/apiServices/authApi";
+import { getUserInfo, login, signUp as signUpApi } from "@/services/api/authApi";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { SignupRequest } from "../types/auth";
 
