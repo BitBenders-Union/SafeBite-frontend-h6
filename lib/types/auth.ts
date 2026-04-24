@@ -23,3 +23,8 @@ export type ResetPasswordRequest = {
     resetCode: string;
     newPassword: string;
 };
+
+export type SignupRequest = {
+    email: string;
+    password: string;    
+};
