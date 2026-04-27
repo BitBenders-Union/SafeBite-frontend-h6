@@ -1,0 +1,16 @@
+{
+    "hardwareTestRunningMessage": "Testing camera...",
+    "capturingPhotoMessage": "Capturing photo...",
+    "uploadingAndAnalyzingMessage": "Uploading and analyzing...",
+    "analysisResultTitle": "Analysis result",
+    "allergensFoundLabel": "Allergens found",
+    "severityLabel": "Risk level",
+    "noAllergensFoundMessage": "No allergens found",
+    "noIngredientsDetectedMessage": "No ingredients detected",
+    "pointCameraAtIngredientsMessage": "Point the camera at the ingredient list",
+    "allergensDetectedTitle": "Allergens detected",
+    "allergyDetectedPopupMessage": "This product contains ingredients that may be problematic for you.",
+    "CameraAccessNeeded": "Camera access required",
+    "CameraAccessDescription": "To scan ingredients, the app needs access to your camera.",
+    "GrantPermission": "Grant permission"
+}

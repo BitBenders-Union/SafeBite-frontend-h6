@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 export const apiBaseUrl = "https://dev.chimpchonkserver.duckdns.org";
-// export const apiBaseUrl = "https://localhost:7074";
+// export const apiBaseUrl = "https://localhost:5093";
 
 
 export const apiClient = axios.create({
@@ -22,7 +22,6 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use(
     async (request) => {
         const accessToken = await getAccessToken();
-
         if (accessToken) {
             request.headers = request.headers ?? {};
             request.headers.Authorization = `Bearer ${accessToken}`;

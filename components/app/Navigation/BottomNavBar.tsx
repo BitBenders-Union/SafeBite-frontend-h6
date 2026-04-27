@@ -6,7 +6,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
-type TabRoute = "/scan" | "/home" | "/allergy";
+type TabRoute = "/mobil/scan" | "/mobil/home" | "/mobil/allergy";
 
 type TabConfig = {
     icon: keyof typeof Ionicons.glyphMap;
@@ -24,17 +24,17 @@ export default function BottomNavbar() {
         {
             icon: "barcode-outline",
             label: t("scanBottomNav"),
-            route: "/scan",
+            route: "/mobil/scan",
         },
         {
             icon: "home",
             label: t("homeBottomNav"),
-            route: "/home",
+            route: "/mobil/home",
         },
         {
             icon: "warning-outline",
             label: t("allergyBottomNav"),
-            route: "/allergy",
+            route: "/mobil/allergy",
         },
     ];
 
@@ -58,7 +58,7 @@ export default function BottomNavbar() {
                         <TouchableOpacity
                             key={tab.route}
                             onPress={() => {
-                                if (!active) router.push(tab.route);
+                                if (!active) router.push(tab.route as any);
                             }}
                             activeOpacity={0.85}
                             className="items-center justify-center"

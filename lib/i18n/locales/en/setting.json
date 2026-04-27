@@ -1,0 +1,14 @@
+{
+    "languageSettingsTitle": "Language Settings",
+    "languageOptionDa": "Danish",
+    "languageOptionEn": "English",
+    "themeSettingsTitle": "Theme",
+    "themeOptionDevice": "Device",
+    "themeOptionLight": "Light",
+    "themeOptionDark": "Dark",
+    "logoutTitle": "Logout",
+    "logoutButton": "Logout",
+    "logoutLoading": "Logging out...",
+    "deleteAccountTitle": "Delete Account",
+    "deleteAccountButton": "Delete Account"
+}

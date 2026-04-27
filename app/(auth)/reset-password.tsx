@@ -3,7 +3,7 @@
 import { AuthCard } from "@/components/Shared/AuthCard";
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
-import { resetPassword } from "@/services/apiServices/authApi";
+import { resetPassword } from "@/services/api/authApi";
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

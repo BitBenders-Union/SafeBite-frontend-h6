@@ -13,8 +13,8 @@ export default function HeaderBar() {
     const { theme } = useAppTheme();
     const { user } = useAuth();
 
-    const isSettings = pathname === "/settings";
-    const isProfile = pathname === "/userProfile";
+    const isSettings = pathname === "/mobil/settings";
+    const isProfile = pathname === "/mobil/userProfile";
     const isWeb = Platform.OS === "web";
 
     const isAdmin =
@@ -36,7 +36,7 @@ export default function HeaderBar() {
             >
                 <TouchableOpacity
                     onPress={() => {
-                        if (!isSettings) router.push("/settings");
+                        if (!isSettings) router.push("/(app)/mobil/setting");
                     }}
                     activeOpacity={0.7}
                     className="rounded-full p-1.5"
@@ -67,7 +67,7 @@ export default function HeaderBar() {
 
                 <TouchableOpacity
                     onPress={() => {
-                        if (!isProfile) router.push("/userProfile");
+                        if (!isProfile) router.push("/mobil/userProfile");
                     }}
                     activeOpacity={0.7}
                     className="rounded-full p-1.5"

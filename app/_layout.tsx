@@ -28,7 +28,7 @@ function Gate() {
         }
 
         if (user && root === "(auth)") {
-            router.replace("/(app)");
+            router.replace("/(app)/mobil/home");
             return;
         }
     }, [isLoading, user, segments, router]);

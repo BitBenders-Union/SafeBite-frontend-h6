@@ -1,0 +1,93 @@
+import { useAppTheme } from "@/lib/theme/useAppTheme";
+import React from "react";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
+
+type Props = {
+    visible: boolean;
+    title: string;
+    message: string;
+    error: string;
+    onCancel: () => void;
+    onConfirm: () => void;
+};
+
+export default function AdminUserConfirmModal({
+    visible,
+    title,
+    message,
+    error,
+    onCancel,
+    onConfirm,
+}: Props) {
+    const { theme } = useAppTheme();
+
+    return (
+        <Modal
+            visible={visible}
+            transparent
+            animationType="fade"
+            onRequestClose={onCancel}
+        >
+            <View
+                className="flex-1 items-center justify-center px-4"
+                style={{ backgroundColor: "rgba(0,0,0,0.35)" }}
+            >
+                <View
+                    className="w-full max-w-[500px] rounded-2xl border p-5"
+                    style={{
+                        backgroundColor: theme.card,
+                        borderColor: theme.border,
+                    }}
+                >
+                    <Text
+                        className="text-xl font-bold"
+                        style={{ color: theme.text }}
+                    >
+                        {title}
+                    </Text>
+
+                    <Text
+                        className="mt-2 text-sm"
+                        style={{ color: theme.textMuted }}
+                    >
+                        {message}
+                    </Text>
+
+                    {error ? (
+                        <Text
+                            className="mt-4 text-sm"
+                            style={{ color: theme.dangerText }}
+                        >
+                            {error}
+                        </Text>
+                    ) : null}
+
+                    <View className="mt-6 flex-row justify-end gap-3">
+                        <TouchableOpacity
+                            onPress={onCancel}
+                            className="rounded-xl px-4 py-3"
+                            style={{ backgroundColor: theme.surfaceSoft }}
+                        >
+                            <Text style={{ color: theme.text }}>Cancel</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={onConfirm}
+                            className="rounded-xl px-4 py-3"
+                            style={{ backgroundColor: theme.activeSoft }}
+                        >
+                            <Text
+                                style={{
+                                    color: theme.active,
+                                    fontWeight: "600",
+                                }}
+                            >
+                                Confirm
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </Modal>
+    );
+}
