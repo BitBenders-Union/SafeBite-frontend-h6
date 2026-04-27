@@ -1,0 +1,14 @@
+{
+    "languageSettingsTitle": "Sprogindstillinger",
+    "languageOptionDa": "Dansk",
+    "languageOptionEn": "English",
+    "themeSettingsTitle": "Tema",
+    "themeOptionDevice": "Enhed",
+    "themeOptionLight": "Lys",
+    "themeOptionDark": "Mørk",
+    "logoutTitle": "Log ud",
+    "logoutButton": "Log ud",
+    "logoutLoading": "Logger ud...",
+    "deleteAccountTitle": "Slet konto",
+    "deleteAccountButton": "Slet konto"
+}

@@ -14,10 +14,10 @@ import {
 } from "react-native";
 
 import AllergyAlert from "@/components/app/mobil/scan/Alert";
-import AnalysisResult from "@/components/app/mobil/scan/AnalysisResult";
-import HourglassLoader from "@/components/app/mobil/scan/HourglassLoader";
-import PermissionRequest from "@/components/app/mobil/scan/PermissionRequest";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import AnalysisResult from "../../../components/app/mobil/scan/AnalysisResult";
+import HourglassLoader from "../../../components/app/mobil/scan/HourglassLoader";
+import PermissionRequest from "../../../components/app/mobil/scan/PermissionRequest";
 
 type FakeScanResult = {
     ocrText: string;

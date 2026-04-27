@@ -1,5 +1,14 @@
 {
-    "welcome": "Velkommen til SafeBite",
-    "description": "SafeBite er en app, der hjælper dig med at undgå allergiske reaktioner ved at scanne fødevarer og give dig information om deres indhold.",
-    "getStarted": "Kom i gang"
+    "scanLoadError": "Failed to load scans. Please try again.",
+    "noScansRecorded": "No scans recorded",
+    "latestScansTitle": "Latest scans",
+    "latestScansSubtitle": "Here you can see your most recent product scans.",
+    "recentRiskScansTitle": "Recent risk scans",
+    "recentRiskScansSubtitle": "Scans where allergens, cross-reactions or risky ingredients were found.",
+    "swipeToSeeMore": "Swipe to see more",
+    "allergenLabel": "Allergen",
+    "ingredientsLabel": "Ingredients",
+    "severityLabel": "Severity",
+    "unknownSeverity": "Unknown",
+    "noAllergensFound": "No allergens found"
 }

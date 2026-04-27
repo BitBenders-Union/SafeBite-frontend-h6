@@ -1,0 +1,16 @@
+{
+    "hardwareTestRunningMessage": "Kameratest kører...",
+    "capturingPhotoMessage": "Tager billede...",
+    "uploadingAndAnalyzingMessage": "Uploader og analyserer...",
+    "analysisResultTitle": "Analyseresultat",
+    "allergensFoundLabel": "Fundne allergener",
+    "severityLabel": "Risikoniveau",
+    "noAllergensFoundMessage": "Ingen allergener fundet",
+    "noIngredientsDetectedMessage": "Ingen ingredienser fundet",
+    "pointCameraAtIngredientsMessage": "Ret kameraet mod ingredienslisten",
+    "allergensDetectedTitle": "Allergener fundet",
+    "allergyDetectedPopupMessage": "Denne vare indeholder ingredienser, der kan være problematiske for dig.",
+    "CameraAccessNeeded": "Tillad adgang til kameraet",
+    "CameraAccessDescription": "For at scanne ingredienser skal appen have adgang til dit kamera.",
+    "GrantPermission": "Tillad kamera"
+}

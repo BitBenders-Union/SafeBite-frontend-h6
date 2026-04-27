@@ -3,7 +3,7 @@
 import { AuthCard } from "@/components/Shared/AuthCard";
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
-import { forgotPassword } from "@/services/apiServices/authApi";
+import { forgotPassword } from "@/services/api/authApi";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";

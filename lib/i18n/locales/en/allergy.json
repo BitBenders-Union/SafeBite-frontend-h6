@@ -1,0 +1,11 @@
+{
+    "AllergyScreenHeader": "My allergies",
+    "AllergyScreenSubtitle": "Add and manage the allergens you want SafeBite to watch for.",
+    "AddCustomAllergen": "Add custom allergen",
+    "DidNotFindAllergen": "Did not find the allergen you were looking for? Add it here.",
+    "TypeAllergenName": "Type the allergen name",
+    "SearchAllergens": "Search allergens",
+    "Add": "Add",
+    "Remove": "Remove",
+    "NoAllergensFound": "No allergens found"
+}

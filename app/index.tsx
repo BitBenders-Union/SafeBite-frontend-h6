@@ -18,5 +18,5 @@ export default function Index() {
         return <Redirect href="/(auth)/auth" />;
     }
 
-    return <Redirect href="/(app)" />;
+    return <Redirect href="/(app)/mobil/scan" />;
 }

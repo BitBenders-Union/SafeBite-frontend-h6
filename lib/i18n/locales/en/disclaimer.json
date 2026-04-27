@@ -1,0 +1,11 @@
+{
+    "title": "Vilkår og ansvarsfraskrivelse",
+    "tosText": "Denne app bruger kunstig intelligens (AI) til at analysere tekst og billeder, f.eks. ved scanning af ingredienslister, og vurdere indholdet.\n\nVi gør vores bedste for at give korrekte resultater, men AI kan tage fejl – især ved scanning af billeder, hvor tekst kan blive læst forkert. Derfor er resultaterne kun vejledende og ikke 100% sikre.\n\nHvis du har allergi eller er i tvivl, bør du altid selv tjekke den originale ingrediensliste eller søge rådgivning hos en fagperson, som f.eks. en læge.\n\nVed at bruge appen accepterer du, at:\n- Resultaterne kan være unøjagtige eller mangelfulde\n- Du selv har ansvar for at kontrollere informationen\n- Appen ikke kan holdes ansvarlig for eventuelle fejl eller konsekvenser",
+    "checkbox": "Jeg accepterer vilkår og ansvarsfraskrivelse",
+    "required": "Du skal acceptere for at oprette en bruger.",
+    "scanTitle": "Vigtigt før du scanner",
+    "scanText": "Resultatet er lavet med AI og kan være forkert eller ufuldstændigt. Scan og analyse er kun vejledende. Hvis du har allergi eller er i tvivl, skal du altid selv tjekke den originale ingrediensliste.",
+    "modalClose": "Luk",
+    "modalAccept": "Accepter",
+    "modalContinue": "Fortsæt"
+}

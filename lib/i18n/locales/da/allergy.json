@@ -1,0 +1,13 @@
+{
+    "profileTitle": "Dine allergier",
+    "profileSubtitle": "Se og administrer de allergier, der er knyttet til din profil.",
+    "manageTitle": "Administrer allergier",
+    "manageSubtitle": "Tilføj og administrer de allergener, du vil have SafeBite til at holde øje med.",
+    "addCustomAllergen": "Tilføj eget allergen",
+    "didNotFindAllergen": "Fandt du ikke det allergen, du leder efter? Tilføj det her.",
+    "typeAllergenName": "Skriv navnet på allergenet",
+    "searchAllergens": "Søg efter allergener",
+    "add": "Tilføj",
+    "remove": "Fjern",
+    "noAllergensFound": "Ingen allergener fundet"
+}
