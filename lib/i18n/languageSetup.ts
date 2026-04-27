@@ -5,19 +5,46 @@ import { getLocales } from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+import daAllergy from "./locales/da/allergy.json";
+import daAuth from "./locales/da/auth.json";
+import daCommon from "./locales/da/common.json";
+import daDisclaimer from "./locales/da/disclaimer.json";
 import daHome from "./locales/da/home.json";
+import daNavBars from "./locales/da/navbars.json";
+import daScan from "./locales/da/scan.json";
+import daSettings from "./locales/da/setting.json";
 
+import enAllergy from "./locales/en/allergy.json";
+import enAuth from "./locales/en/auth.json";
+import enCommon from "./locales/en/common.json";
+import enDisclaimer from "./locales/en/disclaimer.json";
 import enHome from "./locales/en/home.json";
-
+import enNavBars from "./locales/en/navbars.json";
+import enScan from "./locales/en/scan.json";
+import enSettings from "./locales/en/setting.json";
 
 export type AppLanguage = "da" | "en";
 
 const languageResources = {
     da: {
+        common: daCommon,
         home: daHome,
+        auth: daAuth,
+        navbars: daNavBars,
+        scan: daScan,
+        allergy: daAllergy,
+        settings: daSettings,
+        disclaimer: daDisclaimer,
     },
     en: {
+        common: enCommon,
         home: enHome,
+        auth: enAuth,
+        navbars: enNavBars,
+        scan: enScan,
+        allergy: enAllergy,
+        settings: enSettings,
+        disclaimer: enDisclaimer,
     },
 };
 
