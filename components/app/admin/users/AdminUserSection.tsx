@@ -1,27 +1,48 @@
 import AdminUserConfirmModal from "@/components/app/admin/users/AdminUserConfirmModal";
 import AdminUserRow from "@/components/app/admin/users/AdminUserRow";
-import { mockUsers } from "@/lib/mock/mockAdminUsers";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
-import React, { useMemo, useState } from "react";
+import { UserList, UserRole } from "@/lib/types/user";
+import { activateUser, deactivateUser, getAllUsersAndRoles, removeRole, setRole } from "@/services/api/adminUserManagementApi";
+import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
-type AdminUser = {
-    userId: string;
-    email: string;
-    roles: string[];
-    isActive?: boolean;
-};
 
 type PendingAction = "makeAdmin" | "removeAdmin" | "deactivate" | "activate";
 
 export default function AdminUserSection() {
     const { theme } = useAppTheme();
 
-    const [userList, setUserList] = useState<AdminUser[]>(mockUsers);
+    const [userList, setUserList] = useState<UserList[]>([]);``
     const [searchText, setSearchText] = useState("");
     const [actionError, setActionError] = useState("");
-    const [selectedUser, setSelectedUser] = useState<AdminUser | null>(null);
+    const [fetchError, setLoadError] = useState("");
+    const [loading, setIsLoading] = useState(true);
+
+    const [selectedUser, setSelectedUser] = useState<UserList | null>(null);
     const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+
+
+    useEffect(() => {
+        loadUsers();
+    }, []);
+
+    async function loadUsers() {
+        try {
+            setLoadError("");
+            setIsLoading(true);
+            
+            const data = await getAllUsersAndRoles();
+            setUserList(data);
+        }
+
+        catch (err: any) {
+            setLoadError(err.message || "Failed to load users.");
+        }
+
+        finally {
+            setIsLoading(false);
+        }
+    }
 
     const filteredUsers = useMemo(() => {
         const text = searchText.trim().toLowerCase();
@@ -33,7 +54,7 @@ export default function AdminUserSection() {
         );
     }, [userList, searchText]);
 
-    function openAction(user: AdminUser, action: PendingAction) {
+    function openAction(user: UserList, action: PendingAction) {
         setActionError("");
         setSelectedUser(user);
         setPendingAction(action);
@@ -45,40 +66,40 @@ export default function AdminUserSection() {
         setActionError("");
     }
 
-    function confirmAction() {
+    async function confirmAction() {
         if (!selectedUser || !pendingAction) return;
+        
+        const userrole: UserRole = {
+            userID: selectedUser.id,
+            roleName: "Admin"
+        }
 
         if (pendingAction === "makeAdmin") {
-            const alreadyAdmin = selectedUser.roles.includes("admin");
+            const alreadyAdmin = selectedUser.roles.some((r) => r.roleName === "Admin");
 
             if (alreadyAdmin) {
                 setActionError("User already has admin role.");
                 return;
             }
 
-            setUserList((prev) =>
-                prev.map((user) => {
-                    if (user.userId !== selectedUser.userId) return user;
-
-                    return {
-                        ...user,
-                        roles: [...user.roles, "admin"],
-                    };
-                })
-            );
-        }
+            try {
+                await setRole(userrole);
+                await loadUsers();
+            }
+             catch (err) {
+                setActionError("Failed to assign admin role.");
+            }
+        };
 
         if (pendingAction === "removeAdmin") {
-            setUserList((prev) =>
-                prev.map((user) => {
-                    if (user.userId !== selectedUser.userId) return user;
 
-                    return {
-                        ...user,
-                        roles: user.roles.filter((role) => role !== "admin"),
-                    };
-                })
-            );
+            try {
+                await removeRole(userrole);
+                await loadUsers();
+            }
+             catch (err) {
+                setActionError("Failed to remove admin role.");
+            }
         }
 
         if (pendingAction === "deactivate") {
@@ -87,29 +108,27 @@ export default function AdminUserSection() {
                 return;
             }
 
-            setUserList((prev) =>
-                prev.map((user) => {
-                    if (user.userId !== selectedUser.userId) return user;
+            try
+            {
+                await deactivateUser(selectedUser.id);
+                await loadUsers();
+            }
 
-                    return {
-                        ...user,
-                        isActive: false,
-                    };
-                })
-            );
+            catch (err) {
+                setActionError("Failed to deactivate user.");
+            }
         }
 
         if (pendingAction === "activate") {
-            setUserList((prev) =>
-                prev.map((user) => {
-                    if (user.userId !== selectedUser.userId) return user;
+            try
+            {
+                await activateUser(selectedUser.id);
+                await loadUsers();
+            }
 
-                    return {
-                        ...user,
-                        isActive: true,
-                    };
-                })
-            );
+            catch (err) {
+                setActionError("Failed to activate user.");
+            }
         }
 
         closeActionModal();
@@ -166,7 +185,7 @@ export default function AdminUserSection() {
 
             <FlatList
                 data={filteredUsers}
-                keyExtractor={(user) => user.userId}
+                keyExtractor={(user) => user.id}
                 renderItem={({ item }) => (
                     <AdminUserRow
                         user={item}
