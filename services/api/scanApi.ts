@@ -3,11 +3,20 @@ import type { ApiResponse } from "@/services/api/apiResponse";
 import { Platform } from "react-native";
 import { apiClient } from "./apiClient";
 
-export type ScanHistoryPagedResponse = ApiResponse<ScanHistoryResponseDTO[]>;
+export type ScanHistoryPagedResponse = ApiResponse<{
+  data: ScanHistoryResponseDTO[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}>;
+
 export type ScanResultResponse = ScanHistoryResponseDTO;
 
 /**
- * Sender et billede til backend for OCR og AI analyse.
+ * Sends the image to the backend for analysis 
  */
 export async function analyzeImage(
   photo: { uri: string },
@@ -16,43 +25,34 @@ export async function analyzeImage(
   const formData = new FormData();
   let uri = photo.uri;
 
-  // Android URI normalization (file:/ -> file:///)
-  if (Platform.OS === "android") {
-    if (uri.startsWith("file:/") && !uri.startsWith("file:///")) {
+  if (Platform.OS === "web") {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    formData.append("Image", blob, "scan.jpg");
+  } else {
+    if (Platform.OS === "android" && uri.startsWith("file:/") && !uri.startsWith("file:///")) {
       uri = uri.replace("file:/", "file:///");
     }
-
+    
     formData.append("Image", {
       uri,
-      name: "image.jpg",
-      type: "image/jpeg",
-    } as any);
-  }
-  else if (Platform.OS === "web") {
-    const blob = await fetch(uri).then((r) => r.blob());
-    formData.append("Image", new File([blob], "image.jpg", { type: "image/jpeg" }));
-  }
-  else {
-    // iOS
-    formData.append("Image", {
-      uri,
-      name: "image.jpg",
+      name: "scan.jpg",
       type: "image/jpeg",
     } as any);
   }
 
-  formData.append("lang", "eng+dan+swe+nor+fra");
-  formData.append("Name", "");
+  formData.append("Lang", "dan+eng+fra+nor+swe"); 
+  formData.append("Name", "Mobile Scan " + new Date().toLocaleTimeString());
 
-  const timeoutMs = options?.timeoutMs ?? 20000;
+  const timeoutMs = options?.timeoutMs ?? 24000;
 
   const response = await apiClient.post<ScanResultResponse>(
     `/api/Scan`,
     formData,
     {
       headers: {
-        Accept: "application/json",
-        ...(Platform.OS === "android" ? { "Content-Type": "multipart/form-data" } : {}),
+        "Accept": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       timeout: timeoutMs,
     }
@@ -62,41 +62,37 @@ export async function analyzeImage(
 }
 
 /**
- * Henter pagineret historik
+ * Gets the users scan history
  */
 export async function getMyScanHistory(
   params: ScanHistoryParameters = {}
 ): Promise<ScanHistoryPagedResponse> {
   const {
     currentPage = 1,
-    pageSize = 5,
+    pageSize = 6,
     query,
-    orderBy,
-    OrderDescending,
     ContainsAllergies,
   } = params;
 
   const response = await apiClient.get<ScanHistoryPagedResponse>(
-    "/api/ScanHistory/paged",
+    "/api/Scan", 
     {
       params: {
-        PageNumber: currentPage,
+        Page: currentPage,
         PageSize: pageSize,
-        Query: query,
-        OrderBy: orderBy,
-        OrderDescending: OrderDescending,
-        ContainsAllergies: ContainsAllergies,
+        searchTerm: query,
+        hasDetectedAllergies: ContainsAllergies,
       },
     }
   );
-
+  
   return response.data;
 }
 
 /**
- * Henter det samlede antal scanninger
+ * Gets the total count of scans for the user
  */
 export async function getMyScanHistoryCount(): Promise<ApiResponse<number>> {
-  const response = await apiClient.get<ApiResponse<number>>("/api/ScanHistory/count");
+  const response = await apiClient.get<ApiResponse<number>>("/api/Scan/count");
   return response.data;
 }
