@@ -42,7 +42,7 @@ export async function analyzeImage(
   }
 
   formData.append("Lang", "dan+eng+fra+nor+swe"); 
-  formData.append("Name", "Mobile Scan " + new Date().toLocaleTimeString());
+  formData.append("Name", new Date().toLocaleTimeString());
 
   const timeoutMs = options?.timeoutMs ?? 24000;
 
