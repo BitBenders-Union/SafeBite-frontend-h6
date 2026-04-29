@@ -46,8 +46,6 @@ export default function Scan() {
     // Validerer billedkvalitet baseret på dimensioner
     const validatePhotoQuality = (photo: any) => {
         const width = photo.width || photo.exif?.PixelXDimension || 0;
-        const height = photo.height || photo.exif?.PixelYDimension || 0;
-
         const height =
             photo.height ||
             photo.exif?.PixelYDimension ||
