@@ -1,6 +1,7 @@
 // components/scan/AnalysisCard.tsx
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { ScanHistoryResponseDTO, DetectedAllergy } from "@/lib/types/scan"; 
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -29,180 +30,104 @@ export default function AnalysisResult({
             setShowAfterHardwareDelay(false);
             return;
         }
-
-        const timer = setTimeout(() => {
-            setShowAfterHardwareDelay(true);
-        }, 1500);
-
+        const timer = setTimeout(() => setShowAfterHardwareDelay(true), 1500);
         return () => clearTimeout(timer);
     }, [isHardwareTesting]);
 
-    let parsed: any = null;
+    const parsed: ScanHistoryResponseDTO | null = analysisResult ? JSON.parse(analysisResult) : null;
 
-    try {
-        if (analysisResult) {
-            parsed = JSON.parse(analysisResult);
-        }
-    } catch { }
+    // 1. Jeg splitter kun på kommaer der IKKE er inde i parenteser
+    const ingredientString = parsed?.scannedIngredientsText || "";
+    const ingredients = ingredientString 
+        ? ingredientString.split(/,(?![^\(]*\))/g) 
+            .map((ingrediens: string) => ingrediens.trim())
+            .filter((ingrediens: string) => ingrediens.length > 0): [];
 
-    const ingredients: string[] =
-        parsed?.aiResult?.inputs_Ingredients || parsed?.ingredients || [];
+    // 2. Jeg laver en flad liste af ord der skal være røde
+    const flagged = parsed?.detectedAllergies?.flatMap((allergy: DetectedAllergy) => 
+        allergy.matchedIngredients?.map((match) => match.ingredientText.toLowerCase())) || [];
 
-    const flagged: string[] =
-        parsed?.aiResult?.flaggedIngredients || parsed?.flaggedIngredients || [];
-
-    const allergens: string[] =
-        parsed?.aiResult?.matchedAllergy || parsed?.allergens || [];
-
-    const severity: string =
-        parsed?.aiResult?.overallRisk || parsed?.severity || "none";
-
+    const allergens = parsed?.detectedAllergies?.map((allergy: DetectedAllergy) => allergy.allergyName) || [];
     const hasAllergy = allergens.length > 0;
-
-    const severityColor =
-        severity === "high"
-            ? "text-red-500"
-            : severity === "moderate"
-                ? "text-orange-500"
-                : severity === "low"
-                    ? "text-green-600"
-                    : "text-gray-500";
 
     return (
         <View className="w-[85%] mt-6">
             <DefaultCard>
                 {isHardwareTesting || !showAfterHardwareDelay ? (
-                    <Text style={{
-                        color: theme.text,
-                        fontSize: 16,
-                        textAlign: "center"
-                    }}
-                    >
+                    <Text style={{ color: theme.text, fontSize: 16, textAlign: "center" }}>
                         {t("hardwareTestRunningMessage")}
                     </Text>
                 ) : isCapturing ? (
-                    <Text style={{
-                        color: theme.text,
-                        fontSize: 16,
-                        textAlign: "center"
-                    }}
-                    >
+                    <Text style={{ color: theme.text, fontSize: 16, textAlign: "center" }}>
                         {t("capturingPhotoMessage")}
                     </Text>
                 ) : isUploading ? (
                     <View className="items-center">
                         <ActivityIndicator size="large" color="black" />
-                        <Text style={{
-                            color: theme.text,
-                            fontSize: 16,
-                            textAlign: "center"
-                        }}
-                        >
+                        <Text style={{ color: theme.text, fontSize: 16, textAlign: "center", marginTop: 10 }}>
                             {t("uploadingAndAnalyzingMessage")}
                         </Text>
                     </View>
                 ) : errorMessage ? (
                     <View className="items-center">
-                        <Text style={{
-                            color: theme.warningText,
-                            fontSize: 16,
-                            textAlign: "center",
-                            fontWeight: "600",
-                        }}
-                        >
+                        <Text style={{ color: theme.warningText, fontSize: 16, textAlign: "center", fontWeight: "600" }}>
                             {errorMessage}
                         </Text>
                     </View>
                 ) : parsed ? (
                     <View>
-                        <Text style={{
-                            color: theme.text,
-                            fontSize: 16,
-                            fontWeight: "600",
-                            marginBottom: 8,
-                        }}
-                        >
+                        <Text style={{ color: theme.text, fontSize: 16, fontWeight: "600", marginBottom: 8 }}>
                             {t("analysisResultTitle")}
                         </Text>
 
                         {hasAllergy ? (
                             <View className="mb-3">
-                                <Text style={{
-                                    color: theme.warningText,
-                                    fontWeight: "600"
-                                }}
-                                >
+                                <Text style={{ color: theme.warningText, fontWeight: "600" }}>
                                     {t("allergensFoundLabel")}: {allergens.join(", ")}
                                 </Text>
-
-                                {severity && (
-                                    <Text className={`${severityColor} mt-1`}>
-                                        {t("severityLabel")}: {severity}
-                                    </Text>
-                                )}
                             </View>
                         ) : (
-                            <Text
-                                style={{
-                                    color: theme.successText,
-                                    fontWeight: "600",
-                                    marginBottom: 12,
-                                }}
-                                className="text-green-600 font-semibold mb-3">
+                            <Text style={{ color: theme.successText, fontWeight: "600", marginBottom: 12 }}>
                                 {t("noAllergensFoundMessage")}
                             </Text>
                         )}
 
                         <View className="h-[1px] bg-gray-300 my-3" />
 
-                        <Text className="text-base flex-wrap leading-relaxed">
+                        <View className="flex-row flex-wrap">
                             {ingredients.length > 0 ? (
-                                ingredients.map((item, index) => {
-                                    const isFlagged = flagged.some(
-                                        (f) => f.toLowerCase() === item.toLowerCase()
-                                    );
-
-                                    const separator =
-                                        index === ingredients.length - 1 ? "" : ", ";
+                                ingredients.map((item: string, index: number) => {
+                                    // Tjekker om ingrediensen (eller en del af den) findes i flagged-listen
+                                    const isRed = flagged.some(f => item.toLowerCase().includes(f));
+                                    const separator = index === ingredients.length - 1 ? "" : ", ";
 
                                     return (
                                         <Text
                                             key={index}
-                                            className={
-                                                isFlagged
-                                                    ? "text-red-600 font-semibold"
-                                                    : ""
-                                            }
+                                            style={{
+                                                fontSize: 15,
+                                                color: isRed ? "#dc2626" : theme.text,
+                                                fontWeight: isRed ? "700" : "400",
+                                                lineHeight: 22,
+                                            }}
                                         >
-                                            {item}
-                                            {separator}
+                                            {item}{separator}
                                         </Text>
                                     );
                                 })
                             ) : (
-                                <Text
-                                    style={{
-                                        color: theme.text,
-                                        fontSize: 16,
-                                        textAlign: "center"
-                                    }}>
+                                <Text style={{ color: theme.text, fontSize: 16, textAlign: "center", width: '100%' }}>
                                     {t("noIngredientsDetectedMessage")}
                                 </Text>
                             )}
-                        </Text>
+                        </View>
                     </View>
                 ) : (
-                    <Text
-                        style={{
-                            color: theme.text,
-                            fontSize: 16,
-                            textAlign: "center"
-                        }}>
+                    <Text style={{ color: theme.text, fontSize: 16, textAlign: "center" }}>
                         {t("pointCameraAtIngredientsMessage")}
                     </Text>
-                )
-                }
-            </DefaultCard >
-        </View >
+                )}
+            </DefaultCard>
+        </View>
     );
 }
