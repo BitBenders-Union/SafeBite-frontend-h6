@@ -1,20 +1,14 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { UserList } from "@/lib/types/user";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
-type AdminUser = {
-    userId: string;
-    email: string;
-    roles: string[];
-    isActive?: boolean;
-};
-
 type Props = {
-    user: AdminUser;
-    onMakeAdmin: (user: AdminUser) => void;
-    onRemoveAdmin: (user: AdminUser) => void;
-    onDeactivate: (user: AdminUser) => void;
-    onActivate: (user: AdminUser) => void;
+    user: UserList;
+    onMakeAdmin: (user: UserList) => void;
+    onRemoveAdmin: (user: UserList) => void;
+    onDeactivate: (user: UserList) => void;
+    onActivate: (user: UserList) => void;
 };
 
 export default function AdminUserRow({
@@ -26,7 +20,7 @@ export default function AdminUserRow({
 }: Props) {
     const { theme } = useAppTheme();
 
-    const isAdmin = user.roles.includes("admin");
+    const isAdmin = user.roles.some(r => r.roleName === "Admin");
     const isActive = user.isActive !== false;
 
     return (
@@ -50,7 +44,9 @@ export default function AdminUserRow({
                     className="mt-1 text-xs"
                     style={{ color: theme.textMuted }}
                 >
-                    Roles: {user.roles.join(", ")}
+                    UserId: {user.id}
+                    <br />
+                    Roles: {user.roles.map(r => r.roleName).join(", ")}
                 </Text>
 
                 <Text
