@@ -48,6 +48,11 @@ export default function Scan() {
         const width = photo.width || photo.exif?.PixelXDimension || 0;
         const height = photo.height || photo.exif?.PixelYDimension || 0;
 
+        const height =
+            photo.height ||
+            photo.exif?.PixelYDimension ||
+            0;
+
         if (width < 400 || height < 400) {
             setIsCameraTooWeak(true);
             setQualityMessage(t("FailedCameraResToLow"));
