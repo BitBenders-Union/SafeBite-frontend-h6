@@ -46,10 +46,8 @@ export async function analyzeImage(
 
   const timeoutMs = options?.timeoutMs ?? 24000;
 
-  const response = await apiClient.post<ScanResultResponse>(
-    `/api/Scan`,
-    formData,
-    {
+  // 3. POST kaldet
+  const response = await apiClient.post<ScanResultResponse>(`/api/Scan`, formData,{
       headers: {
         "Accept": "application/json",
         "Content-Type": "multipart/form-data",

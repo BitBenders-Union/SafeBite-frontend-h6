@@ -1,5 +1,4 @@
 // app/(app)/scan.tsx
-// until the real backend scan API is ready.
 import { Ionicons } from "@expo/vector-icons";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import React, { useRef, useState } from "react";
@@ -18,53 +17,7 @@ import { useAppTheme } from "@/lib/theme/useAppTheme";
 import AnalysisResult from "../../../components/app/mobil/scan/AnalysisResult";
 import HourglassLoader from "../../../components/app/mobil/scan/HourglassLoader";
 import PermissionRequest from "../../../components/app/mobil/scan/PermissionRequest";
-
-type FakeScanResult = {
-    ocrText: string;
-    aiResult: {
-        matchedAllergy: string[];
-        status: "safe" | "warning" | "danger";
-        summary: string;
-    };
-};
-
-const wait = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-const fakeAnalyzeImage = async (): Promise<FakeScanResult> => {
-    await wait(2200);
-
-    const fakeResults: FakeScanResult[] = [
-        {
-            ocrText: "Ingredienser: sukker, mælkepulver, hasselnødder, kakao",
-            aiResult: {
-                matchedAllergy: ["Milk", "Hazelnuts"],
-                status: "danger",
-                summary: "Possible allergens were found in the ingredient list.",
-            },
-        },
-        {
-            ocrText: "Ingredienser: hvedemel, vand, salt, gær",
-            aiResult: {
-                matchedAllergy: ["Gluten"],
-                status: "warning",
-                summary: "The product may contain ingredients related to your allergies.",
-            },
-        },
-        {
-            ocrText: "Ingredienser: ris, majsmel, salt",
-            aiResult: {
-                matchedAllergy: [],
-                status: "safe",
-                summary: "No matched allergens were found in the ingredient list.",
-            },
-        },
-    ];
-
-    const randomIndex = Math.floor(Math.random() * fakeResults.length);
-    return fakeResults[randomIndex];
-};
-
+import { analyzeImage } from "@/services/api/scanApi";
 
 export default function Scan() {
     const { theme } = useAppTheme();
@@ -90,11 +43,10 @@ export default function Scan() {
     const cameraHeight = screenHeight * 0.28;
     const buttonOverlap = cameraHeight * 0.18;
 
+    // Validerer billedkvalitet baseret på dimensioner
     const validatePhotoQuality = (photo: any) => {
-        const width =
-            photo.width ||
-            photo.exif?.PixelXDimension ||
-            0;
+        const width = photo.width || photo.exif?.PixelXDimension || 0;
+        const height = photo.height || photo.exif?.PixelYDimension || 0;
 
         const height =
             photo.height ||
@@ -136,6 +88,7 @@ export default function Scan() {
                 return;
             }
 
+
             setPhotoUri(photo.uri);
             await uploadToBackend(photo);
         } catch (err) {
@@ -148,46 +101,57 @@ export default function Scan() {
 
     const uploadToBackend = async (photo: any) => {
         setIsUploading(true);
-
         const startedAt = Date.now();
-        console.log("[OCR] fake upload started");
+        console.log("[OCR] Backend upload started via scanApi");
 
         const hardTimeoutPromise = new Promise<never>((_, reject) => {
             setTimeout(() => reject(new Error("HARD_TIMEOUT")), HARD_FAIL_MS);
         });
 
         try {
-            const apiPromise = fakeAnalyzeImage();
+            // Kalder den rigtige API service
+            const apiPromise = analyzeImage(photo, {
+                timeoutMs: HARD_FAIL_MS + 2000,
+            });
 
             const result = await Promise.race([apiPromise, hardTimeoutPromise]);
 
             const ms = Date.now() - startedAt;
-            console.log(`[OCR] fake success in ${ms}ms`);
+            console.log(`[OCR] Success in ${ms}ms`, result);
 
             setQualityMessage(null);
 
-            const detected = result.aiResult?.matchedAllergy || [];
-            setDetectedAllergens(detected);
-            setShowAlert(detected.length > 0);
+            // Mapper detectedAllergies fra DTO til en liste af navne
+            // Dette løser TS-fejlen "Property 'aiResult' does not exist"
+            const detectedNames = result.detectedAllergies?.map(a => a.allergyName) || [];
+            
+            setDetectedAllergens(detectedNames);
+            
+            // Vis kun modal hvis der faktisk er fundet allergener
+            if (detectedNames.length > 0) {
+                setShowAlert(true);
+            } else {
+                setShowAlert(false);
+            }
 
+            // Gemmer hele resultatet som tekst til AnalysisResult komponenten
             setAnalysisResult(JSON.stringify(result, null, 2));
         } catch (error: unknown) {
             const ms = Date.now() - startedAt;
 
             if (error instanceof Error && error.message === "HARD_TIMEOUT") {
-                console.log(`[OCR] fake hard fail at ${ms}ms`);
+                console.log(`[OCR] Hard fail at ${ms}ms`);
                 setQualityMessage(t("ScanTimedOutSuggestHistory"));
-                return;
+            } else {
+                console.log(`[OCR] Failed after ${ms}ms`, error);
+                setQualityMessage(t("ScanFailedTryHistory"));
             }
-
-            console.log(`[OCR] fake failed after ${ms}ms`, error);
 
             setDetectedAllergens([]);
             setShowAlert(false);
             setAnalysisResult(
                 JSON.stringify({ error: t("FailedtoAnalyze") }, null, 2)
             );
-            setQualityMessage(t("ScanFailedTryHistory"));
         } finally {
             setIsUploading(false);
         }
@@ -224,6 +188,7 @@ export default function Scan() {
 
     return (
         <View className="flex-1 bg-transparent">
+            {/* Viser kun advarsel hvis der er fundet allergener */}
             {showAlert && (
                 <AllergyAlert
                     allergens={detectedAllergens}
