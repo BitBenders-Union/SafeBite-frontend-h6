@@ -12,5 +12,9 @@
     "allergyDetectedPopupMessage": "This product contains ingredients that may be problematic for you.",
     "CameraAccessNeeded": "Camera access required",
     "CameraAccessDescription": "To scan ingredients, the app needs access to your camera.",
-    "GrantPermission": "Grant permission"
+    "GrantPermission": "Grant permission",
+    "FailedCameraResToLow": "Camera resolution is too low. Try using a device with a better camera.",
+    "ScanTimedOutSuggestHistory":"Scanning took too long. If it continues, you can check your scan history for previous results.",
+    "ScanFailedTryHistory":"Scanning failed. If it continues, you can check your scan history for previous results.",
+    "FailedtoAnalyze":"Failed to analyze the image. Please try again and make sure the ingredient list is clearly visible."
 }

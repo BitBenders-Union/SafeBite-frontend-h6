@@ -12,5 +12,9 @@
     "allergyDetectedPopupMessage": "Denne vare indeholder ingredienser, der kan være problematiske for dig.",
     "CameraAccessNeeded": "Tillad adgang til kameraet",
     "CameraAccessDescription": "For at scanne ingredienser skal appen have adgang til dit kamera.",
-    "GrantPermission": "Tillad kamera"
+    "GrantPermission": "Tillad kamera",
+    "FailedCameraResToLow": "Kameraets opløsning er for lav. Prøv at bruge en enhed med et bedre kamera.",
+    "ScanTimedOutSuggestHistory":"Scanningen tog for lang tid. Hvis det fortsætter, kan du tjekke din scanhistorik for tidligere resultater.",
+    "ScanFailedTryHistory":"Scanningen mislykkedes. Hvis det fortsætter, kan du tjekke din scanhistorik for tidligere resultater.",
+    "FailedtoAnalyze":"Kunne ikke analysere billedet. Prøv igen, og sørg for at ingredienslisten er tydeligt synlig."
 }

@@ -17,6 +17,7 @@ export type ScanHistoryResponseDTO = {
   userId: string;
   name: string | null;
   scannedAt: string;
+  scannedIngredientsText: string | null;
   detectedAllergies: DetectedAllergy[];
 };
 

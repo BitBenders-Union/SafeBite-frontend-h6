@@ -16,43 +16,37 @@ export async function analyzeImage(
   const formData = new FormData();
   let uri = photo.uri;
 
-  // Android URI normalization (file:/ -> file:///)
-  if (Platform.OS === "android") {
-    if (uri.startsWith("file:/") && !uri.startsWith("file:///")) {
+  // 1. Pak billedet til 'Image' feltet (IFormFile i C#)
+  if (Platform.OS === "web") {
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    // VIGTIGT: Nøglen "Image" matcher din CreateScanRequest property
+    formData.append("Image", blob, "scan.jpg");
+  } else {
+    // Android normalisering
+    if (Platform.OS === "android" && uri.startsWith("file:/") && !uri.startsWith("file:///")) {
       uri = uri.replace("file:/", "file:///");
     }
-
+    
+    // Mobil upload (iOS/Android)
     formData.append("Image", {
       uri,
-      name: "image.jpg",
-      type: "image/jpeg",
-    } as any);
-  }
-  else if (Platform.OS === "web") {
-    const blob = await fetch(uri).then((r) => r.blob());
-    formData.append("Image", new File([blob], "image.jpg", { type: "image/jpeg" }));
-  }
-  else {
-    // iOS
-    formData.append("Image", {
-      uri,
-      name: "image.jpg",
+      name: "scan.jpg",
       type: "image/jpeg",
     } as any);
   }
 
-  formData.append("lang", "eng+dan+swe+nor+fra");
-  formData.append("Name", "");
+  // 2. Tilføj de andre felter fra CreateScanRequest
+  formData.append("Lang", "dan+eng+fra+nor+swe"); 
+  formData.append("Name", "Mobile Scan " + new Date().toLocaleTimeString());
 
   const timeoutMs = options?.timeoutMs ?? 20000;
 
-  const response = await apiClient.post<ScanResultResponse>(
-    `/api/Scan`,
-    formData,
-    {
+  // 3. POST kaldet
+  const response = await apiClient.post<ScanResultResponse>(`/api/Scan`, formData,{
       headers: {
-        Accept: "application/json",
-        ...(Platform.OS === "android" ? { "Content-Type": "multipart/form-data" } : {}),
+        "Accept": "application/json",
+        "Content-Type": "multipart/form-data",
       },
       timeout: timeoutMs,
     }
