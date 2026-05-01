@@ -9,6 +9,7 @@ import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "rea
 import UserAllergyList, { Allergen } from "../../../components/app/mobil/userProfil/UserAllergyList";
 import UserScanHistory, { ScanHistoryItem } from "../../../components/app/mobil/userProfil/UserScanHistory";
 import { getMyScanHistory } from "@/services/api/scanApi";
+import { getmyAllergies, getmycustomAllergies } from "@/services/api/allergyApi"; 
 
 type ProfileView = "buttons" | "allergies" | "history";
 
@@ -19,19 +20,58 @@ export default function UserProfile() {
 
     const [activeView, setActiveView] = useState<ProfileView>("buttons");
     const [userAllergens, setUserAllergens] = useState<Allergen[]>([]);
+    const [isLoadingAllergies, setIsLoadingAllergies] = useState(false);
     
-    // Pagination states
     const [historyItems, setHistoryItems] = useState<ScanHistoryItem[]>([]);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-
     const [historyCount, setHistoryCount] = useState<number>(0);
     const [isLoadingCount, setIsLoadingCount] = useState(false);
 
     const allergyCount = userAllergens.length;
 
-    // Fetch initial count
+    // Only fetches the allergies that the user has selected
+useEffect(() => {
+        if (!user) return;
+
+        async function fetchAllAllergyData() {
+            try {
+                setIsLoadingAllergies(true);
+                const [standardRes, customRes] = await Promise.all([
+                    getmyAllergies(),
+                    getmycustomAllergies()
+                ]);
+                
+                // Map standard allergy
+                const mappedStandard: Allergen[] = (standardRes || []).map((a: any) => ({
+                    id: a.allergyId || a.id, 
+                    name: a.allergyName || a.name || "Unknown",
+                    icon: a.icon,
+                    isCustom: false
+                }));
+
+                // Map custom allergy
+                const mappedCustom: Allergen[] = (customRes || []).map((a: any) => ({
+                    id: a.id,
+                    name: a.name || "Custom Allergy",
+                    icon: a.icon || "pencil-outline", 
+                    isCustom: true
+                }));
+
+                // combines the two lists and sets the state
+                setUserAllergens([...mappedStandard, ...mappedCustom]);
+
+            } catch (error) {
+                console.error("Fejl ved hentning af allergidata:", error);
+            } finally {
+                setIsLoadingAllergies(false);
+            }
+        }
+        fetchAllAllergyData();
+    }, [user]);
+
+    // fetch History stats
     useEffect(() => {
         if (!user) return;
         async function fetchHistoryStats() {
@@ -48,38 +88,29 @@ export default function UserProfile() {
         fetchHistoryStats();
     }, [user]);
 
-    // Fetch initial history (Page 1)
-    useEffect(() => {
-        if (activeView === "history" && user && historyItems.length === 0) {
-            loadHistory(1);
-        }
-    }, [activeView, user]);
+    const handleUpdateAllergens = (updated: Allergen[]) => {
+        setUserAllergens(updated);
+    };
 
+    // fetches the users scan history
     const loadHistory = async (page: number) => {
         try {
             setIsLoadingHistory(true);
-            const res = await getMyScanHistory({
-                currentPage: page,
-                pageSize: 20,
-            });
+            const res = await getMyScanHistory({ currentPage: page, pageSize: 20 });
 
             if (res && res.data) {
                 const mappedItems: ScanHistoryItem[] = res.data.map(item => ({
                     id: item.id,
                     date: new Date(item.scannedAt).toLocaleDateString(),
                     allergens: item.detectedAllergies.length > 0 
-                        ? item.detectedAllergies.map(allergies => allergies.allergyName).join(", ")
+                        ? item.detectedAllergies.map(allergy => allergy.allergyName).join(", ")
                         : t("NoAllergensFound"),
                     matches: item.scannedIngredientsText || ""
                 }));
 
                 setHistoryItems(prev => page === 1 ? mappedItems : [...prev, ...mappedItems]);
                 setHistoryCount(res.totalCount ?? 0);
-                
-                // If there are less items than the page size, we know there are no more pages
-                if (res.data.length < 20) {
-                    setHasMore(false);
-                }
+                if (res.data.length < 20) setHasMore(false);
             }
         } catch (error) {
             console.error("Fejl ved hentning af historik:", error);
@@ -88,6 +119,7 @@ export default function UserProfile() {
         }
     };
 
+    // handles fetching more history items when the user scrolls to the bottom
     const fetchMoreHistory = useCallback(() => {
         if (!isLoadingHistory && hasMore) {
             const nextPage = currentPage + 1;
@@ -96,6 +128,7 @@ export default function UserProfile() {
         }
     }, [isLoadingHistory, hasMore, currentPage]);
 
+    // Renders the main content based on the active view
     function renderContent() {
         if (activeView === "buttons") {
             const items = [
@@ -106,6 +139,7 @@ export default function UserProfile() {
                     value: String(allergyCount),
                     label: t("Allergies"),
                     onPress: () => setActiveView("allergies"),
+                    loading: isLoadingAllergies
                 },
                 {
                     key: "history",
@@ -113,7 +147,11 @@ export default function UserProfile() {
                     color: "#6366f1",
                     value: String(historyCount),
                     label: t("History"),
-                    onPress: () => setActiveView("history"),
+                    onPress: () => {
+                        if (historyItems.length === 0) loadHistory(1);
+                        setActiveView("history");
+                    },
+                    loading: isLoadingCount
                 },
             ];
 
@@ -128,7 +166,7 @@ export default function UserProfile() {
                                 style={{ backgroundColor: theme.surface, borderWidth: 1, borderColor: theme.borderSoft }}
                             >
                                 <Ionicons name={item.icon as any} size={40} color={item.color} />
-                                {isLoadingCount && item.key === "history" ? (
+                                {item.loading ? (
                                     <ActivityIndicator size="small" color={theme.text} className="mt-2" />
                                 ) : (
                                     <Text className="text-lg font-bold mt-2" style={{ color: theme.text }}>{item.value}</Text>
@@ -142,7 +180,13 @@ export default function UserProfile() {
         }
 
         if (activeView === "allergies") {
-            return <UserAllergyList userAllergens={userAllergens} onUpdateAllergens={setUserAllergens} loading={false} />;
+            return (
+                <UserAllergyList 
+                    userAllergens={userAllergens} 
+                    onUpdateAllergens={handleUpdateAllergens} 
+                    loading={isLoadingAllergies} 
+                />
+            );
         }
 
         return (
@@ -160,16 +204,14 @@ export default function UserProfile() {
             <DefaultCard className="items-center px-5 py-5">
                 <View className="mb-4 w-full">
                     {activeView !== "buttons" && (
-                        <TouchableOpacity onPress={() => setActiveView("buttons")} className="mb-4 flex-row items-center self-start" activeOpacity={0.8}>
+                        <TouchableOpacity onPress={() => setActiveView("buttons")} className="mb-4 flex-row items-center self-start">
                             <Ionicons name="arrow-back" size={18} color={theme.text} />
                             <Text className="ml-2 text-sm font-medium" style={{ color: theme.text }}>{t("Back")}</Text>
                         </TouchableOpacity>
                     )}
-                    {authLoading ? (
-                        <View className="items-center py-2"><ActivityIndicator size="small" color={theme.text} /></View>
-                    ) : (
-                        <Text className="text-center text-xl font-bold" style={{ color: theme.text }}>{user?.email?.split("@")[0] || "User"}</Text>
-                    )}
+                    <Text className="text-center text-xl font-bold" style={{ color: theme.text }}>
+                        {authLoading ? "..." : user?.email?.split("@")[0] || "User"}
+                    </Text>
                 </View>
 
                 <View className="mb-4 w-full max-w-[260px] flex-row items-center justify-between">
@@ -179,11 +221,7 @@ export default function UserProfile() {
                     </View>
                     <View className="h-9 w-[1px]" style={{ backgroundColor: theme.borderSoft }} />
                     <View className="items-center">
-                        {isLoadingCount ? (
-                            <ActivityIndicator size="small" color={theme.text} />
-                        ) : (
-                            <Text className="text-lg font-bold" style={{ color: theme.text }}>{historyCount}</Text>
-                        )}
+                        <Text className="text-lg font-bold" style={{ color: theme.text }}>{historyCount}</Text>
                         <Text className="mt-1 text-xs" style={{ color: theme.textMuted }}>{t("History")}</Text>
                     </View>
                 </View>
