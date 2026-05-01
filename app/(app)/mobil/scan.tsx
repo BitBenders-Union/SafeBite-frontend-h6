@@ -37,7 +37,7 @@ export default function Scan() {
 
     const cameraRef = useRef<CameraView>(null);
 
-    const HARD_FAIL_MS = 20000;
+    const HARD_FAIL_MS = 28000;
 
     const screenHeight = Dimensions.get("window").height;
     const cameraHeight = screenHeight * 0.28;
@@ -266,11 +266,11 @@ export default function Scan() {
                             alignItems: "center",
                             justifyContent: "center",
                             backgroundColor:
-                                isUploading || isCapturing
-                                    ? theme.card
-                                    : isCameraTooWeak
-                                        ? theme.scanButtonDangerBg
-                                        : theme.scanButtonBg,
+                            isUploading || isCapturing
+                            ? theme.card
+                            : isCameraTooWeak
+                            ? theme.scanButtonDangerBg
+                            : theme.scanButtonBg,
                             borderColor: theme.scanButtonBorder,
                             opacity: isUploading ? 0.9 : 1,
                             borderRadius: 37,

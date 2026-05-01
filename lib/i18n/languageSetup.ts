@@ -13,6 +13,7 @@ import daHome from "./locales/da/home.json";
 import daNavBars from "./locales/da/navbars.json";
 import daScan from "./locales/da/scan.json";
 import daSettings from "./locales/da/setting.json";
+import daprofile from "./locales/da/profile.json";
 
 import enAllergy from "./locales/en/allergy.json";
 import enAuth from "./locales/en/auth.json";
@@ -22,6 +23,7 @@ import enHome from "./locales/en/home.json";
 import enNavBars from "./locales/en/navbars.json";
 import enScan from "./locales/en/scan.json";
 import enSettings from "./locales/en/setting.json";
+import enprofile from "./locales/en/profile.json";
 
 export type AppLanguage = "da" | "en";
 
@@ -35,6 +37,7 @@ const languageResources = {
         allergy: daAllergy,
         settings: daSettings,
         disclaimer: daDisclaimer,
+        profile: daprofile,
     },
     en: {
         common: enCommon,
@@ -45,6 +48,7 @@ const languageResources = {
         allergy: enAllergy,
         settings: enSettings,
         disclaimer: enDisclaimer,
+        profile: enprofile,
     },
 };
 

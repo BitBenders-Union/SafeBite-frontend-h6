@@ -3,7 +3,7 @@ import type { ApiResponse } from "@/services/api/apiResponse";
 import { Platform } from "react-native";
 import { apiClient } from "./apiClient";
 
-export type ScanHistoryPagedResponse = ApiResponse<{
+export type ScanHistoryPagedResponse = {
   data: ScanHistoryResponseDTO[];
   page: number;
   pageSize: number;
@@ -11,7 +11,7 @@ export type ScanHistoryPagedResponse = ApiResponse<{
   totalPages: number;
   hasPreviousPage: boolean;
   hasNextPage: boolean;
-}>;
+};
 
 export type ScanResultResponse = ScanHistoryResponseDTO;
 

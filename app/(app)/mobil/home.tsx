@@ -77,14 +77,14 @@ useEffect(() => {
             // Her fikser vi fejlen: 
             // recentRes.data er objektet fra din konsol, og list-arrayet ligger på recentRes.data.data
             if (recentRes) {
-                const scanList = (recentRes as any)?.data || [];
+                const scanList = recentRes.data || [];
                 setScans(scanList);
             } else {
                 setError(t("scanLoadError"));
             }
 
             if (allergyRes) {
-                const allergyList = (allergyRes as any)?.data || [];
+                const allergyList = allergyRes.data || [];
                 setAllergenScans(allergyList);
             }
         } catch (err) {
