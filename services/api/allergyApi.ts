@@ -1,6 +1,6 @@
 // /services/apiServices/allergyApi.ts
 
-import { Allergy, CreateAllergyRequest, CreateAllergyResponse, UpdateAllergyRequest } from "@/lib/types/allergy";
+import { Allergy, AllergyUser, CreateAllergyRequest, CreateAllergyResponse, UpdateAllergyRequest } from "@/lib/types/allergy";
 import { PageResponse } from "@/lib/types/api";
 import { apiClient } from "./apiClient";
 
@@ -23,4 +23,17 @@ export async function updateAllergy(
     updatedAllergyData: UpdateAllergyRequest
 ): Promise<void> {
     await apiClient.put("/api/Allergy", updatedAllergyData);
+}
+
+export async function getMyAllergies(): Promise<AllergyUser[]> {
+    const response = await apiClient.get<PageResponse<AllergyUser>>("/api/AllergyUser");
+    return response.data.data;
+}
+
+export async function removeUserAllergy(allergyId: string): Promise<void> {
+    await apiClient.delete(`/api/AllergyUser/${allergyId}`);
+}   
+
+export async function addUserAllergy(allergyId: string): Promise<void> {
+    await apiClient.post("/api/AllergyUser", { allergyId });
 }
