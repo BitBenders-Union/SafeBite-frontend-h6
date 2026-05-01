@@ -24,7 +24,7 @@ export type UpdateAllergyRequest = {
 };
 
 export type CustomAllergy = {
-    id: number;
+    id: string;
     name: string;
 };
 
