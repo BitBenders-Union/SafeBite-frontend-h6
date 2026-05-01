@@ -1,210 +1,138 @@
 // /components/app/mobil/userProfile/UserScanHistory.tsx
-// User scan history component.
-
 import { Ionicons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    ScrollView,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
-
+import { ScrollView, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
 
-export type ScanSeverity = "mild" | "moderate" | "severe";
-
 export type ScanHistoryItem = {
-    id: number;
+    id: string | number;
     date: string;
     allergens: string;
-    matches?: string;
-    severity: ScanSeverity;
+    matches?: string; 
 };
 
+//Props for the UserScanHistory component, including the history items, loading state, error text, and a callback for loading more items when scrolling
 type UserScanHistoryProps = {
     historyItems: ScanHistoryItem[];
     loading?: boolean;
     errorText?: string | null;
+    onLoadMore?: () => void;
 };
 
 export default function UserScanHistory({
     historyItems,
     loading = false,
     errorText = null,
+    onLoadMore,
 }: UserScanHistoryProps) {
     const { t } = useTranslation("profile");
     const { theme } = useAppTheme();
-
     const [search, setSearch] = useState("");
+    const [expandedItems, setExpandedItems] = useState<Record<string | number, boolean>>({});
 
+    //This toggle the expanded state of a history item to show/hide the ingredient list
+    const toggleExpand = (id: string | number) => {
+        setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    //check if the user has scrolled close to the bottom of the list
+    const handleScroll = (event: any) => {
+        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+        const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
+
+        if (isCloseToBottom && !loading) {
+            onLoadMore?.();
+        }
+    };
+
+    //filter history items
     const filteredHistory = useMemo(() => {
         const value = search.trim().toLowerCase();
-
         if (!value) return historyItems;
-
         return historyItems.filter((item) => {
             return (
                 item.allergens.toLowerCase().includes(value) ||
                 item.matches?.toLowerCase().includes(value) ||
-                item.severity.toLowerCase().includes(value) ||
                 item.date.toLowerCase().includes(value)
             );
         });
     }, [historyItems, search]);
 
-    function getSeverityStyle(severity: ScanSeverity) {
-        if (severity === "severe") {
-            return {
-                bg: theme.dangerSolid,
-                text: theme.dangerSolidText,
-                label: t("SeveritySevere", "Severe"),
-            };
-        }
-
-        if (severity === "moderate") {
-            return {
-                bg: theme.warningBg,
-                text: theme.warningText,
-                label: t("SeverityModerate", "Moderate"),
-            };
-        }
-
-        return {
-            bg: theme.successBg,
-            text: theme.successText,
-            label: t("SeverityMild", "Mild"),
-        };
-    }
-
     return (
         <View className="w-full">
             <View className="mb-1 flex-row items-center">
                 <View className="flex-1">
-                    <Text
-                        className="text-lg font-semibold"
-                        style={{ color: theme.text }}
-                    >
-                        {t("HistoryTitle", "Scan history")}
+                    <Text className="text-lg font-semibold" style={{ color: theme.text }}>
+                        {t("HistoryTitle")}
                     </Text>
-
-                    <Text
-                        className="text-xs"
-                        style={{ color: theme.textMuted }}
-                    >
-                        {t("HistorySubtitle", "See your previous scan results")}
+                    <Text className="text-xs" style={{ color: theme.textMuted }}>
+                        {t("HistorySubtitle")}
                     </Text>
                 </View>
             </View>
 
-            <View
-                className="mb-4 mt-3 flex-row items-center rounded-full px-4 py-2"
-                style={{
-                    backgroundColor: theme.inputBg,
-                    borderWidth: 1,
-                    borderColor: theme.inputBorder,
-                }}
-            >
-                <Ionicons
-                    name="search"
-                    size={18}
-                    color={theme.textMuted}
-                />
-
+            <View className="mb-4 mt-3 flex-row items-center rounded-full px-4 py-2" style={{ backgroundColor: theme.inputBg, borderWidth: 1, borderColor: theme.inputBorder }}>
+                <Ionicons name="search" size={18} color={theme.textMuted} />
                 <TextInput
                     value={search}
                     onChangeText={setSearch}
-                    placeholder={t("SearchHistory", "Search history")}
+                    placeholder={t("SearchHistory")}
                     placeholderTextColor={theme.textPlaceholder}
                     className="ml-2 flex-1 text-sm"
                     style={{ color: theme.text }}
                 />
             </View>
 
-            <View
-                className="max-h-96 rounded-2xl " >
-                {loading ? (
-                    <View className="items-center justify-center py-8">
-                        <Text style={{ color: theme.textMuted }}>
-                            {t("LoadingHistory", "Loading history...")}
-                        </Text>
-                    </View>
-                ) : errorText ? (
-                    <Text
-                        className="text-center text-sm"
-                        style={{ color: theme.dangerText }}
-                    >
-                        {errorText}
-                    </Text>
-                ) : filteredHistory.length === 0 ? (
-                    <Text
-                        className="text-center text-sm"
-                        style={{ color: theme.textMuted }}
-                    >
-                        {t("NoHistoryFound", "No scan history found")}
-                    </Text>
+            <View className="max-h-96 rounded-2xl">
+                {errorText ? (
+                    <Text className="text-center text-sm" style={{ color: theme.dangerText }}>{errorText}</Text>
+                ) : filteredHistory.length === 0 && !loading ? (
+                    <Text className="text-center text-sm" style={{ color: theme.textMuted }}>{t("NoHistoryFound")}</Text>
                 ) : (
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
+                    <ScrollView 
+                        showsVerticalScrollIndicator={false} 
                         nestedScrollEnabled
-                        keyboardShouldPersistTaps="handled"
+                        onScroll={handleScroll}
+                        scrollEventThrottle={16}
                     >
                         {filteredHistory.map((item) => {
-                            const severityStyle = getSeverityStyle(item.severity);
+                            const hasAllergies = item.allergens && item.allergens !== t("NoAllergensFound");
+                            const isExpanded = expandedItems[item.id];
 
                             return (
-                                <View
-                                    key={item.id}
-                                    className="mb-3 rounded-xl px-4 py-3"
-                                    style={{
-                                        backgroundColor: theme.surfaceSoft,
-                                        borderWidth: 1,
-                                        borderColor: theme.borderSoft,
-                                    }}
-                                >
+                                <View key={item.id} className="mb-3 rounded-xl px-4 py-3" style={{ backgroundColor: theme.surfaceSoft, borderWidth: 1, borderColor: theme.borderSoft }}>
                                     <View className="mb-2 flex-row items-center justify-between">
-                                        <Text
-                                            className="mr-3 flex-1 text-[13px] font-semibold"
-                                            style={{ color: theme.text }}
-                                        >
-                                            {item.date}
-                                        </Text>
-
-                                        <View
-                                            className="rounded-full px-3 py-1"
-                                            style={{ backgroundColor: severityStyle.bg }}
-                                        >
-                                            <Text
-                                                className="text-[11px] font-semibold"
-                                                style={{ color: severityStyle.text }}
-                                            >
-                                                {severityStyle.label}
-                                            </Text>
-                                        </View>
+                                        <Text className="text-[11px] font-medium" style={{ color: theme.textMuted }}>{item.date}</Text>
                                     </View>
-
-                                    <Text
-                                        className="text-[14px]"
-                                        style={{ color: theme.text }}
-                                    >
-                                        {item.allergens}
+                                    <Text className="text-[15px] font-bold" style={{ color: hasAllergies ? theme.dangerSolid : theme.successText }}>
+                                        {hasAllergies ? item.allergens : t("NoAllergensFound")}
                                     </Text>
 
-                                    {item.matches ? (
-                                        <Text
-                                            className="mt-1 text-[12px]"
-                                            style={{ color: theme.textMuted }}
-                                        >
-                                            {t("Matches", "Matches:")}{" "}
-                                            <Text style={{ color: theme.text }}>
-                                                {item.matches}
-                                            </Text>
-                                        </Text>
-                                    ) : null}
+                                    {item.matches && (
+                                        <View className="mt-3 border-t pt-2" style={{ borderColor: theme.borderSoft }}>
+                                            <TouchableOpacity onPress={() => toggleExpand(item.id)} className="flex-row items-center">
+                                                <Text className="text-[12px] font-semibold" style={{ color: theme.text }}>
+                                                    {isExpanded ? t("HideIngredients", "Skjul ingredienser") : t("ShowIngredients")}
+                                                </Text>
+                                                <Ionicons name={isExpanded ? "chevron-up" : "chevron-down"} size={14} color={theme.text} style={{ marginLeft: 4 }} />
+                                            </TouchableOpacity>
+                                            {isExpanded && (
+                                                <View className="mt-2 p-2 rounded-lg" style={{ backgroundColor: theme.inputBg }}>
+                                                    <Text className="text-[11px] font-bold mb-1" style={{ color: theme.textMuted }}>{t("IngredientList")}</Text>
+                                                    <Text className="text-[12px] leading-4" style={{ color: theme.text }}>{item.matches}</Text>
+                                                </View>
+                                            )}
+                                        </View>
+                                    )}
                                 </View>
                             );
                         })}
+                        {loading && (
+                            <View className="py-4">
+                                <ActivityIndicator size="small" color={theme.text} />
+                            </View>
+                        )}
                     </ScrollView>
                 )}
             </View>

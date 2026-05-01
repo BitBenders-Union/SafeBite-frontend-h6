@@ -8,4 +8,5 @@ export type PageResponse<T> = {
     totalPages: number;
     hasPreviousPage: boolean;
     hasNextPage: boolean;
+    searchterm: string | null;
 };
