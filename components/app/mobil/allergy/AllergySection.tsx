@@ -66,16 +66,23 @@ export default function AllergyListView() {
         loadAllergies();
     }, []);
 
+    // Filter allergy list based on search text
     const filteredAllergies = useMemo(() => {
-        const newSearchText = searchText.trim().toLowerCase();
+        const searchTerms = searchText
+            .toLowerCase()
+            .split(',')
+            .map(term => term.trim())
+            .filter(term => term !== "");
 
-        if (!searchText) {
+        if (searchTerms.length === 0) {
             return allergyList;
         }
 
-        return allergyList.filter((item) =>
-            item.name.toLowerCase().includes(searchText)
-        );
+        return allergyList.filter((item) => {
+            const itemName = item.name.toLowerCase();
+
+            return searchTerms.some((term) => itemName.includes(term));
+        });
     }, [allergyList, searchText]);
 
     async function toggleAllergy(item: Allergy) {

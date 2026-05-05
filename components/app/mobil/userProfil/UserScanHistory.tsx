@@ -1,6 +1,6 @@
 // /components/app/mobil/userProfile/UserScanHistory.tsx
 import { Ionicons } from "@expo/vector-icons";
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ScrollView, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
@@ -12,12 +12,12 @@ export type ScanHistoryItem = {
     matches?: string; 
 };
 
-//Props for the UserScanHistory component, including the history items, loading state, error text, and a callback for loading more items when scrolling
 type UserScanHistoryProps = {
     historyItems: ScanHistoryItem[];
     loading?: boolean;
     errorText?: string | null;
     onLoadMore?: () => void;
+    onSearch?: (text: string) => void;
 };
 
 export default function UserScanHistory({
@@ -25,18 +25,27 @@ export default function UserScanHistory({
     loading = false,
     errorText = null,
     onLoadMore,
+    onSearch,
 }: UserScanHistoryProps) {
     const { t } = useTranslation("profile");
     const { theme } = useAppTheme();
     const [search, setSearch] = useState("");
     const [expandedItems, setExpandedItems] = useState<Record<string | number, boolean>>({});
 
-    //This toggle the expanded state of a history item to show/hide the ingredient list
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            if (onSearch) {
+                onSearch(search);
+            }
+        }, 750); // 750ms delay
+
+        return () => clearTimeout(handler);
+    }, [search, onSearch]);
+
     const toggleExpand = (id: string | number) => {
         setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
-    //check if the user has scrolled close to the bottom of the list
     const handleScroll = (event: any) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
         const isCloseToBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height - 50;
@@ -45,19 +54,6 @@ export default function UserScanHistory({
             onLoadMore?.();
         }
     };
-
-    //filter history items
-    const filteredHistory = useMemo(() => {
-        const value = search.trim().toLowerCase();
-        if (!value) return historyItems;
-        return historyItems.filter((item) => {
-            return (
-                item.allergens.toLowerCase().includes(value) ||
-                item.matches?.toLowerCase().includes(value) ||
-                item.date.toLowerCase().includes(value)
-            );
-        });
-    }, [historyItems, search]);
 
     return (
         <View className="w-full">
@@ -72,6 +68,7 @@ export default function UserScanHistory({
                 </View>
             </View>
 
+            {/* Search field Lokale State*/}
             <View className="mb-4 mt-3 flex-row items-center rounded-full px-4 py-2" style={{ backgroundColor: theme.inputBg, borderWidth: 1, borderColor: theme.inputBorder }}>
                 <Ionicons name="search" size={18} color={theme.textMuted} />
                 <TextInput
@@ -87,7 +84,7 @@ export default function UserScanHistory({
             <View className="max-h-96 rounded-2xl">
                 {errorText ? (
                     <Text className="text-center text-sm" style={{ color: theme.dangerText }}>{errorText}</Text>
-                ) : filteredHistory.length === 0 && !loading ? (
+                ) : historyItems.length === 0 && !loading ? (
                     <Text className="text-center text-sm" style={{ color: theme.textMuted }}>{t("NoHistoryFound")}</Text>
                 ) : (
                     <ScrollView 
@@ -96,7 +93,8 @@ export default function UserScanHistory({
                         onScroll={handleScroll}
                         scrollEventThrottle={16}
                     >
-                        {filteredHistory.map((item) => {
+                        {/* We use historyItems directly from props, as they are now filtered by the API */}
+                        {historyItems.map((item) => {
                             const hasAllergies = item.allergens && item.allergens !== t("NoAllergensFound");
                             const isExpanded = expandedItems[item.id];
 
