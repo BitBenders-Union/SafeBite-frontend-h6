@@ -37,7 +37,7 @@ export default function Scan() {
 
     const cameraRef = useRef<CameraView>(null);
 
-    const HARD_FAIL_MS = 60000;
+    const HARD_FAIL_MS = 120000;
 
     const screenHeight = Dimensions.get("window").height;
     const cameraHeight = screenHeight * 0.28;
