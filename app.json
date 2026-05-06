@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SafeBite",
-    "slug": "SafeBite",
+    "slug": "SafeBite-frontend-h6",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
