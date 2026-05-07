@@ -3,12 +3,12 @@
 
 // Provides access to application preferences such as theme,
 // language selection, and account logout.
+import DeActivateAccountButton from "@/components/app/mobil/settings/DeActivateAccountButton";
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
-import DeleteAccountButton from "../../../components/app/mobil/settings/DeleteAccountButton";
 import { LanguageSettings } from "../../../components/app/mobil/settings/LanguageSettings";
 import { LogoutSettings } from "../../../components/app/mobil/settings/LogoutSettings";
 import { ThemeSettings } from "../../../components/app/mobil/settings/ThemeSettings";
@@ -32,7 +32,7 @@ export default function Settings() {
                 </View>
 
                 <View className="mt-6">
-                    <DeleteAccountButton />
+                    <DeActivateAccountButton />
                 </View>
                 
             </DefaultCard>

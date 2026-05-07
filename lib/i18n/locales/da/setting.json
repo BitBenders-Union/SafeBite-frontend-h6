@@ -9,6 +9,6 @@
     "logoutTitle": "Log ud",
     "logoutButton": "Log ud",
     "logoutLoading": "Logger ud...",
-    "deleteAccountTitle": "Slet konto",
-    "deleteAccountButton": "Slet konto"
+    "deActivateAccountTitle": "Deaktivere konto",
+    "deActivateAccountButton": "Deaktivere konto"
 }

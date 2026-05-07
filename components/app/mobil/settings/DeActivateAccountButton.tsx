@@ -1,4 +1,4 @@
-// /components/app/mobil/settings/DeleteAccountButton.tsx
+// /components/app/mobil/settings/DeActivateAccountButton.tsx
 
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
 import React from "react";
@@ -9,7 +9,7 @@ type Props = {
     onDelete?: () => void;
 };
 
-export default function DeleteAccountButton({ onDelete }: Props) {
+export default function DeActivateAccountButton({ onDelete }: Props) {
     const { theme } = useAppTheme();
     const { t } = useTranslation("settings");
 
@@ -19,7 +19,7 @@ export default function DeleteAccountButton({ onDelete }: Props) {
                 className="mb-3 text-lg font-semibold"
                 style={{ color: theme.text }}
             >
-                {t("deleteAccountTitle")}
+                {t("deActivateAccountTitle")}
             </Text>
             <View
                 className="w-full rounded-2xl px-4 py-4"
@@ -39,7 +39,7 @@ export default function DeleteAccountButton({ onDelete }: Props) {
                         className="text-center font-semibold"
                         style={{ color: theme.dangerSolidText }}
                     >
-                        {t("deleteAccountButton")}
+                        {t("deActivateAccountButton")}
                     </Text>
                 </TouchableOpacity>
             </View>

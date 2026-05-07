@@ -9,6 +9,6 @@
     "logoutTitle": "Logout",
     "logoutButton": "Logout",
     "logoutLoading": "Logging out...",
-    "deleteAccountTitle": "Delete Account",
-    "deleteAccountButton": "Delete Account"
+    "deActivateAccountTitle": "Deactivate Account",
+    "deActivateAccountButton": "Deactivate Account"
 }

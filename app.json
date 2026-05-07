@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "SafeBite-frontend-h6",
+    "name": "SafeBite",
     "slug": "SafeBite-frontend-h6",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "safebitefrontendh6",
+    "scheme": "safebite",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.BitBenders.SafeBite"
     },
     "web": {
       "output": "static",
@@ -44,6 +45,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b4e37e1e-e080-4794-a6db-3841593563ce"
+      }
     }
   }
 }

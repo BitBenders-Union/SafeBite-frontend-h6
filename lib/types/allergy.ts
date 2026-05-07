@@ -33,3 +33,4 @@ export type AllergyUser = {
     allergyId: string;
     allergyName: string;
 };
+

@@ -44,7 +44,7 @@ export async function analyzeImage(
   formData.append("Lang", "dan+eng+fra+nor+swe"); 
   formData.append("Name", new Date().toLocaleTimeString());
 
-  const timeoutMs = options?.timeoutMs ?? 24000;
+  const timeoutMs = options?.timeoutMs ?? 60000;
 
   // 3. POST kaldet
   const response = await apiClient.post<ScanResultResponse>(`/api/Scan`, formData,{
