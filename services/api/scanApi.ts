@@ -1,4 +1,7 @@
-import type { ScanHistoryParameters, ScanHistoryResponseDTO } from "@/lib/types/scan";
+import type {
+    ScanHistoryParameters,
+    ScanHistoryResponseDTO,
+} from "@/lib/types/scan";
 import type { ApiResponse } from "@/services/api/apiResponse";
 import { Platform } from "react-native";
 import { apiClient } from "./apiClient";
@@ -16,11 +19,11 @@ export type ScanHistoryPagedResponse = {
 export type ScanResultResponse = ScanHistoryResponseDTO;
 
 /**
- * Sends the image to the backend for analysis 
+ * Sends the image to the backend for analysis
  */
 export async function analyzeImage(
   photo: { uri: string },
-  options?: { timeoutMs?: number; }
+  options?: { timeoutMs?: number },
 ): Promise<ScanResultResponse> {
   const formData = new FormData();
   let uri = photo.uri;
@@ -30,10 +33,14 @@ export async function analyzeImage(
     const blob = await response.blob();
     formData.append("Image", blob, "scan.jpg");
   } else {
-    if (Platform.OS === "android" && uri.startsWith("file:/") && !uri.startsWith("file:///")) {
+    if (
+      Platform.OS === "android" &&
+      uri.startsWith("file:/") &&
+      !uri.startsWith("file:///")
+    ) {
       uri = uri.replace("file:/", "file:///");
     }
-    
+
     formData.append("Image", {
       uri,
       name: "scan.jpg",
@@ -41,19 +48,22 @@ export async function analyzeImage(
     } as any);
   }
 
-  formData.append("Lang", "dan+eng+fra+nor+swe"); 
+  formData.append("Lang", "dan+eng+fra+nor+swe");
   formData.append("Name", new Date().toLocaleTimeString());
 
   const timeoutMs = options?.timeoutMs ?? 60000;
 
   // 3. POST kaldet
-  const response = await apiClient.post<ScanResultResponse>(`/api/Scan`, formData,{
+  const response = await apiClient.post<ScanResultResponse>(
+    `/api/Scan`,
+    formData,
+    {
       headers: {
-        "Accept": "application/json",
+        Accept: "application/json",
         "Content-Type": "multipart/form-data",
       },
       timeout: timeoutMs,
-    }
+    },
   );
 
   return response.data;
@@ -63,27 +73,19 @@ export async function analyzeImage(
  * Gets the users scan history
  */
 export async function getMyScanHistory(
-  params: ScanHistoryParameters = {}
+  params: ScanHistoryParameters = {},
 ): Promise<ScanHistoryPagedResponse> {
-  const {
-    currentPage = 1,
-    pageSize = 6,
-    query,
-    ContainsAllergies,
-  } = params;
+  const { currentPage = 1, pageSize = 6, query, ContainsAllergies } = params;
 
-  const response = await apiClient.get<ScanHistoryPagedResponse>(
-    "/api/Scan", 
-    {
-      params: {
-        Page: currentPage,
-        PageSize: pageSize,
-        searchTerm: query,
-        hasDetectedAllergies: ContainsAllergies,
-      },
-    }
-  );
-  
+  const response = await apiClient.get<ScanHistoryPagedResponse>("/api/Scan", {
+    params: {
+      Page: currentPage,
+      PageSize: pageSize,
+      searchTerm: query,
+      hasDetectedAllergies: ContainsAllergies,
+    },
+  });
+
   return response.data;
 }
 
@@ -93,4 +95,12 @@ export async function getMyScanHistory(
 export async function getMyScanHistoryCount(): Promise<ApiResponse<number>> {
   const response = await apiClient.get<ApiResponse<number>>("/api/Scan/count");
   return response.data;
+}
+
+export async function getTotalScans(): Promise<number> {
+  const response = await apiClient.get<{
+    totalScanCount: number;
+  }>("/api/Scan/total-count");
+
+  return response.data.totalScanCount;
 }

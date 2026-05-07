@@ -1,33 +1,130 @@
 // /components/app/admin/dashboard/AdminDashboardSection.tsx
+
 import AdminQuickLinks from "@/components/app/admin/dashboard/AdminQuickLinks";
 import AdminStats from "@/components/app/admin/dashboard/AdminStats";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { getTotalUsers } from "@/services/api/adminUserManagementApi";
+import { getTotalAllergies } from "@/services/api/allergyApi";
+import { getTotalScans } from "@/services/api/scanApi";
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
 
-type AdminStatsData = {
-    users: number;
-    allergies: number;
-    scans: number;
+type StatState = {
+    value: number | undefined;
+    isLoading: boolean;
+    error: string;
 };
 
 export default function AdminDashboardSection() {
     const { theme } = useAppTheme();
 
-    const [stats, setStats] = useState<AdminStatsData>({
-        users: 0,
-        allergies: 0,
-        scans: 0,
+    const [users, setUsers] = useState<StatState>({
+        value: undefined,
+        isLoading: true,
+        error: "",
+    });
+
+    const [allergies, setAllergies] = useState<StatState>({
+        value: undefined,
+        isLoading: true,
+        error: "",
+    });
+
+    const [scans, setScans] = useState<StatState>({
+        value: undefined,
+        isLoading: true,
+        error: "",
     });
 
     useEffect(() => {
-        // MOCK MOCK MOCK !
-        setStats({
-            users: 76,
-            allergies: 34,
-            scans: 120,
-        });
+        loadUserCount();
+        loadAllergyCount();
+        loadScanCount();
     }, []);
+
+    async function loadUserCount() {
+        try {
+            setUsers(prev => ({
+                ...prev,
+                isLoading: true,
+                error: "",
+            }));
+
+            const count = await getTotalUsers();
+
+            setUsers({
+                value: count,
+                isLoading: false,
+                error: "",
+            });
+
+        } catch (error) {
+            setUsers({
+                value: undefined,
+                isLoading: false,
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to load user count.",
+            });
+        }
+    }
+
+    async function loadAllergyCount() {
+        try {
+            setAllergies(prev => ({
+                ...prev,
+                isLoading: true,
+                error: "",
+            }));
+
+            const count = await getTotalAllergies();
+
+            setAllergies({
+                value: count,
+                isLoading: false,
+                error: "",
+            });
+
+        } catch (error) {
+            setAllergies({
+                value: undefined,
+                isLoading: false,
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to load allergy count.",
+            });
+        }
+    }
+
+    async function loadScanCount() {
+        try {
+            setScans(prev => ({
+                ...prev,
+                isLoading: true,
+                error: "",
+            }));
+
+            const count = await getTotalScans();
+
+            setScans({
+                value: count,
+                isLoading: false,
+                error: "",
+            });
+
+        } catch (error) {
+            setScans({
+                value: undefined,
+                isLoading: false,
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to load scan count.",
+            });
+        }
+    }
 
     return (
         <>
@@ -39,9 +136,9 @@ export default function AdminDashboardSection() {
             </Text>
 
             <AdminStats
-                users={stats.users}
-                allergies={stats.allergies}
-                scans={stats.scans}
+                users={users}
+                allergies={allergies}
+                scans={scans}
             />
 
             <AdminQuickLinks />
