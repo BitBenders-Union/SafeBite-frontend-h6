@@ -2,14 +2,14 @@
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
+import { getMyCustomAllergies, getMySelectedAllergies } from "@/services/api/allergyApi";
+import { getMyScanHistory } from "@/services/api/scanApi";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import UserAllergyList, { Allergen } from "../../../components/app/mobil/userProfil/UserAllergyList";
 import UserScanHistory, { ScanHistoryItem } from "../../../components/app/mobil/userProfil/UserScanHistory";
-import { getMyScanHistory } from "@/services/api/scanApi";
-import { getmyAllergies, getmycustomAllergies } from "@/services/api/allergyApi"; 
 
 type ProfileView = "buttons" | "allergies" | "history";
 
@@ -39,8 +39,8 @@ useEffect(() => {
             try {
                 setIsLoadingAllergies(true);
                 const [standardRes, customRes] = await Promise.all([
-                    getmyAllergies(),
-                    getmycustomAllergies()
+                    getMySelectedAllergies(),
+                    getMyCustomAllergies()
                 ]);
                 
                 // Map standard allergy

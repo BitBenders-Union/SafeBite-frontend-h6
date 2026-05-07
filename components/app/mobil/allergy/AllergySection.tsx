@@ -2,13 +2,12 @@
 import { AllergyRow } from "@/components/app/mobil/allergy/AllergyRow";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import {
-    Allergy,
-    AllergyUser
+    Allergy
 } from "@/lib/types/allergy";
 import {
     addUserAllergy,
     getAllergies,
-    getMyAllergies,
+    getMyAllergyRelations,
     removeUserAllergy,
 } from "@/services/api/allergyApi";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,35 +34,44 @@ export default function AllergyListView() {
     const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
+        // Create an instance of AbortController to manage network requests
+        const controller = new AbortController();
+
         async function loadAllergies() {
             try {
                 setLoadError("");
                 setIsLoading(true);
 
-                const systemAllergies = await getAllergies();
-                let userAllergies: AllergyUser[] = [];
-
-                try {
-                    userAllergies = await getMyAllergies();
-                } catch (error) {
-                    console.error("Failed to load my allergies:", error);
-                }
+                // Fetch data and pass the abort signal to the API calls
+                const systemAllergies = await getAllergies(controller.signal);
+                const userAllergies = await getMyAllergyRelations(controller.signal);
 
                 const userAllergyIds = new Set(
                     userAllergies.map((item) => item.allergyId)
                 );
 
+                // Update state only if the component is still mounted
                 setAllergyList(systemAllergies);
                 setAddedAllergyIds(userAllergyIds);
-            } catch (error) {
-                console.error("Failed to load allergies:", error);
-                setLoadError("Failed to load allergies.");
+
+            } catch (error: any) {
+                // Only handle errors that are NOT caused by the user leaving the page
+                if (error.name !== "AbortError" && error.name !== "CanceledError") {
+                    console.error("Failed to load allergies:", error);
+                    setLoadError("Could not load allergy data.");
+                }
             } finally {
+                // Stop loading indicator regardless of success or failure
                 setIsLoading(false);
             }
         }
 
         loadAllergies();
+
+        // Cleanup function: Aborts the fetch requests if the component unmounts
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     const filteredAllergies = useMemo(() => {
@@ -173,7 +181,7 @@ export default function AllergyListView() {
                     const isToggling = loadingIds.has(item.id);
 
                     return (
-                        <AllergyRow 
+                        <AllergyRow
                             allergy={item}
                             isAdded={added}
                             onToggle={toggleAllergy}
