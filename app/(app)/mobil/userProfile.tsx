@@ -2,7 +2,7 @@
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
-import { getMyCustomAllergies, getMySelectedAllergies } from "@/services/api/allergyApi";
+import { getMyAllergyRelations, getMyCustomAllergies } from "@/services/api/allergyApi";
 import { getMyScanHistory } from "@/services/api/scanApi";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useCallback, useEffect, useState } from "react";
@@ -39,7 +39,7 @@ useEffect(() => {
             try {
                 setIsLoadingAllergies(true);
                 const [standardRes, customRes] = await Promise.all([
-                    getMySelectedAllergies(),
+                    getMyAllergyRelations(),
                     getMyCustomAllergies()
                 ]);
                 
