@@ -1,64 +1,83 @@
 // /services/apiServices/allergyApi.ts
 
-import { Allergy, AllergyUser, CreateAllergyRequest, CreateAllergyResponse, UpdateAllergyRequest } from "@/lib/types/allergy";
+import {
+    Allergy,
+    AllergyUser,
+    CreateAllergyRequest,
+    CreateAllergyResponse,
+    UpdateAllergyRequest,
+} from "@/lib/types/allergy";
 import { PageResponse } from "@/lib/types/api";
 import { apiClient } from "./apiClient";
 
-export async function getAllergies(signal?: AbortSignal): Promise<Allergy[]> {
-    const response = await apiClient.get<PageResponse<Allergy>>("/api/Allergy", { signal });
-    return response.data.data;
+export async function getAllergies(): Promise<Allergy[]> {
+  const response = await apiClient.get<PageResponse<Allergy>>("/api/Allergy");
+  return response.data.data;
 }
 
-export async function getMySelectedAllergies(signal?: AbortSignal): Promise<Allergy[]> {
-    const response = await apiClient.get<PageResponse<Allergy>>("/api/AllergyUser", { signal });
-    return response.data.data;
+export async function getmyAllergies(): Promise<Allergy[]> {
+  const response =
+    await apiClient.get<PageResponse<Allergy>>("/api/AllergyUser");
+  return response.data.data;
 }
 
-export async function getMyCustomAllergies(signal?: AbortSignal): Promise<Allergy[]> {
-    const response = await apiClient.get<PageResponse<Allergy>>("/api/CustomAllergy", { signal });
-    return response.data.data;
+export async function getmycustomAllergies(): Promise<Allergy[]> {
+  const response =
+    await apiClient.get<PageResponse<Allergy>>("/api/CustomAllergy");
+  return response.data.data;
 }
 
-export async function addCustomAllergy(name: string, signal?: AbortSignal): Promise<Allergy> {
-    const response = await apiClient.post<Allergy>("/api/CustomAllergy", { name }, { signal });
-    return response.data;
+export async function addCustomAllergy(name: string): Promise<Allergy> {
+  const response = await apiClient.post<Allergy>("/api/CustomAllergy", {
+    name,
+  });
+  return response.data;
 }
 
-export async function deleteCustomAllergy(customAllergyId: string, signal?: AbortSignal): Promise<void> {
-    await apiClient.delete(`/api/CustomAllergy/${customAllergyId}`, { signal });
+export async function deleteCustomAllergy(
+  customAllergyId: string,
+): Promise<void> {
+  await apiClient.delete(`/api/CustomAllergy/${customAllergyId}`);
 }
 
-export async function deleteUserAllergy(allergyId: string, signal?: AbortSignal): Promise<void> {
-    await apiClient.delete(`/api/AllergyUser/${allergyId}`, { signal });
+export async function deleteUserAllergy(allergyId: string): Promise<void> {
+  await apiClient.delete(`/api/AllergyUser/${allergyId}`);
 }
 
 export async function createAllergy(
-    allergyData: CreateAllergyRequest, signal?: AbortSignal
+  allergyData: CreateAllergyRequest,
 ): Promise<CreateAllergyResponse> {
-    const response = await apiClient.post<CreateAllergyResponse>(
-        "/api/Allergy?Page=1&PageSize=50",
-        allergyData,
-        { signal }
-    );
-    return response.data;
+  const response = await apiClient.post<CreateAllergyResponse>(
+    "/api/Allergy?Page=1&PageSize=50",
+    allergyData,
+  );
+  return response.data;
 }
 
 export async function updateAllergy(
-    updatedAllergyData: UpdateAllergyRequest, signal?: AbortSignal
+  updatedAllergyData: UpdateAllergyRequest,
 ): Promise<void> {
-    await apiClient.put("/api/Allergy", updatedAllergyData, { signal });
+  await apiClient.put("/api/Allergy", updatedAllergyData);
 }
 
-// Get the allergy relations for the current user for allergy page, not the same as getMySelectedAllergies which is for the user profile page
-export async function getMyAllergyRelations(signal?: AbortSignal): Promise<AllergyUser[]> {
-    const response = await apiClient.get<PageResponse<AllergyUser>>("/api/AllergyUser", { signal });
-    return response.data.data;
+export async function getMyAllergies(): Promise<AllergyUser[]> {
+  const response =
+    await apiClient.get<PageResponse<AllergyUser>>("/api/AllergyUser");
+  return response.data.data;
 }
 
-export async function removeUserAllergy(allergyId: string, signal?: AbortSignal): Promise<void> {
-    await apiClient.delete(`/api/AllergyUser/${allergyId}`, { signal });
-}   
+export async function removeUserAllergy(allergyId: string): Promise<void> {
+  await apiClient.delete(`/api/AllergyUser/${allergyId}`);
+}
 
-export async function addUserAllergy(allergyId: string, signal?: AbortSignal): Promise<void> {
-    await apiClient.post("/api/AllergyUser", { allergyId }, { signal });
+export async function addUserAllergy(allergyId: string): Promise<void> {
+  await apiClient.post("/api/AllergyUser", { allergyId });
+}
+
+export async function getTotalAllergies(): Promise<number> {
+  const response = await apiClient.get<{
+    totalAllergyCount: number;
+  }>("/api/Allergy/total-count");
+
+  return response.data.totalAllergyCount;
 }
