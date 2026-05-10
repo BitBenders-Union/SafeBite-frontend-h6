@@ -26,16 +26,16 @@ jobs:
       - name: Build Docker image using existing Dockerfile
         run: |
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          version="dev-${{ github.event.release.tag_name || github.run_number }}"
+          version="${{ github.event.release.tag_name || github.run_number }}"
           echo "Building version: ${version}"
           docker build -f Dockerfile \
-              -t ghcr.io/${owner}/dev-safebite-frontend-h6:${version} \
-              -t ghcr.io/${owner}/dev-safebite-frontend-h6:latest .
+              -t ghcr.io/${owner}/safebite-frontend-h6:${version} \
+              -t ghcr.io/${owner}/safebite-frontend-h6:latest .
 
       - name: Push Dev Container image to GitHub Container Registry
         run: |
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
-          version="dev-${{ github.event.release.tag_name || github.run_number }}"
+          version="${{ github.event.release.tag_name || github.run_number }}"
           docker push ghcr.io/${owner}/safebite-frontend-h6:${version}
           docker push ghcr.io/${owner}/safebite-frontend-h6:latest
 
