@@ -32,7 +32,7 @@ jobs:
               -t ghcr.io/${owner}/safebite-frontend-h6:${version} \
               -t ghcr.io/${owner}/safebite-frontend-h6:latest .
 
-      - name: Push Dev Container image to GitHub Container Registry
+      - name: Push frontend Container image to GitHub Container Registry
         run: |
           owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           version="${{ github.event.release.tag_name || github.run_number }}"
@@ -62,7 +62,7 @@ jobs:
             docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GHCR_PAT }}
 
             echo "Pulling version ${version}..."
-            docker pull ghcr.io/${owner}/safebite-frontend:${version}
+            docker pull ghcr.io/${owner}/safebite-frontend-h6:${version}
 
             echo "Stopping existing container (if any)..."
             docker ps -a --filter "name=${container_name}" --format "{{.ID}}" | xargs -r docker rm -f
