@@ -1,6 +1,7 @@
+// /services/api/scanService.ts
 import type {
-    ScanHistoryParameters,
-    ScanHistoryResponseDTO,
+  ScanHistoryParameters,
+  ScanHistoryResponseDTO,
 } from "@/lib/types/scan";
 import type { ApiResponse } from "@/services/api/apiResponse";
 import { Platform } from "react-native";
@@ -23,7 +24,7 @@ export type ScanResultResponse = ScanHistoryResponseDTO;
  */
 export async function analyzeImage(
   photo: { uri: string },
-  options?: { timeoutMs?: number },
+  options?: { timeoutMs?: number }, signal?: AbortSignal
 ): Promise<ScanResultResponse> {
   const formData = new FormData();
   let uri = photo.uri;
@@ -63,6 +64,7 @@ export async function analyzeImage(
         "Content-Type": "multipart/form-data",
       },
       timeout: timeoutMs,
+      signal,
     },
   );
 
@@ -72,10 +74,11 @@ export async function analyzeImage(
 /**
  * Gets the users scan history
  */
-// /services/api/scanService.ts
+
 
 export async function getMyScanHistory(
   params: ScanHistoryParameters = {},
+  signal?: AbortSignal
 ): Promise<ScanHistoryPagedResponse> {
   const { currentPage = 1, pageSize = 6, query, ContainsAllergies } = params;
 
@@ -86,6 +89,7 @@ export async function getMyScanHistory(
       searchTerm: query,
       hasDetectedAllergies: ContainsAllergies,
     },
+    signal,
   });
 
   return response.data;
@@ -94,15 +98,15 @@ export async function getMyScanHistory(
 /**
  * Gets the total count of scans for the user
  */
-export async function getMyScanHistoryCount(): Promise<ApiResponse<number>> {
-  const response = await apiClient.get<ApiResponse<number>>("/api/Scan/count");
+export async function getMyScanHistoryCount(signal?: AbortSignal): Promise<ApiResponse<number>> {
+  const response = await apiClient.get<ApiResponse<number>>("/api/Scan/count", { signal });
   return response.data;
 }
 
-export async function getTotalScans(): Promise<number> {
+export async function getTotalScans(signal?: AbortSignal): Promise<number> {
   const response = await apiClient.get<{
     totalScanCount: number;
-  }>("/api/Scan/total-count");
+  }>("/api/Scan/total-count", { signal });
 
   return response.data.totalScanCount;
 }

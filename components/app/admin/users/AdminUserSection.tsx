@@ -23,19 +23,28 @@ export default function AdminUserSection() {
 
 
     useEffect(() => {
-        loadUsers();
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        loadUsers(signal);
+        
+        return () => {
+            controller.abort();
+        };
     }, []);
 
-    async function loadUsers() {
+    async function loadUsers(signal?: AbortSignal) {
         try {
             setErrorMessage("");
             setIsLoading(true);
 
-            const data = await getAllUsersAndRoles();
+            const data = await getAllUsersAndRoles(signal);
             setUserList(data);
         }
 
         catch (err: any) {
+            if (err.name === "CanceledError" || err.name === "AbortError") return;
+
             setErrorMessage(err.message || "Failed to load users.");
         }
 

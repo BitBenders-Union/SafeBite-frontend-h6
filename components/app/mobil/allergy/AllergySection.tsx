@@ -11,6 +11,7 @@ import {
     removeUserAllergy,
 } from "@/services/api/allergyApi";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -34,41 +35,36 @@ export default function AllergyListView() {
     const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
-        // Create an instance of AbortController to manage network requests
         const controller = new AbortController();
+        const signal = controller.signal;
 
         async function loadAllergies() {
             try {
                 setLoadError("");
                 setIsLoading(true);
 
-                // Fetch data and pass the abort signal to the API calls
-                const systemAllergies = await getAllergies(controller.signal);
-                const userAllergies = await getMyAllergyRelations(controller.signal);
+                const systemAllergies = await getAllergies(signal);
+                const userAllergies = await getMyAllergyRelations(signal);
 
                 const userAllergyIds = new Set(
                     userAllergies.map((item) => item.allergyId)
                 );
 
-                // Update state only if the component is still mounted
                 setAllergyList(systemAllergies);
                 setAddedAllergyIds(userAllergyIds);
 
-            } catch (error: any) {
-                // Only handle errors that are NOT caused by the user leaving the page
-                if (error.name !== "AbortError" && error.name !== "CanceledError") {
-                    console.error("Failed to load allergies:", error);
-                    setLoadError("Could not load allergy data.");
-                }
+            } catch (error) {
+                if (axios.isCancel(error)) return;
+                
+                console.error("Failed to load allergies:", error);
+                setLoadError("Could not load allergy data.");
             } finally {
-                // Stop loading indicator regardless of success or failure
                 setIsLoading(false);
             }
         }
 
         loadAllergies();
 
-        // Cleanup function: Aborts the fetch requests if the component unmounts
         return () => {
             controller.abort();
         };

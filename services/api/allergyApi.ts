@@ -1,5 +1,4 @@
 // /services/apiServices/allergyApi.ts
-
 import {
     Allergy,
     AllergyUser,

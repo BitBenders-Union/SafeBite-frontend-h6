@@ -5,6 +5,7 @@ import { useAppTheme } from "@/lib/theme/ThemeProvider";
 import { getMyAllergyRelations, getMyCustomAllergies } from "@/services/api/allergyApi";
 import { getMyScanHistory } from "@/services/api/scanApi";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, ScrollView, Text, TouchableOpacity, View } from "react-native";
@@ -21,7 +22,7 @@ export default function UserProfile() {
     const [activeView, setActiveView] = useState<ProfileView>("buttons");
     const [userAllergens, setUserAllergens] = useState<Allergen[]>([]);
     const [isLoadingAllergies, setIsLoadingAllergies] = useState(false);
-    
+
     const [historyItems, setHistoryItems] = useState<ScanHistoryItem[]>([]);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
@@ -34,18 +35,21 @@ export default function UserProfile() {
 
     // Get allergys
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         if (!user) return;
 
-        async function fetchAllAllergyData() {
+        async function fetchAllAllergyData(signal?: AbortSignal) {
             try {
                 setIsLoadingAllergies(true);
                 const [standardRes, customRes] = await Promise.all([
-                    getMyAllergyRelations(),
-                    getMyCustomAllergies()
+                    getMyAllergyRelations(signal),
+                    getMyCustomAllergies(signal)
                 ]);
-                
+
                 const mappedStandard: Allergen[] = (standardRes || []).map((a: any) => ({
-                    id: a.allergyId || a.id, 
+                    id: a.allergyId || a.id,
                     name: a.allergyName || a.name || "Unknown",
                     icon: a.icon,
                     isCustom: false
@@ -54,35 +58,47 @@ export default function UserProfile() {
                 const mappedCustom: Allergen[] = (customRes || []).map((a: any) => ({
                     id: a.id,
                     name: a.name || "Custom Allergy",
-                    icon: a.icon || "pencil-outline", 
+                    icon: a.icon || "pencil-outline",
                     isCustom: true
                 }));
 
                 setUserAllergens([...mappedStandard, ...mappedCustom]);
             } catch (error) {
+                if (axios.isCancel(error)) return;
                 console.error("Fejl ved hentning af allergidata:", error);
             } finally {
                 setIsLoadingAllergies(false);
             }
         }
-        fetchAllAllergyData();
+        fetchAllAllergyData(signal);
+        return () => {
+            controller.abort();
+        };
     }, [user]);
 
     // Fetch stats
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         if (!user) return;
-        async function fetchHistoryStats() {
+
+        async function fetchHistoryStats(signal?: AbortSignal) {
             try {
                 setIsLoadingCount(true);
-                const res = await getMyScanHistory({ currentPage: 1, pageSize: 1 });
+                const res = await getMyScanHistory({ currentPage: 1, pageSize: 1 }, signal);
                 if (res) setHistoryCount(res.totalCount ?? 0);
             } catch (error) {
+                if (axios.isCancel(error)) return;
                 console.error("Kunne ikke hente historik-statistik:", error);
             } finally {
                 setIsLoadingCount(false);
             }
         }
-        fetchHistoryStats();
+        fetchHistoryStats(signal);
+            return () => {
+                controller.abort();
+            };
     }, [user]);
 
     const handleUpdateAllergens = (updated: Allergen[]) => {
@@ -92,32 +108,33 @@ export default function UserProfile() {
     /**
      * fecth the history from the API based on page and search query
      */
-    const loadHistory = async (page: number, query: string = "") => {
+    const loadHistory = async (page: number, query: string = "", signal?: AbortSignal) => {
         try {
             setIsLoadingHistory(true);
-            const res = await getMyScanHistory({ 
-                currentPage: page, 
+            const res = await getMyScanHistory({
+                currentPage: page,
                 pageSize: 20,
-                query: query 
-            });
+                query: query
+            }, signal);
 
             if (res && res.data) {
                 const mappedItems: ScanHistoryItem[] = res.data.map(item => ({
                     id: item.id,
                     date: new Date(item.scannedAt).toLocaleDateString(),
-                    allergens: item.detectedAllergies.length > 0 
+                    allergens: item.detectedAllergies.length > 0
                         ? item.detectedAllergies.map(allergy => allergy.allergyName).join(", ")
                         : t("NoAllergensFound"),
                     matches: item.scannedIngredientsText || ""
                 }));
 
                 setHistoryItems(prev => page === 1 ? mappedItems : [...prev, ...mappedItems]);
-                
+
                 if (!query) setHistoryCount(res.totalCount ?? 0);
-                
+
                 setHasMore(res.hasNextPage);
             }
         } catch (error) {
+            if (axios.isCancel(error)) return;
             console.error("Fejl ved hentning af historik:", error);
         } finally {
             setIsLoadingHistory(false);
@@ -194,10 +211,10 @@ export default function UserProfile() {
 
         if (activeView === "allergies") {
             return (
-                <UserAllergyList 
-                    userAllergens={userAllergens} 
-                    onUpdateAllergens={handleUpdateAllergens} 
-                    loading={isLoadingAllergies} 
+                <UserAllergyList
+                    userAllergens={userAllergens}
+                    onUpdateAllergens={handleUpdateAllergens}
+                    loading={isLoadingAllergies}
                 />
             );
         }

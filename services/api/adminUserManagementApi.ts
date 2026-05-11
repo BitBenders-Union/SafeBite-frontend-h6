@@ -1,3 +1,4 @@
+// /services/api/adminUserManagementApi.ts
 import { PageResponse } from "@/lib/types/api";
 import { UserList, UserRole } from "@/lib/types/user";
 import { apiClient } from "./apiClient";

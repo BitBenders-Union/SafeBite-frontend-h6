@@ -9,6 +9,7 @@ import {
     getAllergies,
     updateAllergy,
 } from "@/services/api/allergyApi";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
     ActivityIndicator,
@@ -36,17 +37,24 @@ export default function AdminAllergySection() {
     const [editError, setEditError] = useState("");
 
     useEffect(() => {
-        loadAllergies();
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        loadAllergies(signal);
+        return () => {
+            controller.abort();
+        };
     }, []);
 
-    async function loadAllergies() {
+    async function loadAllergies(signal?: AbortSignal) {
         try {
             setLoadError("");
             setIsLoading(true);
 
-            const data = await getAllergies();
+            const data = await getAllergies(signal);
             setAllergyList(data);
         } catch (error) {
+            if (axios.isCancel(error)) return;
             setLoadError(
                 error instanceof Error
                     ? error.message
@@ -187,7 +195,7 @@ export default function AdminAllergySection() {
                         </Text>
 
                         <TouchableOpacity
-                            onPress={loadAllergies}
+                            onPress={() => loadAllergies()}
                             className="mt-4 self-start rounded-xl px-4 py-2"
                             style={{
                                 backgroundColor: theme.activeSoft,
