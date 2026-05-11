@@ -72,6 +72,8 @@ export async function analyzeImage(
 /**
  * Gets the users scan history
  */
+// /services/api/scanService.ts
+
 export async function getMyScanHistory(
   params: ScanHistoryParameters = {},
 ): Promise<ScanHistoryPagedResponse> {

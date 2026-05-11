@@ -28,11 +28,12 @@ export default function UserProfile() {
     const [hasMore, setHasMore] = useState(true);
     const [historyCount, setHistoryCount] = useState<number>(0);
     const [isLoadingCount, setIsLoadingCount] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const allergyCount = userAllergens.length;
 
-    // Only fetches the allergies that the user has selected
-useEffect(() => {
+    // Get allergys
+    useEffect(() => {
         if (!user) return;
 
         async function fetchAllAllergyData() {
@@ -43,7 +44,6 @@ useEffect(() => {
                     getMyCustomAllergies()
                 ]);
                 
-                // Map standard allergy
                 const mappedStandard: Allergen[] = (standardRes || []).map((a: any) => ({
                     id: a.allergyId || a.id, 
                     name: a.allergyName || a.name || "Unknown",
@@ -51,7 +51,6 @@ useEffect(() => {
                     isCustom: false
                 }));
 
-                // Map custom allergy
                 const mappedCustom: Allergen[] = (customRes || []).map((a: any) => ({
                     id: a.id,
                     name: a.name || "Custom Allergy",
@@ -59,9 +58,7 @@ useEffect(() => {
                     isCustom: true
                 }));
 
-                // combines the two lists and sets the state
                 setUserAllergens([...mappedStandard, ...mappedCustom]);
-
             } catch (error) {
                 console.error("Fejl ved hentning af allergidata:", error);
             } finally {
@@ -71,7 +68,7 @@ useEffect(() => {
         fetchAllAllergyData();
     }, [user]);
 
-    // fetch History stats
+    // Fetch stats
     useEffect(() => {
         if (!user) return;
         async function fetchHistoryStats() {
@@ -92,11 +89,17 @@ useEffect(() => {
         setUserAllergens(updated);
     };
 
-    // fetches the users scan history
-    const loadHistory = async (page: number) => {
+    /**
+     * fecth the history from the API based on page and search query
+     */
+    const loadHistory = async (page: number, query: string = "") => {
         try {
             setIsLoadingHistory(true);
-            const res = await getMyScanHistory({ currentPage: page, pageSize: 20 });
+            const res = await getMyScanHistory({ 
+                currentPage: page, 
+                pageSize: 20,
+                query: query 
+            });
 
             if (res && res.data) {
                 const mappedItems: ScanHistoryItem[] = res.data.map(item => ({
@@ -109,8 +112,10 @@ useEffect(() => {
                 }));
 
                 setHistoryItems(prev => page === 1 ? mappedItems : [...prev, ...mappedItems]);
-                setHistoryCount(res.totalCount ?? 0);
-                if (res.data.length < 20) setHasMore(false);
+                
+                if (!query) setHistoryCount(res.totalCount ?? 0);
+                
+                setHasMore(res.hasNextPage);
             }
         } catch (error) {
             console.error("Fejl ved hentning af historik:", error);
@@ -119,16 +124,24 @@ useEffect(() => {
         }
     };
 
-    // handles fetching more history items when the user scrolls to the bottom
+    /**
+     * Handle search from the userScanHistory component
+     */
+    const handleSearch = useCallback((text: string) => {
+        setSearchQuery(text);
+        setCurrentPage(1);
+        setHasMore(true);
+        loadHistory(1, text);
+    }, []);
+
     const fetchMoreHistory = useCallback(() => {
         if (!isLoadingHistory && hasMore) {
             const nextPage = currentPage + 1;
             setCurrentPage(nextPage);
-            loadHistory(nextPage);
+            loadHistory(nextPage, searchQuery);
         }
-    }, [isLoadingHistory, hasMore, currentPage]);
+    }, [isLoadingHistory, hasMore, currentPage, searchQuery]);
 
-    // Renders the main content based on the active view
     function renderContent() {
         if (activeView === "buttons") {
             const items = [
@@ -148,7 +161,7 @@ useEffect(() => {
                     value: String(historyCount),
                     label: t("History"),
                     onPress: () => {
-                        if (historyItems.length === 0) loadHistory(1);
+                        if (historyItems.length === 0) loadHistory(1, "");
                         setActiveView("history");
                     },
                     loading: isLoadingCount
@@ -195,6 +208,7 @@ useEffect(() => {
                 loading={isLoadingHistory}
                 errorText={null}
                 onLoadMore={fetchMoreHistory}
+                onSearch={handleSearch}
             />
         );
     }

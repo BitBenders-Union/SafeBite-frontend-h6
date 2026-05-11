@@ -36,11 +36,22 @@ export default function UserAllergyList({
     const [customAllergen, setCustomAllergen] = useState("");
     const [isActionLoading, setIsActionLoading] = useState(false);
 
-    const filteredAllergens = useMemo(() => {
-        return userAllergens.filter((item) =>
-            item.name.toLowerCase().includes(search.toLowerCase())
-        );
-    }, [userAllergens, search]);
+const filteredAllergens = useMemo(() => {
+    const searchTerms = search
+        .toLowerCase()
+        .split(',')
+        .map(term => term.trim())
+        .filter(term => term !== "");
+
+    if (searchTerms.length === 0) {
+        return userAllergens;
+    }
+
+    return userAllergens.filter((item) => {
+        const itemName = item.name.toLowerCase();
+        return searchTerms.some((term) => itemName.includes(term));
+    });
+}, [userAllergens, search]);
 
     // Handles removing an allergen
     async function handleRemove(allergy: Allergen) {
@@ -141,7 +152,7 @@ export default function UserAllergyList({
                     />
                 </View>
 
-                {/* Intern ScrollView med fast højde så den ikke stikker ud */}
+                {/* Intern ScrollView with fixed height to prevent overflow */}
                 <View className="max-h-64">
                     {loading ? (
                         <View className="items-center justify-center py-6">
