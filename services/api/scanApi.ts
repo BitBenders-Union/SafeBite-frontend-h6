@@ -1,4 +1,4 @@
-// /services/api/scanService.ts
+// /services/api/scanApi.ts
 import type {
   ScanHistoryParameters,
   ScanHistoryResponseDTO,

@@ -1,4 +1,12 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import type {
+    DetectedAllergy,
+    MatchedIngredient,
+    ScanHistoryParameters,
+    ScanHistoryResponseDTO
+} from "@/lib/types/scan";
+import { getMyScanHistory } from "@/services/api/scanApi";
+import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,13 +18,6 @@ import {
     useWindowDimensions
 } from "react-native";
 import { DefaultCard } from "../../../components/Shared/DefaultCard";
-import { getMyScanHistory } from "@/services/api/scanApi";
-import type { 
-    ScanHistoryResponseDTO, 
-    DetectedAllergy, 
-    MatchedIngredient, 
-    ScanHistoryParameters 
-} from "@/lib/types/scan";
 
 /**
  * Format dato to more readable format
@@ -36,14 +37,14 @@ function formatDate(dateString: string) {
  * I split the scan data into pages (chunks) for swipe viewing
  */
 function chunkData<T>(items: T[], itemsPerPage: number) {
-  const paginatedChunks: T[][] = [];
+    const paginatedChunks: T[][] = [];
 
-  for (let offset = 0; offset < items.length; offset += itemsPerPage) {
-    const page = items.slice(offset, offset + itemsPerPage);
-    paginatedChunks.push(page);
-  }
+    for (let offset = 0; offset < items.length; offset += itemsPerPage) {
+        const page = items.slice(offset, offset + itemsPerPage);
+        paginatedChunks.push(page);
+    }
 
-  return paginatedChunks;
+    return paginatedChunks;
 }
 
 export default function Home() {
@@ -58,45 +59,49 @@ export default function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-useEffect(() => {
-    async function fetchScans() {
-        try {
-            setIsLoading(true);
-            setError(null);
+    useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-            const baseParams: ScanHistoryParameters = {
-                currentPage: 1,
-                pageSize: 6,
-            };
+        async function fetchScans(signal?: AbortSignal) {            
+            try {
+                setIsLoading(true);
+                setError(null);
 
-            const [recentRes, allergyRes] = await Promise.all([
-                getMyScanHistory(baseParams),
-                getMyScanHistory({ ...baseParams, ContainsAllergies: true })
-            ]);
+                const baseParams: ScanHistoryParameters = {
+                    currentPage: 1,
+                    pageSize: 6,
+                };
 
-            // Her fikser vi fejlen: 
-            // recentRes.data er objektet fra din konsol, og list-arrayet ligger på recentRes.data.data
-            if (recentRes) {
-                const scanList = recentRes.data || [];
-                setScans(scanList);
-            } else {
+                const [recentRes, allergyRes] = await Promise.all([
+                    getMyScanHistory(baseParams, signal),
+                    getMyScanHistory({ ...baseParams, ContainsAllergies: true }, signal)
+                ]);
+
+                if (recentRes) {
+                    const scanList = recentRes.data || [];
+                    setScans(scanList);
+                } else {
+                    setError(t("scanLoadError"));
+                }
+
+                if (allergyRes) {
+                    const allergyList = allergyRes.data || [];
+                    setAllergenScans(allergyList);
+                }
+            } catch (err) {
+                if (axios.isCancel(err)) return;
+
+                console.error("Error loading home scans", err);
                 setError(t("scanLoadError"));
+            } finally {
+                setIsLoading(false);
             }
-
-            if (allergyRes) {
-                const allergyList = allergyRes.data || [];
-                setAllergenScans(allergyList);
-            }
-        } catch (err) {
-            console.error("Error loading home scans", err);
-            setError(t("scanLoadError"));
-        } finally {
-            setIsLoading(false);
         }
-    }
 
-    fetchScans();
-}, [t]);
+        fetchScans();
+        return () => { controller.abort() };        
+    }, [t]);
 
     const pagedAllScans = useMemo(() => chunkData(scans, 3), [scans]);
     const pagedAllergenScans = useMemo(() => chunkData(allergenScans, 3), [allergenScans]);
@@ -137,8 +142,8 @@ useEffect(() => {
     };
 
     return (
-        <ScrollView 
-            className="flex-1" 
+        <ScrollView
+            className="flex-1"
             contentContainerStyle={{ padding: 16, paddingBottom: 28 }}
             showsVerticalScrollIndicator={false}
         >
@@ -209,7 +214,7 @@ useEffect(() => {
                                 <View style={{ width: cardContentWidth }}>
                                     {item.map((scan, idx) => {
                                         const matchedIngredients = scan.detectedAllergies?.flatMap(
-                                            (da: DetectedAllergy) => 
+                                            (da: DetectedAllergy) =>
                                                 da.matchedIngredients.map((mi: MatchedIngredient) => mi.ingredientText)
                                         ) ?? [];
 
