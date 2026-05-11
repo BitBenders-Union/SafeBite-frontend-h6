@@ -37,12 +37,19 @@ export default function AdminDashboardSection() {
     });
 
     useEffect(() => {
-        loadUserCount();
-        loadAllergyCount();
-        loadScanCount();
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        loadUserCount(signal);
+        loadAllergyCount(signal);
+        loadScanCount(signal);
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
-    async function loadUserCount() {
+    async function loadUserCount(signal?: AbortSignal) {
         try {
             setUsers(prev => ({
                 ...prev,
@@ -50,7 +57,7 @@ export default function AdminDashboardSection() {
                 error: "",
             }));
 
-            const count = await getTotalUsers();
+            const count = await getTotalUsers(signal);
 
             setUsers({
                 value: count,
@@ -58,19 +65,18 @@ export default function AdminDashboardSection() {
                 error: "",
             });
 
-        } catch (error) {
-            setUsers({
-                value: undefined,
-                isLoading: false,
-                error:
-                    error instanceof Error
-                        ? error.message
-                        : "Failed to load user count.",
-            });
+        } catch (error: any) {
+            if (error.name !== "CanceledError" && error.name !== "AbortError") {
+                setUsers({
+                    value: undefined,
+                    isLoading: false,
+                    error: error.message || "Failed to load user count.",
+                });
+            }
         }
     }
 
-    async function loadAllergyCount() {
+    async function loadAllergyCount(signal?: AbortSignal) {
         try {
             setAllergies(prev => ({
                 ...prev,
@@ -78,7 +84,7 @@ export default function AdminDashboardSection() {
                 error: "",
             }));
 
-            const count = await getTotalAllergies();
+            const count = await getTotalAllergies(signal);
 
             setAllergies({
                 value: count,
@@ -86,19 +92,21 @@ export default function AdminDashboardSection() {
                 error: "",
             });
 
-        } catch (error) {
-            setAllergies({
-                value: undefined,
-                isLoading: false,
-                error:
-                    error instanceof Error
-                        ? error.message
-                        : "Failed to load allergy count.",
-            });
+        } catch (error: any) {
+            if (error.name !== "CanceledError" && error.name !== "AbortError") {
+                setAllergies({
+                    value: undefined,
+                    isLoading: false,
+                    error:
+                        error instanceof Error
+                            ? error.message
+                            : "Failed to load allergy count.",
+                });
+            }
         }
     }
 
-    async function loadScanCount() {
+    async function loadScanCount(signal?: AbortSignal) {
         try {
             setScans(prev => ({
                 ...prev,
@@ -106,7 +114,7 @@ export default function AdminDashboardSection() {
                 error: "",
             }));
 
-            const count = await getTotalScans();
+            const count = await getTotalScans(signal);
 
             setScans({
                 value: count,
@@ -114,15 +122,14 @@ export default function AdminDashboardSection() {
                 error: "",
             });
 
-        } catch (error) {
-            setScans({
-                value: undefined,
-                isLoading: false,
-                error:
-                    error instanceof Error
-                        ? error.message
-                        : "Failed to load scan count.",
-            });
+        } catch(error: any) {
+            if (error.name !== "CanceledError" && error.name !== "AbortError") {
+                setUsers({
+                    value: undefined,
+                    isLoading: false,
+                    error: error.message || "Failed to load user count.",
+                });
+            }
         }
     }
 

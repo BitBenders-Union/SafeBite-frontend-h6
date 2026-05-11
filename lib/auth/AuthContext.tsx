@@ -8,6 +8,7 @@ import {
 } from "@/lib/auth/tokenStorage";
 import { UserInfo } from "@/lib/types/user";
 import { getUserInfo, login, signUp as signUpApi } from "@/services/api/authApi";
+import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { SignupRequest } from "../types/auth";
 
@@ -33,7 +34,17 @@ export function AuthState({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<UserInfo | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    async function restoreSession() {
+    useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        restoreSession(signal);
+        return () => {
+            controller.abort();
+        };
+    }, []);
+
+    async function restoreSession(signal: AbortSignal) {
         const keepSignedIn = await getKeepSignedIn();
 
         if (!keepSignedIn) {
@@ -51,11 +62,13 @@ export function AuthState({ children }: { children: React.ReactNode }) {
                 return;
             }
 
-            const userInfo = await getUserInfo();
+            const userInfo = await getUserInfo(signal);
             setUser(userInfo);
 
 
         } catch (error) {
+            if ( axios.isCancel(error) ) return;
+
             await clearTokens();
             setUser(null);
         } finally {
@@ -80,12 +93,7 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             );
 
             const userInfo = await getUserInfo();
-            if (userInfo.email === "denpasdk++@gmail.com") {
-                userInfo.roles.push("admin");
-                console.log("Email: ", userInfo.email, " and roles: ", userInfo.roles);
-            }
-
-
+            
             setUser(userInfo);
 
         } catch (error) {
@@ -101,18 +109,6 @@ export function AuthState({ children }: { children: React.ReactNode }) {
         setUser(null);
     }
 
-    // async function signUp(signupData: SignupRequest)   {
-    //     try {
-    //         setIsLoading(true);
-    //         await signUp(signupData);
-    //     } catch (error) {
-    //         console.error("Signup error:", error);
-    //         throw error;
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }
-
     async function signUp(signupData: SignupRequest) {
         try {
             setIsLoading(true);
@@ -124,10 +120,6 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             setIsLoading(false);
         }
     }
-
-    useEffect(() => {
-        restoreSession();
-    }, []);
 
     return (
         <AuthContext.Provider

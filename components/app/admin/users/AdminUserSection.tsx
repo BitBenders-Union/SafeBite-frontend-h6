@@ -7,36 +7,45 @@ import React, { useEffect, useMemo, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 
-type PendingAction = "makeAdmin" | "removeAdmin" | "deactivate" | "activate";
+type ActionType = "makeAdmin" | "removeAdmin" | "deactivate" | "activate";
 
 export default function AdminUserSection() {
     const { theme } = useAppTheme();
 
-    const [userList, setUserList] = useState<UserList[]>([]);``
+    const [userList, setUserList] = useState<UserList[]>([]); ``
     const [searchText, setSearchText] = useState("");
-    const [actionError, setActionError] = useState("");
-    const [fetchError, setLoadError] = useState("");
+    const [Error, setError] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const [loading, setIsLoading] = useState(true);
 
     const [selectedUser, setSelectedUser] = useState<UserList | null>(null);
-    const [pendingAction, setPendingAction] = useState<PendingAction | null>(null);
+    const [selectedAction, setSelectedAction] = useState<ActionType | null>(null);
 
 
     useEffect(() => {
-        loadUsers();
+        const controller = new AbortController();
+        const signal = controller.signal;
+
+        loadUsers(signal);
+        
+        return () => {
+            controller.abort();
+        };
     }, []);
 
-    async function loadUsers() {
+    async function loadUsers(signal?: AbortSignal) {
         try {
-            setLoadError("");
+            setErrorMessage("");
             setIsLoading(true);
-            
-            const data = await getAllUsersAndRoles();
+
+            const data = await getAllUsersAndRoles(signal);
             setUserList(data);
         }
 
         catch (err: any) {
-            setLoadError(err.message || "Failed to load users.");
+            if (err.name === "CanceledError" || err.name === "AbortError") return;
+
+            setErrorMessage(err.message || "Failed to load users.");
         }
 
         finally {
@@ -54,31 +63,31 @@ export default function AdminUserSection() {
         );
     }, [userList, searchText]);
 
-    function openAction(user: UserList, action: PendingAction) {
-        setActionError("");
+    function showModal(user: UserList, action: ActionType) {
+        setError("");
         setSelectedUser(user);
-        setPendingAction(action);
+        setSelectedAction(action);
     }
 
-    function closeActionModal() {
+    function closeModal() {
         setSelectedUser(null);
-        setPendingAction(null);
-        setActionError("");
+        setSelectedAction(null);
+        setError("");
     }
 
-    async function confirmAction() {
-        if (!selectedUser || !pendingAction) return;
-        
+    async function onSave() {
+        if (!selectedUser || !selectedAction) return;
+
         const userrole: UserRole = {
             userID: selectedUser.id,
             roleName: "Admin"
         }
 
-        if (pendingAction === "makeAdmin") {
+        if (selectedAction === "makeAdmin") {
             const alreadyAdmin = selectedUser.roles.some((r) => r.roleName === "Admin");
 
             if (alreadyAdmin) {
-                setActionError("User already has admin role.");
+                setError("User already has admin role.");
                 return;
             }
 
@@ -86,78 +95,76 @@ export default function AdminUserSection() {
                 await setRole(userrole);
                 await loadUsers();
             }
-             catch (err) {
-                setActionError("Failed to assign admin role.");
+            catch (err) {
+                setError("Failed to assign admin role.");
             }
         };
 
-        if (pendingAction === "removeAdmin") {
+        if (selectedAction === "removeAdmin") {
 
             try {
                 await removeRole(userrole);
                 await loadUsers();
             }
-             catch (err) {
-                setActionError("Failed to remove admin role.");
+            catch (err) {
+                setError("Failed to remove admin role.");
             }
         }
 
-        if (pendingAction === "deactivate") {
+        if (selectedAction === "deactivate") {
             if (selectedUser.isActive === false) {
-                setActionError("User is already inactive.");
+                setError("User is already inactive.");
                 return;
             }
 
-            try
-            {
+            try {
                 await deactivateUser(selectedUser.id);
                 await loadUsers();
             }
 
             catch (err) {
-                setActionError("Failed to deactivate user.");
+                setError("Failed to deactivate user.");
             }
         }
 
-        if (pendingAction === "activate") {
-            try
-            {
+        if (selectedAction === "activate") {
+            try {
                 await activateUser(selectedUser.id);
                 await loadUsers();
             }
 
             catch (err) {
-                setActionError("Failed to activate user.");
+                setError("Failed to activate user.");
             }
         }
 
-        closeActionModal();
+        closeModal();
     }
 
     function getModalTitle() {
-        if (pendingAction === "makeAdmin") return "Give admin role";
-        if (pendingAction === "removeAdmin") return "Remove admin role";
-        if (pendingAction === "deactivate") return "Deactivate user";
-        if (pendingAction === "activate") return "Activate user";
+        if (selectedAction === "makeAdmin") return "Give admin role";
+        if (selectedAction === "removeAdmin") return "Remove admin role";
+        if (selectedAction === "deactivate") return "Deactivate user";
+        if (selectedAction === "activate") return "Activate user";
         return "Confirm action";
     }
 
     function getModalText() {
         if (!selectedUser) return "";
 
-        if (pendingAction === "makeAdmin") {
+        if (selectedAction === "makeAdmin") {
             return `Give admin role to ${selectedUser.email}?`;
         }
 
-        if (pendingAction === "removeAdmin") {
+        if (selectedAction === "removeAdmin") {
             return `Remove admin role from ${selectedUser.email}?`;
         }
 
-        if (pendingAction === "deactivate") {
+        if (selectedAction === "deactivate") {
             return `Deactivate ${selectedUser.email}?`;
         }
 
-        if (pendingAction === "activate") {
+        if (selectedAction === "activate") {
             return `Activate ${selectedUser.email}?`;
         }
 
@@ -190,16 +197,16 @@ export default function AdminUserSection() {
                     <AdminUserRow
                         user={item}
                         onMakeAdmin={(pickedUser) =>
-                            openAction(pickedUser, "makeAdmin")
+                            showModal(pickedUser, "makeAdmin")
                         }
                         onRemoveAdmin={(pickedUser) =>
-                            openAction(pickedUser, "removeAdmin")
+                            showModal(pickedUser, "removeAdmin")
                         }
                         onDeactivate={(pickedUser) =>
-                            openAction(pickedUser, "deactivate")
+                            showModal(pickedUser, "deactivate")
                         }
                         onActivate={(pickedUser) =>
-                            openAction(pickedUser, "activate")
+                            showModal(pickedUser, "activate")
                         }
                     />
                 )}
@@ -215,12 +222,12 @@ export default function AdminUserSection() {
             />
 
             <AdminUserConfirmModal
-                visible={!!selectedUser && !!pendingAction}
+                visible={!!selectedUser && !!selectedAction}
                 title={getModalTitle()}
                 message={getModalText()}
-                error={actionError}
-                onCancel={closeActionModal}
-                onConfirm={confirmAction}
+                error={Error}
+                onCancel={closeModal}
+                onConfirm={onSave}
             />
         </>
     );

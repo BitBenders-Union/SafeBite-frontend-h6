@@ -2,16 +2,16 @@
 import { AllergyRow } from "@/components/app/mobil/allergy/AllergyRow";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import {
-    Allergy,
-    AllergyUser
+    Allergy
 } from "@/lib/types/allergy";
 import {
     addUserAllergy,
     getAllergies,
-    getMyAllergies,
+    getMyAllergyRelations,
     removeUserAllergy,
 } from "@/services/api/allergyApi";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -35,19 +35,16 @@ export default function AllergyListView() {
     const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set());
 
     useEffect(() => {
+        const controller = new AbortController();
+        const signal = controller.signal;
+
         async function loadAllergies() {
             try {
                 setLoadError("");
                 setIsLoading(true);
 
-                const systemAllergies = await getAllergies();
-                let userAllergies: AllergyUser[] = [];
-
-                try {
-                    userAllergies = await getMyAllergies();
-                } catch (error) {
-                    console.error("Failed to load my allergies:", error);
-                }
+                const systemAllergies = await getAllergies(signal);
+                const userAllergies = await getMyAllergyRelations(signal);
 
                 const userAllergyIds = new Set(
                     userAllergies.map((item) => item.allergyId)
@@ -55,15 +52,22 @@ export default function AllergyListView() {
 
                 setAllergyList(systemAllergies);
                 setAddedAllergyIds(userAllergyIds);
+
             } catch (error) {
+                if (axios.isCancel(error)) return;
+                
                 console.error("Failed to load allergies:", error);
-                setLoadError("Failed to load allergies.");
+                setLoadError("Could not load allergy data.");
             } finally {
                 setIsLoading(false);
             }
         }
 
         loadAllergies();
+
+        return () => {
+            controller.abort();
+        };
     }, []);
 
     // Filter allergy list based on search text
@@ -180,7 +184,7 @@ export default function AllergyListView() {
                     const isToggling = loadingIds.has(item.id);
 
                     return (
-                        <AllergyRow 
+                        <AllergyRow
                             allergy={item}
                             isAdded={added}
                             onToggle={toggleAllergy}

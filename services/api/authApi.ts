@@ -9,42 +9,43 @@ import {
 import { UserInfo } from "@/lib/types/user";
 import { apiClient } from "./apiClient";
 
-export async function login(loginData: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<LoginResponse>("auth/login", loginData);
+export async function login(loginData: LoginRequest, signal?: AbortSignal): Promise<LoginResponse> {
+    const response = await apiClient.post<LoginResponse>("auth/login", loginData, { signal });
     return response.data;
 }
 
-export async function logout(): Promise<void> {
-    await apiClient.post("/logout");
+export async function logout(signal?: AbortSignal): Promise<void> {
+    await apiClient.post("/logout", { signal });
 }
 
-export async function refreshToken(refreshToken: string): Promise<RefreshResponse> {
+export async function refreshToken(refreshToken: string, signal?: AbortSignal): Promise<RefreshResponse> {
     const response = await apiClient.post<RefreshResponse>("auth/refresh", {
         refreshToken,
-    });
+    }, { signal });
     return response.data;
 }
 
-export async function getUserInfo(): Promise<UserInfo> {
-    const response = await apiClient.get<UserInfo>("/auth/manage/info");
+export async function getUserInfo(signal?: AbortSignal): Promise<UserInfo> {
+    const response = await apiClient.get<UserInfo>("/auth/manage/info", { signal });
     return response.data;
 }
 
-export async function forgotPassword(email: string) {
+export async function forgotPassword(email: string, signal?: AbortSignal) {
     const response = await apiClient.post("auth/forgotPassword", {
         email,
-    });
+    }, { signal });
     return response.data;
 }
 
 export async function resetPassword(
-    resetPasswordData: ResetPasswordRequest
+    resetPasswordData: ResetPasswordRequest,
+    signal?: AbortSignal
 ) {
-    const response = await apiClient.post("/auth/resetPassword", resetPasswordData);
+    const response = await apiClient.post("/auth/resetPassword", resetPasswordData, { signal });
     return response.data;
 }
 
-export async function signUp(signupData: SignupRequest) {
-    const response = await apiClient.post("/auth/register", signupData);
+export async function signUp(signupData: SignupRequest, signal?: AbortSignal) {
+    const response = await apiClient.post("/auth/register", signupData, { signal });
     return response.data;
 } 

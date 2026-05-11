@@ -1,5 +1,4 @@
 // /lib/theme/themeStorage.ts
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export type ThemeMode = "device" | "light" | "dark";
