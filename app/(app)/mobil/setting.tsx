@@ -8,7 +8,7 @@ import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { LanguageSettings } from "../../../components/app/mobil/settings/LanguageSettings";
 import { LogoutSettings } from "../../../components/app/mobil/settings/LogoutSettings";
 import { ThemeSettings } from "../../../components/app/mobil/settings/ThemeSettings";
@@ -19,7 +19,7 @@ export default function Settings() {
     const { t } = useTranslation("settings");
 
     return (
-        <View className="flex-1 px-4 pt-4 gap-4">   
+        <ScrollView className="flex-1 px-4 pt-4 gap-4">   
             <DefaultCard>
                 <LanguageSettings />
 
@@ -36,6 +36,6 @@ export default function Settings() {
                 </View>
                 
             </DefaultCard>
-        </View>
+        </ScrollView>
     );
 }
