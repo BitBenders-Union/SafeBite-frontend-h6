@@ -15,7 +15,6 @@ import { Checkbox } from "expo-checkbox";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Alert,
     Text,
     TextInput,
     View
@@ -23,12 +22,12 @@ import {
 import { TosModal } from "../Shared/TosModal";
 
 type Props = {
-    onRequestLogin: () => void;
+    onSignUpResult:(success?: boolean) => void;
     disabledLinks?: boolean;
 };
 
 export function SignupCard({
-    onRequestLogin,
+    onSignUpResult,
     disabledLinks = false,
 }: Props) {
 
@@ -107,11 +106,10 @@ export function SignupCard({
 
             await signUp(signupData);
 
-            Alert.alert(t("accountCreatedSuccessfully"));
-            onRequestLogin();
+            onSignUpResult(true);
 
         } catch (error: any) {
-            Alert.alert(t("error"), error.message || t("signupFailed"));
+            onSignUpResult(false);
         } finally {
             setIsLoading(false);
         }
@@ -246,7 +244,7 @@ export function SignupCard({
                             ? theme.linkTextDisabled
                             : theme.linkText,
                     }}
-                    onPress={isFormDisabled ? undefined : onRequestLogin}
+                    onPress={isFormDisabled ? undefined : () => onSignUpResult(false)}
                 >
                     {t("loginButton") || "Log ind"}
                 </Text>
