@@ -2,9 +2,11 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function AdminQuickLinks() {
+    const { t } = useTranslation("adminquicklinks");
     const { theme } = useAppTheme();
     const router = useRouter();
 
@@ -19,7 +21,7 @@ export default function AdminQuickLinks() {
                     className="text-center font-semibold"
                     style={{ color: theme.active }}
                 >
-                    Manage Users
+                    {t("links.manageUsers")}
                 </Text>
             </TouchableOpacity>
 
@@ -32,7 +34,7 @@ export default function AdminQuickLinks() {
                     className="text-center font-semibold"
                     style={{ color: theme.active }}
                 >
-                    Manage Allergies
+                    {t("links.manageAllergies")}
                 </Text>
             </TouchableOpacity>
         </View>

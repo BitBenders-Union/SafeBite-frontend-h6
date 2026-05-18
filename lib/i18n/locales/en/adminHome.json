@@ -1,0 +1,10 @@
+{
+  "dashboard": {
+    "title": "Admin Dashboard"
+  },
+  "errors": {
+    "failedToLoadUsers": "Failed to load user count.",
+    "failedToLoadAllergies": "Failed to load allergy count.",
+    "failedToLoadScans": "Failed to load scan count."
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "stats": {
+    "error": "Error",
+    "registeredUsers": "Registered Users",
+    "totalAllergies": "Total Allergies",
+    "scansPerformed": "Scans Performed"
+  }
+}

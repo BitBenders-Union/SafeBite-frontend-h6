@@ -3,8 +3,8 @@ import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
-
 
 type StatState = {
     value: number | undefined;
@@ -18,14 +18,13 @@ type Props = {
     scans: StatState;
 };
 
-
-
 export default function AdminStats({ users, allergies, scans }: Props) {
+    const { t } = useTranslation("adminstats");
     const { theme } = useAppTheme();
-
 
     return (
         <View className="mb-6 flex-row gap-3">
+            {/* Users Card */}
             <DefaultCard className="flex-1 items-center py-5">
                 <View
                     className="mb-2 h-10 w-10 items-center justify-center rounded-full"
@@ -39,7 +38,6 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-2xl font-bold"
                         style={{ color: theme.active }}
                     >
-                        {/* you could create a loading animation here - skeleton or spinner - jonas */}
                         ...
                     </Text>
                 ) : users.error ? (
@@ -47,7 +45,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        Error
+                        {t("stats.error")}
                     </Text>
                 ) : (
                     <Text
@@ -59,10 +57,11 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    Registered Users
+                    {t("stats.registeredUsers")}
                 </Text>
             </DefaultCard>
 
+            {/* Allergies Card */}
             <DefaultCard className="flex-1 items-center py-5">
                 <View
                     className="mb-2 h-10 w-10 items-center justify-center rounded-full"
@@ -76,7 +75,6 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-2xl font-bold"
                         style={{ color: theme.active }}
                     >
-                        {/* you could create a loading animation here - skeleton or spinner - jonas */}
                         ...
                     </Text>
                 ) : allergies.error ? (
@@ -84,7 +82,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        Error
+                        {t("stats.error")}
                     </Text>
                 ) : (
                     <Text
@@ -96,10 +94,11 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    Total Allergies
+                    {t("stats.totalAllergies")}
                 </Text>
             </DefaultCard>
 
+            {/* Scans Card */}
             <DefaultCard className="flex-1 items-center py-5">
                 <View
                     className="mb-2 h-10 w-10 items-center justify-center rounded-full"
@@ -113,7 +112,6 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-2xl font-bold"
                         style={{ color: theme.active }}
                     >
-                        {/* you could create a loading animation here - skeleton or spinner - jonas */}
                         ... 
                     </Text>
                 ) : scans.error ? (
@@ -121,7 +119,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        Error
+                        {t("stats.error")}
                     </Text>
                 ) : (
                     <Text
@@ -133,7 +131,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    Scans Performed
+                    {t("stats.scansPerformed")}
                 </Text>
             </DefaultCard>
         </View>
