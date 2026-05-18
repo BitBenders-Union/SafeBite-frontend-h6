@@ -29,10 +29,12 @@ import enSettings from "./locales/en/setting.json";
 // Admin
 import daadminHome from "./locales/da/adminHome.json";
 import daadminQuickLinks from "./locales/da/adminQuickLinks.json";
+import daadminSidebar from "./locales/da/adminSidebar.json";
 import daadminStats from "./locales/da/adminStats.json";
 
 import enadminHome from "./locales/en/adminHome.json";
 import enadminQuickLinks from "./locales/en/adminQuickLinks.json";
+import enadminSidebar from "./locales/en/adminSidebar.json";
 import enadminStats from "./locales/en/adminStats.json";
 
 export type AppLanguage = "da" | "en";
@@ -51,6 +53,7 @@ const languageResources = {
         adminhome: daadminHome,
         adminquicklinks: daadminQuickLinks,
         adminstats: daadminStats,
+        adminsidebar: daadminSidebar,
     },
     en: {
         common: enCommon,
@@ -65,6 +68,7 @@ const languageResources = {
         adminhome: enadminHome,
         adminquicklinks: enadminQuickLinks,
         adminstats: enadminStats,
+        adminsidebar: enadminSidebar,
     },
 };
 
