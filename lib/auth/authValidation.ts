@@ -2,7 +2,7 @@
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-type SignupValidationErrors = {
+export type SignupValidationErrors = {
     emailError: string;
     passwordError: string;
     confirmPasswordError: string;
@@ -13,38 +13,68 @@ type LoginValidationErrors = {
     passwordError: string;
 };
 
+export function validateEmail(email: string): string {
+    if (!email.trim()) {
+        return "inputEmailError";
+    }
+
+    if (!emailRegex.test(email)) {
+        return "inputValidEmailError";
+    }
+
+    return "";
+}
+
+export function isPasswordStrong(password: string): boolean {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasDigit = /[0-9]/.test(password);
+    const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+    const isLongEnough = password.length >= 8;
+
+    return hasUpperCase && hasLowerCase && hasDigit && hasSpecialChar && isLongEnough;
+}
+
+export function validatePassword(password: string): string {
+    if (!password.trim()) {
+        return "inputPasswordError";
+    }
+
+    if (!isPasswordStrong(password)) {
+        return "inputPasswordRulesError";
+    }
+
+    return "";
+}
+
+export function validateConfirmPassword(
+    password: string,
+    confirmPassword: string
+): string {
+    if (!confirmPassword.trim()) {
+        return "inputConfirmPasswordError";
+    }
+
+    if (confirmPassword !== password) {
+        return "passwordsDoNotMatchError";
+    }
+
+    return "";
+}
+
 export function validateSignupForm(
     email: string,
     password: string,
     confirmPassword: string
 ): SignupValidationErrors {
-    const errors: SignupValidationErrors = {    
-        emailError: "",
-        passwordError: "",
-        confirmPasswordError: "",
+    return {
+        emailError: validateEmail(email),
+        passwordError: validatePassword(password),
+        confirmPasswordError: validateConfirmPassword(password, confirmPassword),
     };
-
-
-    if (!email.trim()) {
-        errors.emailError = "inputEmailError";
-    } else if (!emailRegex.test(email)) {
-        errors.emailError = "inputValidEmailError";
-    }
-
-    if (!password.trim()) {
-        errors.passwordError = "inputPasswordError";
-    }
-
-    if (!confirmPassword.trim()) {
-        errors.confirmPasswordError = "inputConfirmPasswordError";
-    } else if (confirmPassword !== password) {
-        errors.confirmPasswordError = "inputConfirmPasswordError";
-    }
-
-    return errors;
 }
 
-export function hasSignupErrors(errors: SignupValidationErrors) {
+export function hasSignupErrors(errors: SignupValidationErrors): boolean {
     return (
         !!errors.emailError ||
         !!errors.passwordError ||
@@ -65,11 +95,7 @@ export function validateLoginForm(
 ): LoginValidationErrors {
     const errors = createEmptyLoginErrors();
 
-    if (!email.trim()) {
-        errors.emailError = "inputEmailError";
-    } else if (!emailRegex.test(email)) {
-        errors.emailError = "inputValidEmailError";
-    }
+    errors.emailError = validateEmail(email);
 
     if (!password.trim()) {
         errors.passwordError = "inputPasswordError";
@@ -78,6 +104,6 @@ export function validateLoginForm(
     return errors;
 }
 
-export function hasLoginErrors(errors: LoginValidationErrors) {
+export function hasLoginErrors(errors: LoginValidationErrors): boolean {
     return !!errors.emailError || !!errors.passwordError;
 }

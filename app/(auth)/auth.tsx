@@ -1,42 +1,69 @@
-// app/(auth)/auth.tsx
+// /app/(auth)/auth.tsx
 import { LoginCard } from "@/components/auth/LoginCard";
 import { SignupCard } from "@/components/auth/SignupCard";
+import { useAppTheme } from "@/lib/theme/ThemeProvider";
 import React, { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     Animated,
     Easing,
     KeyboardAvoidingView,
     Platform,
     ScrollView,
-    View,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+let signUpResultBackup: boolean | null = null;
+
 export default function AuthScreen() {
-    const [activeForm, setActiveForm] = useState<"login" | "signup">("login");
+    const { t } = useTranslation("auth");
+    const { theme } = useAppTheme();
+
+    const [isLogin, setIsLogin] = useState(true);
+    const [signUpResult, setSignUpResult] = useState<boolean | undefined>(undefined);
 
     const loginFade = useRef(new Animated.Value(1)).current;
     const signupFade = useRef(new Animated.Value(0)).current;
 
-    function switchForm(nextForm: "login" | "signup") {
-        const showLogin = nextForm === "login";
-
-        setActiveForm(nextForm);
-
+    const runAnimation = (toLogin: boolean) => {
         Animated.parallel([
             Animated.timing(loginFade, {
-                toValue: showLogin ? 1 : 0,
+                toValue: toLogin ? 1 : 0,
                 duration: 220,
                 easing: Easing.out(Easing.ease),
                 useNativeDriver: Platform.OS !== "web",
             }),
             Animated.timing(signupFade, {
-                toValue: showLogin ? 0 : 1,
+                toValue: toLogin ? 0 : 1,
                 duration: 220,
                 easing: Easing.out(Easing.ease),
                 useNativeDriver: Platform.OS !== "web",
             }),
         ]).start();
+    };
+
+    function toggleAuthMode(isSuccess?: boolean) {
+
+        if (isSuccess === true) {
+            signUpResultBackup = true;
+            setSignUpResult(true);
+            setIsLogin(true);
+            runAnimation(true);
+        }
+        else if (isSuccess === false) {
+            signUpResultBackup = false;
+            setSignUpResult(false);
+            setIsLogin(true);
+            runAnimation(true);
+        }
+        else {
+            signUpResultBackup = null;
+            setSignUpResult(undefined);
+            const nextMode = !isLogin;
+            setIsLogin(nextMode);
+            runAnimation(nextMode);
+        }
     }
 
     function makeCardStyle(animValue: Animated.Value) {
@@ -76,57 +103,40 @@ export default function AuthScreen() {
                         <View className="w-full max-w-sm">
                             <View className="relative">
                                 <Animated.View
-                                    pointerEvents={activeForm === "login" ? "auto" : "none"}
+                                    pointerEvents={isLogin ? "auto" : "none"}
                                     style={[
                                         {
-                                            position: "absolute",
                                             width: "100%",
-                                            zIndex: activeForm === "login" ? 2 : 1,
+                                            zIndex: isLogin ? 2 : 1,
                                         },
                                         loginStyle,
                                     ]}
                                 >
                                     <LoginCard
-                                        onRequestSignup={() => switchForm("signup")}
+                                        key="stable-login-card"
+                                        onToggleAuth={() => toggleAuthMode()}
                                         disabledLinks={false}
+                                        signUpResult={signUpResult !== undefined ? signUpResult : (signUpResultBackup ?? undefined)}
                                     />
                                 </Animated.View>
 
                                 <Animated.View
-                                    pointerEvents={activeForm === "signup" ? "auto" : "none"}
+                                    pointerEvents={!isLogin ? "auto" : "none"}
                                     style={[
                                         {
                                             position: "absolute",
+                                            top: 0,
                                             width: "100%",
-                                            zIndex: activeForm === "signup" ? 2 : 1,
+                                            zIndex: !isLogin ? 2 : 1,
                                         },
                                         signupStyle,
                                     ]}
                                 >
                                     <SignupCard
-                                        onRequestLogin={() => switchForm("login")}
+                                        onSignUpResult={toggleAuthMode}
                                         disabledLinks={false}
                                     />
                                 </Animated.View>
-
-                                <View
-                                    style={{
-                                        opacity: 0,
-                                        pointerEvents: "none",
-                                    }}
-                                >
-                                    {activeForm === "login" ? (
-                                        <LoginCard
-                                            onRequestSignup={() => {}}
-                                            disabledLinks={true}
-                                        />
-                                    ) : (
-                                        <SignupCard
-                                            onRequestLogin={() => {}}
-                                            disabledLinks={true}
-                                        />
-                                    )}
-                                </View>
                             </View>
                         </View>
                     </View>

@@ -6,11 +6,11 @@ import {
     getAccessToken,
     saveTokens,
 } from "@/lib/auth/tokenStorage";
+import { SignupRequest } from "@/lib/types/auth";
 import { UserInfo } from "@/lib/types/user";
 import { getUserInfo, login, signUp as signUpApi } from "@/services/api/authApi";
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { SignupRequest } from "../types/auth";
 
 type LoginData = {
     email: string;
@@ -25,7 +25,7 @@ type AuthContextType = {
     isLoading: boolean;
     signIn: (loginData: LoginData) => Promise<void>;
     signOut: () => Promise<void>;
-    signUp: (signupData: SignupRequest) => Promise<void>;
+    signUp: (signupData: SignupRequest) => Promise<{ success: boolean } | void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -114,7 +114,6 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             setIsLoading(true);
             await signUpApi(signupData);
         } catch (error) {
-            console.error("Signup error:", error);
             throw error;
         } finally {
             setIsLoading(false);

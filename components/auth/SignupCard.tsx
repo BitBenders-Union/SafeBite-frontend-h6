@@ -1,42 +1,43 @@
+// /components/auth/SignupCard.tsx
 import { AuthCard } from "@/components/Shared/AuthCard";
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
 import { useAuth } from "@/lib/auth/AuthContext";
-import { hasSignupErrors, validateSignupForm } from "@/lib/auth/authValidation";
+import {
+    hasSignupErrors,
+    validateConfirmPassword,
+    validateEmail,
+    validatePassword,
+    validateSignupForm,
+} from "@/lib/auth/authValidation";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { SignupRequest } from "@/lib/types/auth";
 import { Checkbox } from "expo-checkbox";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-    Alert,
     Text,
     TextInput,
     View
 } from "react-native";
 import { TosModal } from "../Shared/TosModal";
 
-
 type Props = {
-    onRequestLogin: () => void;
+    onSignUpResult:(success?: boolean) => void;
     disabledLinks?: boolean;
 };
 
-
-
 export function SignupCard({
-    onRequestLogin,
+    onSignUpResult,
     disabledLinks = false,
 }: Props) {
 
     const { theme } = useAppTheme();
     const { t } = useTranslation("auth");
-
     const { signUp } = useAuth();
-   
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-
 
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
@@ -44,21 +45,44 @@ export function SignupCard({
 
     const [hasAcceptedTos, setHasAcceptedTos] = useState(false);
     const [showTosModal, setShowTosModal] = useState(false);
-    const [tosError, setTosError] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
 
-    const isDisabled = isLoading || disabledLinks;
+    const isFormDisabled = isLoading || disabledLinks;
 
-    async function handleSignup() {
+    const emailIsValid = !validateEmail(email);
+    const passwordIsValid = !validatePassword(password);
+    const confirmPasswordIsValid = !validateConfirmPassword(password, confirmPassword);
 
-        if (isDisabled) return;
+    const isSignupDisabled =
+        isFormDisabled ||
+        !emailIsValid ||
+        !passwordIsValid ||
+        !confirmPasswordIsValid ||
+        !hasAcceptedTos;
 
-      
-        setEmailError("");
-        setPasswordError("");
-        setConfirmPasswordError("");
-        setTosError("");
+    function checkEmail() {
+        const error = validateEmail(email);
+        setEmailError(error ? t(error) : "");
+    }
+
+    function checkPassword() {
+        const error = validatePassword(password);
+        setPasswordError(error ? t(error) : "");
+
+        if (confirmPassword) {
+            const confirmError = validateConfirmPassword(password, confirmPassword);
+            setConfirmPasswordError(confirmError ? t(confirmError) : "");
+        }
+    }
+
+    function checkConfirmPassword() {
+        const error = validateConfirmPassword(password, confirmPassword);
+        setConfirmPasswordError(error ? t(error) : "");
+    }
+
+    async function signupUser() {
+        if (isSignupDisabled) return;
 
         const errors = validateSignupForm(email, password, confirmPassword);
 
@@ -72,13 +96,7 @@ export function SignupCard({
             return;
         }
 
-        if (!hasAcceptedTos) {
-            setTosError(t("acceptDisclaimerError"));
-            return;
-        }
-
         try {
-
             setIsLoading(true);
 
             const signupData: SignupRequest = {
@@ -88,86 +106,33 @@ export function SignupCard({
 
             await signUp(signupData);
 
-            Alert.alert(t("AccountCreatedSuccessfully"));
-            onRequestLogin();
+            onSignUpResult(true);
 
         } catch (error: any) {
-
-            Alert.alert(t("Error"), error.message || t("SignupFailed"));
-
+            onSignUpResult(false);
         } finally {
-
             setIsLoading(false);
-
         }
     }
 
     return (
         <AuthCard>
             <View className="mb-6 items-center justify-center">
-                <Text className="text-xl font-semibold"
-                    style={{ color: theme.text }}>
+                <Text
+                    className="text-xl font-semibold"
+                    style={{ color: theme.text }}
+                >
                     {t("signupTitle")}
                 </Text>
 
-                <Text className="mt-1 text-center text-sm"
-                    style={{ color: theme.textMuted }}>
+                <Text
+                    className="mt-1 text-center text-sm"
+                    style={{ color: theme.textMuted }}
+                >
                     {t("signupSubtitle")}
                 </Text>
             </View>
 
-            {/* First/last name row */}
-            {/* <View className="flex-row gap-3 mb-4  ">
-                <View className="flex-1">
-                    <TextInput
-                        value={firstName}
-                        onChangeText={(text) => {
-                            setFirstName(text);
-                            if (firstNameError) setFirstNameError("");
-                        }}
-                        editable={!disabledLinks}
-                        placeholder={t("firstNamePlaceholder") || "Fornavn"}
-                        placeholderTextColor="#6b7280"
-                        className={`border rounded-xl px-3 py-3 text-base `}
-                        style={{
-                            backgroundColor: theme.inputBg,
-                            color: theme.text,
-                            borderColor: firstNameError ? theme.dangerBorder : theme.inputBorder,
-                        }}
-                    />
-                    <View className="min-h-[18px] mt-1">
-                        {firstNameError ? (
-                            <Text className="text-xs"
-                                style={{ color: theme.dangerText }}>{firstNameError}</Text>
-                        ) : null}
-                    </View>
-                </View>
-                <View className="flex-1">
-                    <TextInput
-                        value={lastName}
-                        onChangeText={(text) => {
-                            setLastName(text);
-                            if (lastNameError) setLastNameError("");
-                        }}
-                        editable={!disabledLinks}
-                        placeholder={t("lastNamePlaceholder") || "Efternavn"}
-                        placeholderTextColor="#6b7280"
-                        className={`border rounded-xl px-3 py-3 text-base `}
-                        style={{
-                            backgroundColor: theme.inputBg,
-                            color: theme.text,
-                            borderColor: lastNameError ? theme.dangerBorder : theme.inputBorder,
-                        }}
-                    />
-                    <View className="min-h-[18px] mt-1">
-                        {lastNameError ? (
-                            <Text className="text-xs" style={{ color: theme.dangerText }} >{lastNameError}</Text>
-                        ) : null}
-                    </View>
-                </View>
-            </View> */}
-
-            {/* Email */}
             <View className="mb-4">
                 <TextInput
                     value={email}
@@ -175,26 +140,32 @@ export function SignupCard({
                         setEmail(text);
                         if (emailError) setEmailError("");
                     }}
-                    editable={!disabledLinks}
+                    onBlur={checkEmail}
+                    editable={!isFormDisabled}
                     placeholder={t("emailPlaceholder") || "Email"}
                     placeholderTextColor="#6b7280"
                     keyboardType="email-address"
                     autoCapitalize="none"
-                    className={`border rounded-xl px-3 py-3 text-base`}
+                    className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
                         color: theme.text,
                         borderColor: emailError ? theme.dangerBorder : theme.inputBorder,
                     }}
                 />
+
                 <View className="min-h-[18px] mt-1 mb-1">
                     {emailError ? (
-                        <Text className="text-xs" style={{ color: theme.dangerText }}>{emailError}</Text>
+                        <Text
+                            className="text-xs"
+                            style={{ color: theme.dangerText }}
+                        >
+                            {emailError}
+                        </Text>
                     ) : null}
                 </View>
             </View>
 
-            {/* Password */}
             <View className="mb-2">
                 <TextInput
                     value={password}
@@ -202,30 +173,31 @@ export function SignupCard({
                         setPassword(text);
                         if (passwordError) setPasswordError("");
                     }}
-                    editable={!disabledLinks}
+                    onBlur={checkPassword}
+                    editable={!isFormDisabled}
                     placeholder={t("passwordPlaceholder") || "Password"}
                     placeholderTextColor="#6b7280"
                     secureTextEntry
-                    className={`border rounded-xl px-3 py-3 text-base `}
+                    className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
                         color: theme.text,
                         borderColor: passwordError ? theme.dangerBorder : theme.inputBorder,
                     }}
-
                 />
+
                 <View className="min-h-[18px] mt-1 mb-1">
                     {passwordError ? (
-                        <Text className="text-xs" style={{ color: theme.dangerText }}>
+                        <Text
+                            className="text-xs"
+                            style={{ color: theme.dangerText }}
+                        >
                             {passwordError}
                         </Text>
-                    ) : (
-                        <Text className="text-transparent text-xs"></Text>
-                    )}
+                    ) : null}
                 </View>
             </View>
 
-            {/* Confirm Password */}
             <View className="mb-4">
                 <TextInput
                     value={confirmPassword}
@@ -233,48 +205,59 @@ export function SignupCard({
                         setConfirmPassword(text);
                         if (confirmPasswordError) setConfirmPasswordError("");
                     }}
-                    editable={!disabledLinks}
+                    onBlur={checkConfirmPassword}
+                    editable={!isFormDisabled}
                     placeholder={t("confirmPasswordPlaceholder") || "Bekræft adgangskode"}
                     placeholderTextColor="#6b7280"
                     secureTextEntry
-                    className={`border rounded-xl px-3 py-3 text-base `}
+                    className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
                         color: theme.text,
-                        borderColor: confirmPasswordError ? theme.dangerBorder : theme.inputBorder,
+                        borderColor: confirmPasswordError
+                            ? theme.dangerBorder
+                            : theme.inputBorder,
                     }}
                 />
+
                 <View className="min-h-[18px] mt-1 mb-1">
                     {confirmPasswordError ? (
-                        <Text className="text-xs" style={{ color: theme.dangerText }}>
+                        <Text
+                            className="text-xs"
+                            style={{ color: theme.dangerText }}
+                        >
                             {confirmPasswordError}
                         </Text>
                     ) : null}
                 </View>
             </View>
 
-            {/* Already have account */}
-            <Text className="text-center mb-4 text-sm" style={{ color: theme.textMuted }}>
+            <Text
+                className="text-center mb-4 text-sm"
+                style={{ color: theme.textMuted }}
+            >
                 {t("alreadyHaveUser")}{" "}
                 <Text
                     className="font-semibold"
-                    style={{ color: isDisabled ? theme.linkTextDisabled : theme.linkText }}
-                    onPress={isDisabled ? undefined : onRequestLogin}
+                    style={{
+                        color: isFormDisabled
+                            ? theme.linkTextDisabled
+                            : theme.linkText,
+                    }}
+                    onPress={isFormDisabled ? undefined : () => onSignUpResult(false)}
                 >
                     {t("loginButton") || "Log ind"}
                 </Text>
             </Text>
 
-            {/* Tos */}
             <View className="mb-4">
                 <View className="flex-row items-start">
                     <Checkbox
                         value={hasAcceptedTos}
                         onValueChange={(value) => {
                             setHasAcceptedTos(value);
-                            if (tosError) setTosError("");
                         }}
-                        disabled={isDisabled}
+                        disabled={isFormDisabled}
                         style={{ marginTop: 2 }}
                     />
 
@@ -286,32 +269,29 @@ export function SignupCard({
                             {t("acceptDisclaimerPrefix")}{" "}
                             <Text
                                 className="font-semibold"
-                                style={{ color: isDisabled ? theme.textMuted : theme.linkText }}
-                                onPress={isDisabled ? undefined : () => setShowTosModal(true)}
+                                style={{
+                                    color: isFormDisabled
+                                        ? theme.textMuted
+                                        : theme.linkText,
+                                }}
+                                onPress={
+                                    isFormDisabled
+                                        ? undefined
+                                        : () => setShowTosModal(true)
+                                }
                             >
                                 {t("acceptDisclaimerLink")}
                             </Text>
                         </Text>
                     </View>
                 </View>
-
-                <View className="min-h-[18px] mt-1">
-                    {tosError ? (
-                        <Text
-                            className="text-xs"
-                            style={{ color: theme.dangerText }}
-                        >
-                            {tosError}
-                        </Text>
-                    ) : null}
-                </View>
             </View>
 
             <PrimaryButton
                 label={t("signupButton")}
-                onPress={handleSignup}
+                onPress={signupUser}
                 loading={isLoading}
-                disabled={isDisabled}
+                disabled={isSignupDisabled}
             />
 
             <TosModal
@@ -320,10 +300,8 @@ export function SignupCard({
                 onAccept={() => {
                     setHasAcceptedTos(true);
                     setShowTosModal(false);
-                    if (tosError) setTosError("");
                 }}
             />
-
         </AuthCard>
     );
 }

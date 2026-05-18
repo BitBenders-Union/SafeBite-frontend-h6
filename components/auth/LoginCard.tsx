@@ -1,3 +1,4 @@
+// /components/auth/LoginCard.tsx
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { hasLoginErrors, validateLoginForm } from "@/lib/auth/authValidation";
@@ -17,13 +18,17 @@ import { AuthCard } from "../Shared/AuthCard";
 
 
 type Props = {
-    onRequestSignup: () => void;
+    onToggleAuth: () => void;
     disabledLinks?: boolean;
+    signUpResult?: boolean;
+    backupSignUpResult?: boolean | null;
 };
 
 export function LoginCard({
-    onRequestSignup,
+    onToggleAuth,
     disabledLinks = false,
+    signUpResult,
+    backupSignUpResult
 }: Props) {
     const { theme } = useAppTheme();
     const { t } = useTranslation("auth");
@@ -62,7 +67,6 @@ export function LoginCard({
         try {
             setIsLoading(true);
 
-            console.log("LoginCard keepSignedIn:", keepSignedIn);
 
 
             await signIn({
@@ -72,7 +76,7 @@ export function LoginCard({
             });
 
         } catch {
-            setLoginError(t("InvalidCredentials"));
+            setLoginError(t("invalidCredentials"));
         } finally {
             setIsLoading(false);
         }
@@ -80,10 +84,29 @@ export function LoginCard({
 
     return (
         <AuthCard>
+            {signUpResult !== undefined && (
+                <View
+                    className="p-3 rounded-lg mb-4 border"
+                    style={{
+                        backgroundColor: signUpResult ? theme.successBg : theme.dangerBg,
+                        borderColor: signUpResult ? theme.successBorder : theme.dangerBorder,
+                    }}
+                >
+                    <Text
+                        className="text-base font-medium text-center"
+                        style={{
+                            color: signUpResult ? theme.successText : theme.dangerText
+                        }}
+                    >
+                        {signUpResult ? t("loginAfterSignupMessage") : t("signupFailed")}
+                    </Text>
+                </View>
+            )}
+
             <View className="mb-6 items-center justify-center">
                 <Text
                     className="mt-1 text-center text-sm"
-                    style={{ color: theme.text }}
+                    style={{ color: theme.textMuted }}
                 >
                     {t("welcomeSubtitle")}
                 </Text>
@@ -211,7 +234,7 @@ export function LoginCard({
                     style={{
                         color: isDisabled ? theme.linkTextDisabled : theme.linkText,
                     }}
-                    onPress={isDisabled ? undefined : onRequestSignup}
+                    onPress={isDisabled ? undefined : onToggleAuth}
                 >
                     {t("createAccount")}
                 </Text>
