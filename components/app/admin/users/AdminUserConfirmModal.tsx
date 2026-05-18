@@ -73,7 +73,7 @@ export default function AdminUserConfirmModal({
                             style={{ backgroundColor: theme.surfaceSoft }}
                         >
                             <Text style={{ color: theme.text }}>
-                                {t("actions.cancel")}
+                                {t("cancel")}
                             </Text>
                         </TouchableOpacity>
 
@@ -88,7 +88,7 @@ export default function AdminUserConfirmModal({
                                     fontWeight: "600",
                                 }}
                             >
-                                {t("actions.confirm")}
+                                {t("confirm")}
                             </Text>
                         </TouchableOpacity>
                     </View>

@@ -68,7 +68,7 @@ export default function AdminSidebar() {
                         fontWeight: "700",
                     }}
                 >
-                    {t("sidebar.appTitle")}
+                    {t("appTitle")}
                 </Text>
 
                 <Text
@@ -78,7 +78,7 @@ export default function AdminSidebar() {
                         marginTop: 4,
                     }}
                 >
-                    {t("sidebar.controlPanel")}
+                    {t("controlPanel")}
                 </Text>
             </View>
 
@@ -86,7 +86,7 @@ export default function AdminSidebar() {
                 {sidebarItems.map((item) => {
                     const isActive = pathname === item.href;
 
-                    const translationKey = `sidebar.${item.label.toLowerCase()}`;
+                    const translationKey = `${item.label.toLowerCase()}`;
 
                     return (
                         <TouchableOpacity
@@ -157,7 +157,7 @@ export default function AdminSidebar() {
                         fontWeight: "600",
                     }}
                 >
-                    {t("sidebar.userView")}
+                    {t("userView")}
                 </Text>
             </TouchableOpacity>
 
@@ -190,7 +190,7 @@ export default function AdminSidebar() {
                         fontWeight: "600",
                     }}
                 >
-                    {t("sidebar.logout")}
+                    {t("logout")}
                 </Text>
             </TouchableOpacity>
         </View>
