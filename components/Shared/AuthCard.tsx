@@ -22,7 +22,7 @@ export function AuthCard({ children }: Props) {
             {/* logo */}
             <View className="mb-6 items-center justify-center">
                 <Image
-                    source={require("@/assets/images/safebite.png")}
+                    source={require("@/assets/images/safebiteDark.png")}
                     style={{
                         width: 160,
                         height: 160,
