@@ -45,7 +45,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        {t("stats.error")}
+                        {t("error")}
                     </Text>
                 ) : (
                     <Text
@@ -57,7 +57,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    {t("stats.registeredUsers")}
+                    {t("registeredUsers")}
                 </Text>
             </DefaultCard>
 
@@ -82,7 +82,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        {t("stats.error")}
+                        {t("error")}
                     </Text>
                 ) : (
                     <Text
@@ -94,7 +94,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    {t("stats.totalAllergies")}
+                    {t("totalAllergies")}
                 </Text>
             </DefaultCard>
 
@@ -119,7 +119,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                         className="text-sm font-medium"
                         style={{ color: theme.dangerText }}
                     >
-                        {t("stats.error")}
+                        {t("error")}
                     </Text>
                 ) : (
                     <Text
@@ -131,7 +131,7 @@ export default function AdminStats({ users, allergies, scans }: Props) {
                 )}
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    {t("stats.scansPerformed")}
+                    {t("scansPerformed")}
                 </Text>
             </DefaultCard>
         </View>

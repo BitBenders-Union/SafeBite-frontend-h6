@@ -60,7 +60,7 @@ export default function AdminAllergySection() {
             setLoadError(
                 error instanceof Error
                     ? error.message
-                    : t("errors.failedToLoadAllergies")
+                    : t("failedToLoadAllergies")
             );
         } finally {
             setIsLoading(false);
@@ -71,7 +71,7 @@ export default function AdminAllergySection() {
         const trimmedName = newName.trim();
 
         if (!trimmedName) {
-            setCreateError(t("validation.nameRequired"));
+            setCreateError(t("nameRequired"));
             return;
         }
 
@@ -90,7 +90,7 @@ export default function AdminAllergySection() {
             setCreateError(
                 error instanceof Error
                     ? error.message
-                    : t("errors.failedToCreateAllergy")
+                    : t("failedToCreateAllergy")
             );
         } finally {
             setIsCreating(false);
@@ -117,7 +117,7 @@ export default function AdminAllergySection() {
         const trimmedName = editName.trim();
 
         if (!trimmedName) {
-            setEditError(t("validation.nameRequired"));
+            setEditError(t("nameRequired"));
             return;
         }
 
@@ -143,7 +143,7 @@ export default function AdminAllergySection() {
             setEditError(
                 error instanceof Error
                     ? error.message
-                    : t("errors.failedToUpdateAllergy")
+                    : t("failedToUpdateAllergy")
             );
         } finally {
             setIsSaving(false);
@@ -177,7 +177,7 @@ export default function AdminAllergySection() {
                             className="mt-3"
                             style={{ color: theme.textMuted }}
                         >
-                            {t("status.loading")}
+                            {t("loading")}
                         </Text>
                     </View>
                 ) : loadError ? (
@@ -186,7 +186,7 @@ export default function AdminAllergySection() {
                             className="text-base font-semibold"
                             style={{ color: theme.dangerText }}
                         >
-                            {t("errors.somethingWrong")}
+                            {t("somethingWrong")}
                         </Text>
 
                         <Text
@@ -204,7 +204,7 @@ export default function AdminAllergySection() {
                             }}
                         >
                             <Text style={{ color: theme.active }}>
-                                {t("actions.tryAgain")}
+                                {t("tryAgain")}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -228,14 +228,14 @@ export default function AdminAllergySection() {
                                     className="text-base font-semibold"
                                     style={{ color: theme.text }}
                                 >
-                                    {t("emptyState.title")}
+                                    {t("title")}
                                 </Text>
 
                                 <Text
                                     className="mt-2"
                                     style={{ color: theme.textMuted }}
                                 >
-                                    {t("emptyState.message")}
+                                    {t("message")}
                                 </Text>
                             </View>
                         }

@@ -1,5 +1,4 @@
 {
-  "sidebar": {
     "appTitle": "SafeBite Admin",
     "controlPanel": "Control panel",
     "dashboard": "Dashboard",
@@ -9,4 +8,3 @@
     "userView": "User view",
     "logout": "Log out"
   }
-}

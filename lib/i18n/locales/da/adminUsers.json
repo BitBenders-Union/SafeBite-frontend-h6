@@ -13,6 +13,7 @@
     "searchPlaceholder": "Søg efter e-mail",
     "noResults": "Ingen brugere matcher din søgning",
     "defaultTitle": "Bekræft handling",
+    "loading": "Indlæser brugere...",
     "makeAdminTitle": "Tildel administratorrolle",
     "makeAdminMessage": "Vil du tildele administratorrolle til {{email}}?",
     "removeAdminTitle": "Fjern administratorrolle",

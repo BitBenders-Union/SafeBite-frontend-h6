@@ -1,20 +1,12 @@
 {
-  "dashboard": {
-    "title": "Admin Dashboard"
-  },
-  "errors": {
+    "title": "Admin Dashboard",
     "failedToLoadUsers": "Fejlede at indlæse brugertælling.",
     "failedToLoadAllergies": "Fejlede at indlæse allergitælling.",
-    "failedToLoadScans": "Fejlede at indlæse scannings tælling."
-  },
-    "links": {
+    "failedToLoadScans": "Fejlede at indlæse scannings tælling.",
     "manageUsers": "Bruger håndtering",
-    "manageAllergies": "Allergi håndtering"
-  },
-    "stats": {
+    "manageAllergies": "Allergi håndtering",
     "error": "Fejl",
     "registeredUsers": "Registrerede brugere",
     "totalAllergies": "Allergier i alt",
     "scansPerformed": "Scanninger udført"
-  }
 }

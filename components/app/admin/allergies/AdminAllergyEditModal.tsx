@@ -59,14 +59,14 @@ export default function AdminAllergyEditModal({
                         className="text-xl font-bold"
                         style={{ color: theme.text }}
                     >
-                        {t("editModal.title",)}
+                        {t("EditModaltitle",)}
                     </Text>
 
                     <Text
                         className="mt-1"
                         style={{ color: theme.textMuted }}
                     >
-                        {t("editModal.subtitle")}
+                        {t("EditModalsubtitle")}
                     </Text>
 
                     {item ? (
@@ -85,13 +85,13 @@ export default function AdminAllergyEditModal({
                             className="mb-2 text-sm font-semibold"
                             style={{ color: theme.text }}
                         >
-                            {t("editModal.fieldName")}
+                            {t("EditModalfieldName")}
                         </Text>
 
                         <TextInput
                             value={editName}
                             onChangeText={onChangeName}
-                            placeholder={t("editModal.placeholder")}
+                            placeholder={t("EditModalplaceholder")}
                             placeholderTextColor={theme.textPlaceholder}
                             className="rounded-xl border px-4 py-3"
                             style={{
@@ -118,7 +118,7 @@ export default function AdminAllergyEditModal({
                             style={{ backgroundColor: theme.surfaceSoft }}
                         >
                             <Text style={{ color: theme.text }}>
-                                {t("actions.cancel")}
+                                {t("cancel")}
                             </Text>
                         </TouchableOpacity>
 
@@ -140,7 +140,7 @@ export default function AdminAllergyEditModal({
                                         fontWeight: "600",
                                     }}
                                 >
-                                    {t("actions.save")}
+                                    {t("save")}
                                 </Text>
                             )}
                         </TouchableOpacity>

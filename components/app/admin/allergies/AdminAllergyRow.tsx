@@ -88,7 +88,7 @@ export default function AdminAllergyRow({
                         className="ml-1 text-[12px] font-semibold"
                         style={{ color: theme.active }}
                     >
-                        {t("allergyRow.editBtn")}
+                        {t("AllergyRoweditBtn")}
                     </Text>
                 </TouchableOpacity>
 
@@ -117,7 +117,7 @@ export default function AdminAllergyRow({
                         className="ml-1 text-[12px] font-semibold"
                         style={{ color: theme.dangerText }}
                     >
-                        {t("allergyRow.deleteBtn")}
+                        {t("AllergyRowdeleteBtn")}
                     </Text>
                 </TouchableOpacity>
             </View>

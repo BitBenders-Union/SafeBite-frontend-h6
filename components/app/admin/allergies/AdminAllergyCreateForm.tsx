@@ -47,7 +47,7 @@ export default function AdminAllergyCreateForm({
                 className="mb-3 text-lg font-semibold"
                 style={{ color: theme.text }}
             >
-                {t("createForm.title")}
+                {t("CreateFormtitle")}
             </Text>
 
             <View className="gap-3">
@@ -55,7 +55,7 @@ export default function AdminAllergyCreateForm({
                     <TextInput
                         value={newName}
                         onChangeText={onChangeName}
-                        placeholder={t("createForm.placeholder")}
+                        placeholder={t("CreateFormplaceholder")}
                         placeholderTextColor={theme.textPlaceholder}
                         className="rounded-xl border px-4 py-3"
                         style={{
@@ -105,7 +105,7 @@ export default function AdminAllergyCreateForm({
                                     className="ml-1 text-[13px] font-semibold"
                                     style={{ color: theme.active }}
                                 >
-                                    {t("createForm.submitBtn")}
+                                    {t("CreateFormsubmitBtn")}
                                 </Text>
                             </>
                         )}
