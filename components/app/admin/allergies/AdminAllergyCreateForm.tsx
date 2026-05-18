@@ -4,6 +4,7 @@ import AllergyIconPicker from "@/components/app/admin/iconPicker/AllergyIconPick
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     Text,
@@ -31,6 +32,7 @@ export default function AdminAllergyCreateForm({
     isCreating,
     createError,
 }: Props) {
+    const { t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
 
     return (
@@ -45,7 +47,7 @@ export default function AdminAllergyCreateForm({
                 className="mb-3 text-lg font-semibold"
                 style={{ color: theme.text }}
             >
-                Add allergy
+                {t("createForm.title")}
             </Text>
 
             <View className="gap-3">
@@ -53,7 +55,7 @@ export default function AdminAllergyCreateForm({
                     <TextInput
                         value={newName}
                         onChangeText={onChangeName}
-                        placeholder="Enter allergy name"
+                        placeholder={t("createForm.placeholder")}
                         placeholderTextColor={theme.textPlaceholder}
                         className="rounded-xl border px-4 py-3"
                         style={{
@@ -103,7 +105,7 @@ export default function AdminAllergyCreateForm({
                                     className="ml-1 text-[13px] font-semibold"
                                     style={{ color: theme.active }}
                                 >
-                                    Add
+                                    {t("createForm.submitBtn")}
                                 </Text>
                             </>
                         )}

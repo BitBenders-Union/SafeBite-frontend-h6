@@ -1,0 +1,46 @@
+{
+  "allergiesScreen": {
+    "title": "Allergies",
+    "subtitle": "Manage system allergies."
+  },
+  "createForm": {
+    "title": "Add allergy",
+    "placeholder": "Enter allergy name",
+    "submitBtn": "Add"
+  },
+  "iconPicker": {
+    "label": "Icon",
+    "placeholder": "Choose icon"
+  },
+  "allergyRow": {
+    "editBtn": "Edit",
+    "deleteBtn": "Delete"
+  },
+  "editModal": {
+    "title": "Edit allergy",
+    "subtitle": "Update the allergy name.",
+    "fieldName": "Name",
+    "placeholder": "Allergy name"
+  },
+  "validation": {
+    "nameRequired": "Name is required."
+  },
+  "status": {
+    "loading": "Loading allergies..."
+  },
+  "actions": {
+    "tryAgain": "Try again",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "emptyState": {
+    "title": "No allergies found",
+    "message": "There are currently no allergies in the system."
+  },
+  "errors": {
+    "somethingWrong": "Something went wrong",
+    "failedToLoadAllergies": "Failed to load allergies.",
+    "failedToCreateAllergy": "Failed to create allergy.",
+    "failedToUpdateAllergy": "Failed to update allergy."
+  }
+}

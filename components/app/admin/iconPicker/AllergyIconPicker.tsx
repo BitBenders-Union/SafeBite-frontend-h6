@@ -3,6 +3,7 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 import { allergyIconOptions } from "./iconOptions";
 
@@ -24,8 +25,9 @@ function getSafeIconName(icon?: string | null) {
 export default function AllergyIconPicker({
     value,
     onChange,
-    label = "Icon",
+    label,
 }: Props) {
+    const { t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
     const [open, setOpen] = useState(false);
 
@@ -39,7 +41,7 @@ export default function AllergyIconPicker({
                 className="mb-2 text-sm font-medium"
                 style={{ color: theme.text }}
             >
-                {label}
+                {label ?? t("iconPicker.label")}
             </Text>
 
             <TouchableOpacity
@@ -63,7 +65,7 @@ export default function AllergyIconPicker({
                             className="ml-3"
                             style={{ color: theme.text }}
                         >
-                            {selectedOption?.label ?? "Choose icon"}
+                            {selectedOption?.label ?? t("iconPicker.placeholder", "Choose icon")}
                         </Text>
                     </View>
 

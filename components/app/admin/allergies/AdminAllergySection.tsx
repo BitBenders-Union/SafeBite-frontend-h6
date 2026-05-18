@@ -11,6 +11,7 @@ import {
 } from "@/services/api/allergyApi";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     FlatList,
@@ -20,6 +21,7 @@ import {
 } from "react-native";
 
 export default function AdminAllergySection() {
+    const { t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
 
     const [allergyList, setAllergyList] = useState<Allergy[]>([]);
@@ -58,7 +60,7 @@ export default function AdminAllergySection() {
             setLoadError(
                 error instanceof Error
                     ? error.message
-                    : "Failed to load allergies."
+                    : t("errors.failedToLoadAllergies")
             );
         } finally {
             setIsLoading(false);
@@ -69,7 +71,7 @@ export default function AdminAllergySection() {
         const trimmedName = newName.trim();
 
         if (!trimmedName) {
-            setCreateError("Name is required.");
+            setCreateError(t("validation.nameRequired"));
             return;
         }
 
@@ -88,7 +90,7 @@ export default function AdminAllergySection() {
             setCreateError(
                 error instanceof Error
                     ? error.message
-                    : "Failed to create allergy."
+                    : t("errors.failedToCreateAllergy")
             );
         } finally {
             setIsCreating(false);
@@ -115,7 +117,7 @@ export default function AdminAllergySection() {
         const trimmedName = editName.trim();
 
         if (!trimmedName) {
-            setEditError("Name is required.");
+            setEditError(t("validation.nameRequired"));
             return;
         }
 
@@ -141,7 +143,7 @@ export default function AdminAllergySection() {
             setEditError(
                 error instanceof Error
                     ? error.message
-                    : "Failed to update allergy."
+                    : t("errors.failedToUpdateAllergy")
             );
         } finally {
             setIsSaving(false);
@@ -175,7 +177,7 @@ export default function AdminAllergySection() {
                             className="mt-3"
                             style={{ color: theme.textMuted }}
                         >
-                            Loading allergies...
+                            {t("status.loading")}
                         </Text>
                     </View>
                 ) : loadError ? (
@@ -184,7 +186,7 @@ export default function AdminAllergySection() {
                             className="text-base font-semibold"
                             style={{ color: theme.dangerText }}
                         >
-                            Something went wrong
+                            {t("errors.somethingWrong")}
                         </Text>
 
                         <Text
@@ -202,7 +204,7 @@ export default function AdminAllergySection() {
                             }}
                         >
                             <Text style={{ color: theme.active }}>
-                                Try again
+                                {t("actions.tryAgain")}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -226,14 +228,14 @@ export default function AdminAllergySection() {
                                     className="text-base font-semibold"
                                     style={{ color: theme.text }}
                                 >
-                                    No allergies found
+                                    {t("emptyState.title")}
                                 </Text>
 
                                 <Text
                                     className="mt-2"
                                     style={{ color: theme.textMuted }}
                                 >
-                                    There are currently no allergies in the system.
+                                    {t("emptyState.message")}
                                 </Text>
                             </View>
                         }

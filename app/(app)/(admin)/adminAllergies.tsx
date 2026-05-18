@@ -1,10 +1,14 @@
+// /app/(app)/(admin)/adminAllergies.tsx (or wherever this screen lives)
+
 import AdminAllergySection from "@/components/app/admin/allergies/AdminAllergySection";
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, View } from "react-native";
 
 export default function AdminAllergies() {
+    const { t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
 
     return (
@@ -12,11 +16,11 @@ export default function AdminAllergies() {
             <View className="w-full max-w-[1100px] flex-1">
                 <View className="mb-4">
                     <Text className="text-2xl font-bold" style={{ color: theme.text }}>
-                        Allergies
+                        {t("allergiesScreen.title")}
                     </Text>
 
                     <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                        Manage system allergies.
+                        {t("allergiesScreen.subtitle")}
                     </Text>
                 </View>
 

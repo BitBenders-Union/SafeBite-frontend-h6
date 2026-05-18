@@ -4,6 +4,7 @@ import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Allergy } from "@/lib/types/allergy";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
@@ -23,6 +24,7 @@ export default function AdminAllergyRow({
     onEdit,
     onDelete,
 }: Props) {
+    const { t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
 
     return (
@@ -86,7 +88,7 @@ export default function AdminAllergyRow({
                         className="ml-1 text-[12px] font-semibold"
                         style={{ color: theme.active }}
                     >
-                        Edit
+                        {t("allergyRow.editBtn")}
                     </Text>
                 </TouchableOpacity>
 
@@ -115,7 +117,7 @@ export default function AdminAllergyRow({
                         className="ml-1 text-[12px] font-semibold"
                         style={{ color: theme.dangerText }}
                     >
-                        Delete
+                        {t("allergyRow.deleteBtn")}
                     </Text>
                 </TouchableOpacity>
             </View>

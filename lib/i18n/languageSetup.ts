@@ -27,10 +27,12 @@ import enScan from "./locales/en/scan.json";
 import enSettings from "./locales/en/setting.json";
 
 // Admin
+import daadminAllergy from "./locales/da/adminAllergy.json";
 import daadminHome from "./locales/da/adminHome.json";
 import daadminSidebar from "./locales/da/adminSidebar.json";
 import daadminUsers from "./locales/da/adminUsers.json";
 
+import enadminAllergy from "./locales/en/adminAllergy.json";
 import enadminHome from "./locales/en/adminHome.json";
 import enadminSidebar from "./locales/en/adminSidebar.json";
 import enadminUsers from "./locales/en/adminUsers.json";
@@ -51,6 +53,7 @@ const languageResources = {
         adminhome: daadminHome,
         adminsidebar: daadminSidebar,
         adminusers: daadminUsers,
+        adminallergy: daadminAllergy,
     },
     en: {
         common: enCommon,
@@ -65,6 +68,7 @@ const languageResources = {
         adminhome: enadminHome,
         adminsidebar: enadminSidebar,
         adminusers: enadminUsers,
+        adminallergy: enadminAllergy,
     },
 };
 
