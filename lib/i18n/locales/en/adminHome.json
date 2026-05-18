@@ -6,5 +6,15 @@
     "failedToLoadUsers": "Failed to load user count.",
     "failedToLoadAllergies": "Failed to load allergy count.",
     "failedToLoadScans": "Failed to load scan count."
+  },
+    "links": {
+    "manageUsers": "Manage Users",
+    "manageAllergies": "Manage Allergies"
+  },
+    "stats": {
+    "error": "Error",
+    "registeredUsers": "Registered Users",
+    "totalAllergies": "Total Allergies",
+    "scansPerformed": "Scans Performed"
   }
 }

@@ -1,5 +1,8 @@
+// /components/app/admin/AdminUserConfirmModal.tsx
+
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
@@ -19,6 +22,7 @@ export default function AdminUserConfirmModal({
     onCancel,
     onConfirm,
 }: Props) {
+    const { t } = useTranslation("adminusers");
     const { theme } = useAppTheme();
 
     return (
@@ -68,7 +72,9 @@ export default function AdminUserConfirmModal({
                             className="rounded-xl px-4 py-3"
                             style={{ backgroundColor: theme.surfaceSoft }}
                         >
-                            <Text style={{ color: theme.text }}>Cancel</Text>
+                            <Text style={{ color: theme.text }}>
+                                {t("actions.cancel")}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -82,7 +88,7 @@ export default function AdminUserConfirmModal({
                                     fontWeight: "600",
                                 }}
                             >
-                                Confirm
+                                {t("actions.confirm")}
                             </Text>
                         </TouchableOpacity>
                     </View>

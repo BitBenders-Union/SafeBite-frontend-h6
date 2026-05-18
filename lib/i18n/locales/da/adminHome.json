@@ -6,5 +6,15 @@
     "failedToLoadUsers": "Fejlede at indlæse brugertælling.",
     "failedToLoadAllergies": "Fejlede at indlæse allergitælling.",
     "failedToLoadScans": "Fejlede at indlæse scannings tælling."
+  },
+    "links": {
+    "manageUsers": "Bruger håndtering",
+    "manageAllergies": "Allergi håndtering"
+  },
+    "stats": {
+    "error": "Fejl",
+    "registeredUsers": "Registrerede brugere",
+    "totalAllergies": "Allergier i alt",
+    "scansPerformed": "Scanninger udført"
   }
 }

@@ -1,6 +1,9 @@
+// /components/app/admin/AdminUserRow.tsx
+
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { UserList } from "@/lib/types/user";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
@@ -18,6 +21,7 @@ export default function AdminUserRow({
     onDeactivate,
     onActivate,
 }: Props) {
+    const { t } = useTranslation("adminusers");
     const { theme } = useAppTheme();
 
     const isAdmin = user.roles.some(r => r.roleName === "Admin");
@@ -46,7 +50,7 @@ export default function AdminUserRow({
                 >
                     UserId: {user.id}
                     <br />
-                    Roles: {user.roles.map(r => r.roleName).join(", ")}
+                    {t("userRow.roles")} {user.roles.map(r => r.roleName).join(", ")}
                 </Text>
 
                 <Text
@@ -57,7 +61,7 @@ export default function AdminUserRow({
                             : theme.dangerText,
                     }}
                 >
-                    {isActive ? "Active" : "Inactive"}
+                    {isActive ? t("userRow.statusActive") : t("userRow.statusInactive")}
                 </Text>
             </View>
 
@@ -73,7 +77,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            Remove admin
+                            {t("userRow.removeAdmin")}
                         </Text>
                     </TouchableOpacity>
                 ) : (
@@ -86,7 +90,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            Make admin
+                            {t("userRow.makeAdmin")}
                         </Text>
                     </TouchableOpacity>
                 )}
@@ -105,7 +109,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.dangerText }}
                         >
-                            Deactivate
+                            {t("userRow.deactivate")}
                         </Text>
                     </TouchableOpacity>
                 ) : (
@@ -118,7 +122,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            Activate
+                            {t("userRow.activate")}
                         </Text>
                     </TouchableOpacity>
                 )}

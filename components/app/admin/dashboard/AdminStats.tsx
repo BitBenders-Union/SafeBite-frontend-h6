@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function AdminStats({ users, allergies, scans }: Props) {
-    const { t } = useTranslation("adminstats");
+    const { t } = useTranslation("adminhome");
     const { theme } = useAppTheme();
 
     return (

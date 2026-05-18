@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function AdminQuickLinks() {
-    const { t } = useTranslation("adminquicklinks");
+    const { t } = useTranslation("adminhome");
     const { theme } = useAppTheme();
     const router = useRouter();
 
