@@ -5,15 +5,16 @@ import { getLocales } from "expo-localization";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+//Mobiles
 import daAllergy from "./locales/da/allergy.json";
 import daAuth from "./locales/da/auth.json";
 import daCommon from "./locales/da/common.json";
 import daDisclaimer from "./locales/da/disclaimer.json";
 import daHome from "./locales/da/home.json";
 import daNavBars from "./locales/da/navbars.json";
+import daprofile from "./locales/da/profile.json";
 import daScan from "./locales/da/scan.json";
 import daSettings from "./locales/da/setting.json";
-import daprofile from "./locales/da/profile.json";
 
 import enAllergy from "./locales/en/allergy.json";
 import enAuth from "./locales/en/auth.json";
@@ -21,9 +22,22 @@ import enCommon from "./locales/en/common.json";
 import enDisclaimer from "./locales/en/disclaimer.json";
 import enHome from "./locales/en/home.json";
 import enNavBars from "./locales/en/navbars.json";
+import enprofile from "./locales/en/profile.json";
 import enScan from "./locales/en/scan.json";
 import enSettings from "./locales/en/setting.json";
-import enprofile from "./locales/en/profile.json";
+
+// Admin
+import daadminAllergy from "./locales/da/adminAllergy.json";
+import daadminHome from "./locales/da/adminHome.json";
+import daadminSetting from "./locales/da/adminSetting.json";
+import daadminSidebar from "./locales/da/adminSidebar.json";
+import daadminUsers from "./locales/da/adminUsers.json";
+
+import enadminAllergy from "./locales/en/adminAllergy.json";
+import enadminHome from "./locales/en/adminHome.json";
+import enadminSetting from "./locales/en/adminSetting.json";
+import enadminSidebar from "./locales/en/adminSidebar.json";
+import enadminUsers from "./locales/en/adminUsers.json";
 
 export type AppLanguage = "da" | "en";
 
@@ -38,6 +52,11 @@ const languageResources = {
         settings: daSettings,
         disclaimer: daDisclaimer,
         profile: daprofile,
+        adminhome: daadminHome,
+        adminsidebar: daadminSidebar,
+        adminusers: daadminUsers,
+        adminallergy: daadminAllergy,
+        adminsetting: daadminSetting,
     },
     en: {
         common: enCommon,
@@ -49,6 +68,11 @@ const languageResources = {
         settings: enSettings,
         disclaimer: enDisclaimer,
         profile: enprofile,
+        adminhome: enadminHome,
+        adminsidebar: enadminSidebar,
+        adminusers: enadminUsers,
+        adminallergy: enadminAllergy,
+        adminsetting: enadminSetting,
     },
 };
 

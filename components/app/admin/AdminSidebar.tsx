@@ -5,6 +5,7 @@ import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Ionicons } from "@expo/vector-icons";
 import { Href, usePathname, useRouter } from "expo-router";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 
 type SidebarItem = {
@@ -37,6 +38,7 @@ const sidebarItems: SidebarItem[] = [
 ];
 
 export default function AdminSidebar() {
+    const { t } = useTranslation("adminsidebar");
     const router = useRouter();
     const pathname = usePathname();
     const { theme } = useAppTheme();
@@ -66,7 +68,7 @@ export default function AdminSidebar() {
                         fontWeight: "700",
                     }}
                 >
-                    SafeBite Admin
+                    {t("sidebar.appTitle")}
                 </Text>
 
                 <Text
@@ -76,13 +78,15 @@ export default function AdminSidebar() {
                         marginTop: 4,
                     }}
                 >
-                    Control panel
+                    {t("sidebar.controlPanel")}
                 </Text>
             </View>
 
             <View style={{ flex: 1, gap: 8 }}>
                 {sidebarItems.map((item) => {
                     const isActive = pathname === item.href;
+
+                    const translationKey = `sidebar.${item.label.toLowerCase()}`;
 
                     return (
                         <TouchableOpacity
@@ -120,7 +124,7 @@ export default function AdminSidebar() {
                                     fontWeight: isActive ? "700" : "500",
                                 }}
                             >
-                                {item.label}
+                                {t(translationKey, item.label)}
                             </Text>
                         </TouchableOpacity>
                     );
@@ -153,7 +157,7 @@ export default function AdminSidebar() {
                         fontWeight: "600",
                     }}
                 >
-                    User view
+                    {t("sidebar.userView")}
                 </Text>
             </TouchableOpacity>
 
@@ -186,7 +190,7 @@ export default function AdminSidebar() {
                         fontWeight: "600",
                     }}
                 >
-                    Log out
+                    {t("sidebar.logout")}
                 </Text>
             </TouchableOpacity>
         </View>

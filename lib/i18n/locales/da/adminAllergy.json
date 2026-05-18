@@ -1,0 +1,46 @@
+{
+  "allergiesScreen": {
+    "title": "Allergier",
+    "subtitle": "Administrer systemets allergier."
+  },
+  "createForm": {
+    "title": "Tilføj allergi",
+    "placeholder": "Indtast allerginavn",
+    "submitBtn": "Tilføj"
+  },
+  "iconPicker": {
+    "label": "Ikon",
+    "placeholder": "Vælg ikon"
+  },
+  "allergyRow": {
+    "editBtn": "Rediger",
+    "deleteBtn": "Slet"
+  },
+  "editModal": {
+    "title": "Rediger allergi",
+    "subtitle": "Opdater allergiens navn.",
+    "fieldName": "Navn",
+    "placeholder": "Allerginavn"
+  },
+  "validation": {
+    "nameRequired": "Navn er påkrævet."
+  },
+  "status": {
+    "loading": "Indlæser allergier..."
+  },
+  "actions": {
+    "tryAgain": "Prøv igen",
+    "cancel": "Annuller",
+    "save": "Gem"
+  },
+  "emptyState": {
+    "title": "Ingen allergier fundet",
+    "message": "Der er i øjeblikket ingen allergier i systemet."
+  },
+  "errors": {
+    "somethingWrong": "Noget gik galt",
+    "failedToLoadAllergies": "Kunne ikke indlæse allergier.",
+    "failedToCreateAllergy": "Kunne ikke oprette allergi.",
+    "failedToUpdateAllergy": "Kunne ikke opdatere allergi."
+  }
+}

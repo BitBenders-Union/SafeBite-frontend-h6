@@ -1,0 +1,12 @@
+{
+  "sidebar": {
+    "appTitle": "SafeBite Admin",
+    "controlPanel": "Control panel",
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "allergies": "Allergies",
+    "settings": "Settings",
+    "userView": "User view",
+    "logout": "Log out"
+  }
+}

@@ -7,6 +7,7 @@ import { getTotalUsers } from "@/services/api/adminUserManagementApi";
 import { getTotalAllergies } from "@/services/api/allergyApi";
 import { getTotalScans } from "@/services/api/scanApi";
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Text } from "react-native";
 
 type StatState = {
@@ -17,6 +18,8 @@ type StatState = {
 
 export default function AdminDashboardSection() {
     const { theme } = useAppTheme();
+    // Added translation keys for error messages and dashboard title
+    const { t } = useTranslation("adminhome"); 
 
     const [users, setUsers] = useState<StatState>({
         value: undefined,
@@ -70,7 +73,7 @@ export default function AdminDashboardSection() {
                 setUsers({
                     value: undefined,
                     isLoading: false,
-                    error: error.message || "Failed to load user count.",
+                    error: error.message || t("errors.failedToLoadUsers"),
                 });
             }
         }
@@ -97,10 +100,7 @@ export default function AdminDashboardSection() {
                 setAllergies({
                     value: undefined,
                     isLoading: false,
-                    error:
-                        error instanceof Error
-                            ? error.message
-                            : "Failed to load allergy count.",
+                    error: error.message || t("errors.failedToLoadAllergies"),
                 });
             }
         }
@@ -124,10 +124,11 @@ export default function AdminDashboardSection() {
 
         } catch(error: any) {
             if (error.name !== "CanceledError" && error.name !== "AbortError") {
-                setUsers({
+                // FIXED: Changed setUsers to setScans here
+                setScans({
                     value: undefined,
                     isLoading: false,
-                    error: error.message || "Failed to load user count.",
+                    error: error.message || t("errors.failedToLoadScans"),
                 });
             }
         }
@@ -139,7 +140,7 @@ export default function AdminDashboardSection() {
                 className="mb-4 text-2xl font-bold"
                 style={{ color: theme.text }}
             >
-                Admin Dashboard
+                {t("dashboard.title")}
             </Text>
 
             <AdminStats

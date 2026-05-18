@@ -3,6 +3,7 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { Allergy } from "@/lib/types/allergy";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
     ActivityIndicator,
     Modal,
@@ -33,6 +34,7 @@ export default function AdminAllergyEditModal({
     isSaving,
     error,
 }: Props) {
+    const { t: t } = useTranslation("adminallergy");
     const { theme } = useAppTheme();
 
     return (
@@ -57,14 +59,14 @@ export default function AdminAllergyEditModal({
                         className="text-xl font-bold"
                         style={{ color: theme.text }}
                     >
-                        Edit allergy
+                        {t("editModal.title",)}
                     </Text>
 
                     <Text
                         className="mt-1"
                         style={{ color: theme.textMuted }}
                     >
-                        Update the allergy name.
+                        {t("editModal.subtitle")}
                     </Text>
 
                     {item ? (
@@ -83,13 +85,13 @@ export default function AdminAllergyEditModal({
                             className="mb-2 text-sm font-semibold"
                             style={{ color: theme.text }}
                         >
-                            Name
+                            {t("editModal.fieldName")}
                         </Text>
 
                         <TextInput
                             value={editName}
                             onChangeText={onChangeName}
-                            placeholder="Allergy name"
+                            placeholder={t("editModal.placeholder")}
                             placeholderTextColor={theme.textPlaceholder}
                             className="rounded-xl border px-4 py-3"
                             style={{
@@ -115,7 +117,9 @@ export default function AdminAllergyEditModal({
                             className="rounded-xl px-4 py-3"
                             style={{ backgroundColor: theme.surfaceSoft }}
                         >
-                            <Text style={{ color: theme.text }}>Cancel</Text>
+                            <Text style={{ color: theme.text }}>
+                                {t("actions.cancel")}
+                            </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -136,7 +140,7 @@ export default function AdminAllergyEditModal({
                                         fontWeight: "600",
                                     }}
                                 >
-                                    Save
+                                    {t("actions.save")}
                                 </Text>
                             )}
                         </TouchableOpacity>

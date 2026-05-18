@@ -1,0 +1,41 @@
+{
+  "home": {
+    "title": "Brugere",
+    "description": "Administrer brugere, tildel roller og håndter kontostatus."
+  },
+  "actions": {
+    "cancel": "Annuller",
+    "confirm": "Bekræft"
+  },
+    "userRow": {
+    "roles": "Roller:",
+    "statusActive": "Aktiv",
+    "statusInactive": "Inaktiv",
+    "makeAdmin": "Gør til admin",
+    "removeAdmin": "Fjern admin",
+    "deactivate": "Deaktiver",
+    "activate": "Aktiver"
+ },
+  "searchPlaceholder": "Søg efter e-mail",
+  "noResults": "Ingen brugere matcher din søgning",
+  "modal": {
+    "defaultTitle": "Bekræft handling",
+    "makeAdminTitle": "Tildel administratorrolle",
+    "makeAdminMessage": "Vil du tildele administratorrolle til {{email}}?",
+    "removeAdminTitle": "Fjern administratorrolle",
+    "removeAdminMessage": "Vil du fjerne administratorrollen fra {{email}}?",
+    "deactivateTitle": "Deaktiver bruger",
+    "deactivateMessage": "Vil du deaktivere {{email}}?",
+    "activateTitle": "Aktiver bruger",
+    "activateMessage": "Vil du aktivere {{email}}?"
+  },
+  "errors": {
+    "failedToLoadUsers": "Kunne ikke indlæse brugere.",
+    "alreadyAdmin": "Brugeren har allerede en administratorrolle.",
+    "failedToMakeAdmin": "Kunne ikke tildele administratorrolle.",
+    "failedToRemoveAdmin": "Kunne ikke fjerne administratorrolle.",
+    "alreadyInactive": "Brugeren er allerede inaktiv.",
+    "failedToDeactivate": "Kunne ikke deaktivere brugeren.",
+    "failedToActivate": "Kunne ikke aktivere brugeren."
+  }
+}

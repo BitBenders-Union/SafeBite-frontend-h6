@@ -1,22 +1,10 @@
 import { useAppTheme } from "@/lib/theme/useAppTheme";
-import type {
-    DetectedAllergy,
-    MatchedIngredient,
-    ScanHistoryParameters,
-    ScanHistoryResponseDTO
-} from "@/lib/types/scan";
+import type { DetectedAllergy, MatchedIngredient, ScanHistoryParameters, ScanHistoryResponseDTO } from "@/lib/types/scan";
 import { getMyScanHistory } from "@/services/api/scanApi";
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-    ActivityIndicator,
-    FlatList,
-    ScrollView,
-    Text,
-    View,
-    useWindowDimensions
-} from "react-native";
+import { ActivityIndicator, FlatList, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { DefaultCard } from "../../../components/Shared/DefaultCard";
 
 /**

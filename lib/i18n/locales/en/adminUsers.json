@@ -1,0 +1,42 @@
+{
+  "home": {
+    "title": "Users",
+    "description": "Manage admin access and user status."
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
+  },
+  "userRow": {
+    "roles": "Roles:",
+    "statusActive": "Active",
+    "statusInactive": "Inactive",
+    "makeAdmin": "Make admin",
+    "removeAdmin": "Remove admin",
+    "deactivate": "Deactivate",
+    "activate": "Activate"
+  },
+  "searchPlaceholder": "Search by email",
+  "noResults": "No users match your search",
+  "modal": {
+    "defaultTitle": "Confirm action",
+    "makeAdminTitle": "Give admin role",
+    "makeAdminMessage": "Give admin role to {{email}}?",
+    "removeAdminTitle": "Remove admin role",
+    "removeAdminMessage": "Remove admin role from {{email}}?",
+    "deactivateTitle": "Deactivate user",
+    "deactivateMessage": "Deactivate {{email}}?",
+    "activateTitle": "Activate user",
+    "activateMessage": "Activate {{email}}?"
+  },
+  "errors": {
+    "failedToLoadUsers": "Failed to load users.",
+    "alreadyAdmin": "User already has admin role.",
+    "failedToMakeAdmin": "Failed to assign admin role.",
+    "failedToRemoveAdmin": "Failed to remove admin role.",
+    "alreadyInactive": "User is already inactive.",
+    "failedToDeactivate": "Failed to deactivate user.",
+    "failedToActivate": "Failed to activate user."
+  }
+}
+

@@ -1,18 +1,21 @@
+// /components/app/admin/users/AdminUserSection.tsx
+
 import AdminUserConfirmModal from "@/components/app/admin/users/AdminUserConfirmModal";
 import AdminUserRow from "@/components/app/admin/users/AdminUserRow";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { UserList, UserRole } from "@/lib/types/user";
 import { activateUser, deactivateUser, getAllUsersAndRoles, removeRole, setRole } from "@/services/api/adminUserManagementApi";
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, Text, TextInput, View } from "react-native";
-
 
 type ActionType = "makeAdmin" | "removeAdmin" | "deactivate" | "activate";
 
 export default function AdminUserSection() {
+    const { t } = useTranslation("adminusers");
     const { theme } = useAppTheme();
 
-    const [userList, setUserList] = useState<UserList[]>([]); ``
+    const [userList, setUserList] = useState<UserList[]>([]);
     const [searchText, setSearchText] = useState("");
     const [Error, setError] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -20,7 +23,6 @@ export default function AdminUserSection() {
 
     const [selectedUser, setSelectedUser] = useState<UserList | null>(null);
     const [selectedAction, setSelectedAction] = useState<ActionType | null>(null);
-
 
     useEffect(() => {
         const controller = new AbortController();
@@ -41,13 +43,10 @@ export default function AdminUserSection() {
             const data = await getAllUsersAndRoles(signal);
             setUserList(data);
         }
-
         catch (err: any) {
             if (err.name === "CanceledError" || err.name === "AbortError") return;
-
-            setErrorMessage(err.message || "Failed to load users.");
+            setErrorMessage(err.message || t("errors.failedToLoadUsers"));
         }
-
         finally {
             setIsLoading(false);
         }
@@ -55,9 +54,7 @@ export default function AdminUserSection() {
 
     const filteredUsers = useMemo(() => {
         const text = searchText.trim().toLowerCase();
-
         if (!text) return userList;
-
         return userList.filter((user) =>
             user.email.toLowerCase().includes(text)
         );
@@ -81,13 +78,13 @@ export default function AdminUserSection() {
         const userrole: UserRole = {
             userID: selectedUser.id,
             roleName: "Admin"
-        }
+        };
 
         if (selectedAction === "makeAdmin") {
             const alreadyAdmin = selectedUser.roles.some((r) => r.roleName === "Admin");
 
             if (alreadyAdmin) {
-                setError("User already has admin role.");
+                setError(t("errors.alreadyAdmin"));
                 return;
             }
 
@@ -96,24 +93,23 @@ export default function AdminUserSection() {
                 await loadUsers();
             }
             catch (err) {
-                setError("Failed to assign admin role.");
+                setError(t("errors.failedToMakeAdmin"));
             }
-        };
+        }
 
         if (selectedAction === "removeAdmin") {
-
             try {
                 await removeRole(userrole);
                 await loadUsers();
             }
             catch (err) {
-                setError("Failed to remove admin role.");
+                setError(t("errors.failedToRemoveAdmin"));
             }
         }
 
         if (selectedAction === "deactivate") {
             if (selectedUser.isActive === false) {
-                setError("User is already inactive.");
+                setError(t("errors.alreadyInactive"));
                 return;
             }
 
@@ -121,9 +117,8 @@ export default function AdminUserSection() {
                 await deactivateUser(selectedUser.id);
                 await loadUsers();
             }
-
             catch (err) {
-                setError("Failed to deactivate user.");
+                setError(t("errors.failedToDeactivate"));
             }
         }
 
@@ -132,9 +127,8 @@ export default function AdminUserSection() {
                 await activateUser(selectedUser.id);
                 await loadUsers();
             }
-
             catch (err) {
-                setError("Failed to activate user.");
+                setError(t("errors.failedToActivate"));
             }
         }
 
@@ -142,30 +136,27 @@ export default function AdminUserSection() {
     }
 
     function getModalTitle() {
-        if (selectedAction === "makeAdmin") return "Give admin role";
-        if (selectedAction === "removeAdmin") return "Remove admin role";
-        if (selectedAction === "deactivate") return "Deactivate user";
-        if (selectedAction === "activate") return "Activate user";
-        return "Confirm action";
+        if (selectedAction === "makeAdmin") return t("modal.makeAdminTitle");
+        if (selectedAction === "removeAdmin") return t("modal.removeAdminTitle");
+        if (selectedAction === "deactivate") return t("modal.deactivateTitle");
+        if (selectedAction === "activate") return t("modal.activateTitle");
+        return t("modal.defaultTitle");
     }
 
     function getModalText() {
         if (!selectedUser) return "";
 
         if (selectedAction === "makeAdmin") {
-            return `Give admin role to ${selectedUser.email}?`;
+            return t("modal.makeAdminMessage");
         }
-
         if (selectedAction === "removeAdmin") {
-            return `Remove admin role from ${selectedUser.email}?`;
+            return t("modal.removeAdminMessage");
         }
-
         if (selectedAction === "deactivate") {
-            return `Deactivate ${selectedUser.email}?`;
+            return t("modal.deactivateMessage");
         }
-
         if (selectedAction === "activate") {
-            return `Activate ${selectedUser.email}?`;
+            return t("modal.activateMessage");
         }
 
         return "";
@@ -183,7 +174,7 @@ export default function AdminUserSection() {
                 <TextInput
                     value={searchText}
                     onChangeText={setSearchText}
-                    placeholder="Search by email"
+                    placeholder={t("searchPlaceholder")}
                     placeholderTextColor={theme.textMuted}
                     className="flex-1 text-sm"
                     style={{ color: theme.text }}
@@ -196,18 +187,10 @@ export default function AdminUserSection() {
                 renderItem={({ item }) => (
                     <AdminUserRow
                         user={item}
-                        onMakeAdmin={(pickedUser) =>
-                            showModal(pickedUser, "makeAdmin")
-                        }
-                        onRemoveAdmin={(pickedUser) =>
-                            showModal(pickedUser, "removeAdmin")
-                        }
-                        onDeactivate={(pickedUser) =>
-                            showModal(pickedUser, "deactivate")
-                        }
-                        onActivate={(pickedUser) =>
-                            showModal(pickedUser, "activate")
-                        }
+                        onMakeAdmin={(pickedUser) => showModal(pickedUser, "makeAdmin")}
+                        onRemoveAdmin={(pickedUser) => showModal(pickedUser, "removeAdmin")}
+                        onDeactivate={(pickedUser) => showModal(pickedUser, "deactivate")}
+                        onActivate={(pickedUser) => showModal(pickedUser, "activate")}
                     />
                 )}
                 showsVerticalScrollIndicator={false}
@@ -216,7 +199,7 @@ export default function AdminUserSection() {
                         className="py-4 text-center text-sm"
                         style={{ color: theme.textMuted }}
                     >
-                        No users match your search
+                        {t("noResults")}
                     </Text>
                 }
             />
