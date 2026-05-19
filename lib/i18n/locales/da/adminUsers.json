@@ -1,25 +1,19 @@
 {
-  "home": {
     "title": "Brugere",
-    "description": "Administrer brugere, tildel roller og håndter kontostatus."
-  },
-  "actions": {
+    "description": "Administrer brugere, tildel roller og håndter kontostatus.",
     "cancel": "Annuller",
-    "confirm": "Bekræft"
-  },
-    "userRow": {
+    "confirm": "Bekræft",
     "roles": "Roller:",
     "statusActive": "Aktiv",
     "statusInactive": "Inaktiv",
     "makeAdmin": "Gør til admin",
     "removeAdmin": "Fjern admin",
     "deactivate": "Deaktiver",
-    "activate": "Aktiver"
- },
-  "searchPlaceholder": "Søg efter e-mail",
-  "noResults": "Ingen brugere matcher din søgning",
-  "modal": {
+    "activate": "Aktiver",
+    "searchPlaceholder": "Søg efter e-mail",
+    "noResults": "Ingen brugere matcher din søgning",
     "defaultTitle": "Bekræft handling",
+    "loading": "Indlæser brugere...",
     "makeAdminTitle": "Tildel administratorrolle",
     "makeAdminMessage": "Vil du tildele administratorrolle til {{email}}?",
     "removeAdminTitle": "Fjern administratorrolle",
@@ -27,15 +21,15 @@
     "deactivateTitle": "Deaktiver bruger",
     "deactivateMessage": "Vil du deaktivere {{email}}?",
     "activateTitle": "Aktiver bruger",
-    "activateMessage": "Vil du aktivere {{email}}?"
-  },
-  "errors": {
+    "activateMessage": "Vil du aktivere {{email}}?",
     "failedToLoadUsers": "Kunne ikke indlæse brugere.",
     "alreadyAdmin": "Brugeren har allerede en administratorrolle.",
     "failedToMakeAdmin": "Kunne ikke tildele administratorrolle.",
     "failedToRemoveAdmin": "Kunne ikke fjerne administratorrolle.",
     "alreadyInactive": "Brugeren er allerede inaktiv.",
     "failedToDeactivate": "Kunne ikke deaktivere brugeren.",
-    "failedToActivate": "Kunne ikke aktivere brugeren."
-  }
+    "failedToActivate": "Kunne ikke aktivere brugeren.",
+    "previous": "Forrige",
+    "next": "Næste",
+    "pageInfo": "Side {{page}}"
 }

@@ -21,14 +21,14 @@ export default function AdminSettings() {
                         className="text-2xl font-bold"
                         style={{ color: theme.text }}
                     >
-                        {t("settingsScreen.title")}
+                        {t("title")}
                     </Text>
 
                     <Text
                         className="mt-1 text-sm"
                         style={{ color: theme.textMuted }}
                     >
-                        {t("settingsScreen.subtitle")}
+                        {t("subtitle")}
                     </Text>
                 </View>
                 

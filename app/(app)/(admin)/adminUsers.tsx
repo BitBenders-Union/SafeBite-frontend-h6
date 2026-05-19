@@ -15,11 +15,11 @@ export default function AdminUsers() {
         <View className="w-full max-w-[1100px] flex-1">
             <View className="mb-4">
                 <Text className="text-2xl font-bold" style={{ color: theme.text }}>
-                    {t("home.title")}
+                    {t("title")}
                 </Text>
 
                 <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                    {t("home.description")}
+                    {t("description")}
                 </Text>
             </View>
 
