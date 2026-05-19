@@ -12,7 +12,7 @@ import {
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import { SignupRequest } from "@/lib/types/auth";
 import { Checkbox } from "expo-checkbox";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
     Text,
@@ -22,7 +22,7 @@ import {
 import { TosModal } from "../Shared/TosModal";
 
 type Props = {
-    onSignUpResult:(success?: boolean) => void;
+    onSignUpResult: (success?: boolean) => void;
     disabledLinks?: boolean;
 };
 
@@ -47,6 +47,9 @@ export function SignupCard({
     const [showTosModal, setShowTosModal] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const passwordInputRef = useRef<TextInput>(null);
+    const confirmPasswordInputRef = useRef<TextInput>(null);
 
     const isFormDisabled = isLoading || disabledLinks;
 
@@ -146,6 +149,8 @@ export function SignupCard({
                     placeholderTextColor="#6b7280"
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    returnKeyType="next"
+                    onSubmitEditing={() => passwordInputRef.current?.focus()}
                     className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
@@ -175,9 +180,12 @@ export function SignupCard({
                     }}
                     onBlur={checkPassword}
                     editable={!isFormDisabled}
-                    placeholder={t("passwordPlaceholder") || "Password"}
+                    placeholder={t("passwordPlaceholder")}
                     placeholderTextColor="#6b7280"
                     secureTextEntry
+                    ref={passwordInputRef}
+                    returnKeyType="next"
+                    onSubmitEditing={() => confirmPasswordInputRef.current?.focus()}
                     className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
@@ -207,9 +215,12 @@ export function SignupCard({
                     }}
                     onBlur={checkConfirmPassword}
                     editable={!isFormDisabled}
-                    placeholder={t("confirmPasswordPlaceholder") || "Bekræft adgangskode"}
+                    placeholder={t("confirmPasswordPlaceholder")}
                     placeholderTextColor="#6b7280"
                     secureTextEntry
+                    ref={confirmPasswordInputRef}
+                    returnKeyType="done"
+                    onSubmitEditing={signupUser}
                     className="border rounded-xl px-3 py-3 text-base"
                     style={{
                         backgroundColor: theme.inputBg,
