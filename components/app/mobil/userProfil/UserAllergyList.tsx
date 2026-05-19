@@ -1,16 +1,16 @@
 // /components/app/mobil/userProfil/UserAllergyList.tsx
+import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { addCustomAllergy, deleteCustomAllergy, deleteUserAllergy } from "@/services/api/allergyApi";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActivityIndicator, Keyboard, Text, TextInput, TouchableOpacity, View, ScrollView } from "react-native";
-import { useAppTheme } from "@/lib/theme/useAppTheme";
-import { addCustomAllergy, deleteCustomAllergy, deleteUserAllergy } from "@/services/api/allergyApi";
+import { ActivityIndicator, Keyboard, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export type Allergen = {
     id: string;
     name: string;
     icon?: string;
-    isCustom?: boolean; 
+    isCustom?: boolean;
 };
 
 type UserAllergyListProps = {
@@ -22,7 +22,7 @@ type UserAllergyListProps = {
 // Ensures that the icon name is valid and falls back to a default if not
 function getSafeIconName(icon?: string) {
     if (!icon) return "food-apple-outline";
-    return icon as any; 
+    return icon as any;
 }
 
 export default function UserAllergyList({
@@ -36,34 +36,34 @@ export default function UserAllergyList({
     const [customAllergen, setCustomAllergen] = useState("");
     const [isActionLoading, setIsActionLoading] = useState(false);
 
-const filteredAllergens = useMemo(() => {
-    const searchTerms = search
-        .toLowerCase()
-        .split(',')
-        .map(term => term.trim())
-        .filter(term => term !== "");
+    const filteredAllergens = useMemo(() => {
+        const searchTerms = search
+            .toLowerCase()
+            .split(',')
+            .map(term => term.trim())
+            .filter(term => term !== "");
 
-    if (searchTerms.length === 0) {
-        return userAllergens;
-    }
+        if (searchTerms.length === 0) {
+            return userAllergens;
+        }
 
-    return userAllergens.filter((item) => {
-        const itemName = item.name.toLowerCase();
-        return searchTerms.some((term) => itemName.includes(term));
-    });
-}, [userAllergens, search]);
+        return userAllergens.filter((item) => {
+            const itemName = item.name.toLowerCase();
+            return searchTerms.some((term) => itemName.includes(term));
+        });
+    }, [userAllergens, search]);
 
     // Handles removing an allergen
     async function handleRemove(allergy: Allergen) {
         try {
             setIsActionLoading(true);
-            
+
             if (allergy.isCustom) {
-                await deleteCustomAllergy(allergy.id); 
+                await deleteCustomAllergy(allergy.id);
             } else {
                 await deleteUserAllergy(allergy.id);
             }
-            
+
             const updatedItems = userAllergens.filter((item) => item.id !== allergy.id);
             onUpdateAllergens(updatedItems);
         } catch (error) {
@@ -91,7 +91,7 @@ const filteredAllergens = useMemo(() => {
         try {
             setIsActionLoading(true);
             const newAllergy = await addCustomAllergy(trimmedName);
-            
+
             const updatedItems: Allergen[] = [
                 ...userAllergens,
                 {
@@ -159,8 +159,8 @@ const filteredAllergens = useMemo(() => {
                             <ActivityIndicator size="small" color={theme.buttonPrimaryBg} />
                         </View>
                     ) : (
-                        <ScrollView 
-                            nestedScrollEnabled={true} 
+                        <ScrollView
+                            nestedScrollEnabled={true}
                             showsVerticalScrollIndicator={true}
                             className="pr-1"
                         >
@@ -172,10 +172,10 @@ const filteredAllergens = useMemo(() => {
                                         </View>
                                         <Text className="flex-1 text-[15px] font-medium" style={{ color: theme.text }}>{item.name}</Text>
                                     </View>
-                                    <TouchableOpacity 
-                                        onPress={() => handleRemove(item)} 
+                                    <TouchableOpacity
+                                        onPress={() => handleRemove(item)}
                                         disabled={isActionLoading}
-                                        className="flex-row items-center justify-center rounded-full px-3 py-1.5" 
+                                        className="flex-row items-center justify-center rounded-full px-3 py-1.5"
                                         style={{ backgroundColor: theme.dangerSolid }}
                                     >
                                         <Ionicons name="remove" size={14} color={theme.dangerSolidText} />

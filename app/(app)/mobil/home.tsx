@@ -132,7 +132,7 @@ export default function Home() {
             contentContainerStyle={{ padding: 16, paddingBottom: 28 }}
             showsVerticalScrollIndicator={false}
         >
-            {/* SENESTE SCANNINGER */}
+            {/* LATEST SCANS */}
             <DefaultCard>
                 <Text className="mb-2 text-base font-bold uppercase tracking-wide" style={{ color: theme.text }}>
                     {t("latestScansTitle")}
@@ -172,7 +172,7 @@ export default function Home() {
 
             <View className="h-4" />
 
-            {/* RISIKO SCANNINGER (KUN ALLERGIER) */}
+            {/* RISK SCANS (ALLERGIES ONLY) */}
             <DefaultCard>
                 <Text className="mb-2 text-base font-bold uppercase tracking-wide" style={{ color: theme.text }}>
                     {t("recentRiskScansTitle")}

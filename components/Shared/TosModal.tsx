@@ -187,7 +187,7 @@ export function TosModal({
                             />
                         </View>
 
-                        {/* Accept (kun hvis den findes) */}
+                        {/* Accept button  */}
                         {onAccept && (
                             <View style={{ flex: 1 }}>
                                 <PrimaryButton
