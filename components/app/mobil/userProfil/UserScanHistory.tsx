@@ -1,9 +1,9 @@
 // /components/app/mobil/userProfile/UserScanHistory.tsx
-import { Ionicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { ScrollView, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from "react-native";
 import { useAppTheme } from "@/lib/theme/ThemeProvider";
+import { Ionicons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ActivityIndicator, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 export type ScanHistoryItem = {
     id: string | number;
@@ -68,7 +68,7 @@ export default function UserScanHistory({
                 </View>
             </View>
 
-            {/* Search field Lokale State*/}
+            {/* Search field Locale State*/}
             <View className="mb-4 mt-3 flex-row items-center rounded-full px-4 py-2" style={{ backgroundColor: theme.inputBg, borderWidth: 1, borderColor: theme.inputBorder }}>
                 <Ionicons name="search" size={18} color={theme.textMuted} />
                 <TextInput
