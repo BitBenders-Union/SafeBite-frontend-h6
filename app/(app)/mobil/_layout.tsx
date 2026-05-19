@@ -36,7 +36,7 @@ export default function MobileLayout() {
                     keyboardVerticalOffset={keyboardOffset}
                 >
                     <View style={{ flex: 1 }}>
-                        
+
                         <Slot />
                     </View>
                 </KeyboardAvoidingView>

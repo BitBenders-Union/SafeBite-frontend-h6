@@ -1,3 +1,4 @@
+// /app(app)/mobil/allergy.tsx
 import AllergyListView from "@/components/app/mobil/allergy/AllergySection";
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";

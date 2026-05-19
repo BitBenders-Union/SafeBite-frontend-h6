@@ -96,18 +96,17 @@ export default function UserProfile() {
             }
         }
         fetchHistoryStats(signal);
-            return () => {
-                controller.abort();
-            };
+        return () => {
+            controller.abort();
+        };
     }, [user]);
 
     const handleUpdateAllergens = (updated: Allergen[]) => {
         setUserAllergens(updated);
     };
 
-    /**
-     * fecth the history from the API based on page and search query
-     */
+
+    // fecth the history from the API based on page and search query
     const loadHistory = async (page: number, query: string = "", signal?: AbortSignal) => {
         try {
             setIsLoadingHistory(true);
@@ -141,9 +140,7 @@ export default function UserProfile() {
         }
     };
 
-    /**
-     * Handle search from the userScanHistory component
-     */
+    // Handle search from the userScanHistory component
     const handleSearch = useCallback((text: string) => {
         setSearchQuery(text);
         setCurrentPage(1);

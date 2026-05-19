@@ -19,7 +19,7 @@ export default function Settings() {
     const { t } = useTranslation("settings");
 
     return (
-        <ScrollView className="flex-1 px-4 pt-4 gap-4">   
+        <ScrollView className="flex-1 px-4 pt-4 gap-4">
             <DefaultCard>
                 <LanguageSettings />
 
@@ -34,7 +34,7 @@ export default function Settings() {
                 <View className="mt-6">
                     <DeActivateAccountButton />
                 </View>
-                
+
             </DefaultCard>
         </ScrollView>
     );

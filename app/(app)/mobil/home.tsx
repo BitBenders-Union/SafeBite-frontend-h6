@@ -1,3 +1,4 @@
+// /app(app)/mobil/home.tsx
 import { useAppTheme } from "@/lib/theme/useAppTheme";
 import type { DetectedAllergy, MatchedIngredient, ScanHistoryParameters, ScanHistoryResponseDTO } from "@/lib/types/scan";
 import { getMyScanHistory } from "@/services/api/scanApi";
@@ -7,9 +8,8 @@ import { useTranslation } from "react-i18next";
 import { ActivityIndicator, FlatList, ScrollView, Text, View, useWindowDimensions } from "react-native";
 import { DefaultCard } from "../../../components/Shared/DefaultCard";
 
-/**
- * Format dato to more readable format
- */
+
+// Format dato to more readable format
 function formatDate(dateString: string) {
     const d = new Date(dateString);
     return d.toLocaleString(undefined, {
@@ -21,9 +21,6 @@ function formatDate(dateString: string) {
     });
 }
 
-/**
- * I split the scan data into pages (chunks) for swipe viewing
- */
 function chunkData<T>(items: T[], itemsPerPage: number) {
     const paginatedChunks: T[][] = [];
 
@@ -48,10 +45,10 @@ export default function Home() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+        const controller = new AbortController();
+        const signal = controller.signal;
 
-        async function fetchScans(signal?: AbortSignal) {            
+        async function fetchScans(signal?: AbortSignal) {
             try {
                 setIsLoading(true);
                 setError(null);
@@ -88,7 +85,7 @@ export default function Home() {
         }
 
         fetchScans();
-        return () => { controller.abort() };        
+        return () => { controller.abort() };
     }, [t]);
 
     const pagedAllScans = useMemo(() => chunkData(scans, 3), [scans]);
