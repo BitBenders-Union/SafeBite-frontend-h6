@@ -1,46 +1,26 @@
 {
-  "allergiesScreen": {
-    "title": "Allergier",
-    "subtitle": "Administrer systemets allergier."
-  },
-  "createForm": {
-    "title": "Tilføj allergi",
-    "placeholder": "Indtast allerginavn",
-    "submitBtn": "Tilføj"
-  },
-  "iconPicker": {
-    "label": "Ikon",
-    "placeholder": "Vælg ikon"
-  },
-  "allergyRow": {
-    "editBtn": "Rediger",
-    "deleteBtn": "Slet"
-  },
-  "editModal": {
-    "title": "Rediger allergi",
-    "subtitle": "Opdater allergiens navn.",
-    "fieldName": "Navn",
-    "placeholder": "Allerginavn"
-  },
-  "validation": {
-    "nameRequired": "Navn er påkrævet."
-  },
-  "status": {
-    "loading": "Indlæser allergier..."
-  },
-  "actions": {
+    "Screentitle": "Allergier",
+    "Screensubtitle": "Administrer systemets allergier.",
+    "CreateFormtitle": "Tilføj allergi",
+    "CreateFormplaceholder": "Indtast allerginavn",
+    "CreateFormsubmitBtn": "Tilføj",
+    "IconPickerlabel": "Ikon",
+    "IconPickerplaceholder": "Vælg ikon",
+    "AllergyRoweditBtn": "Rediger",
+    "AllergyRowdeleteBtn": "Slet",
+    "EditModaltitle": "Rediger allergi",
+    "EditModalsubtitle": "Opdater allergiens navn.",
+    "EditModalfieldName": "Navn",
+    "EditModalplaceholder": "Allerginavn",
+    "nameRequired": "Navn er påkrævet.",
+    "loading": "Indlæser allergier...",
     "tryAgain": "Prøv igen",
     "cancel": "Annuller",
-    "save": "Gem"
-  },
-  "emptyState": {
+    "save": "Bekræft",
     "title": "Ingen allergier fundet",
-    "message": "Der er i øjeblikket ingen allergier i systemet."
-  },
-  "errors": {
+    "message": "Der er i øjeblikket ingen allergier i systemet.",
     "somethingWrong": "Noget gik galt",
     "failedToLoadAllergies": "Kunne ikke indlæse allergier.",
     "failedToCreateAllergy": "Kunne ikke oprette allergi.",
     "failedToUpdateAllergy": "Kunne ikke opdatere allergi."
-  }
 }

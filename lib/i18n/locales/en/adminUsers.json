@@ -1,25 +1,19 @@
 {
-  "home": {
     "title": "Users",
-    "description": "Manage admin access and user status."
-  },
-  "actions": {
+    "description": "Manage admin access and user status.",
     "cancel": "Cancel",
-    "confirm": "Confirm"
-  },
-  "userRow": {
+    "confirm": "Confirm",
     "roles": "Roles:",
     "statusActive": "Active",
     "statusInactive": "Inactive",
     "makeAdmin": "Make admin",
     "removeAdmin": "Remove admin",
     "deactivate": "Deactivate",
-    "activate": "Activate"
-  },
-  "searchPlaceholder": "Search by email",
-  "noResults": "No users match your search",
-  "modal": {
+    "activate": "Activate",
+    "searchPlaceholder": "Search by email",
+    "noResults": "No users match your search",
     "defaultTitle": "Confirm action",
+    "loading": "Loading users...",
     "makeAdminTitle": "Give admin role",
     "makeAdminMessage": "Give admin role to {{email}}?",
     "removeAdminTitle": "Remove admin role",
@@ -27,16 +21,16 @@
     "deactivateTitle": "Deactivate user",
     "deactivateMessage": "Deactivate {{email}}?",
     "activateTitle": "Activate user",
-    "activateMessage": "Activate {{email}}?"
-  },
-  "errors": {
-    "failedToLoadUsers": "Failed to load users.",
+    "activateMessage": "Activate {{email}}?",
+    "failedToloadingUsers": "Failed to load users.",
     "alreadyAdmin": "User already has admin role.",
     "failedToMakeAdmin": "Failed to assign admin role.",
     "failedToRemoveAdmin": "Failed to remove admin role.",
     "alreadyInactive": "User is already inactive.",
     "failedToDeactivate": "Failed to deactivate user.",
-    "failedToActivate": "Failed to activate user."
-  }
+    "failedToActivate": "Failed to activate user.",
+    "previous": "Previous",
+    "next": "Next",
+    "pageInfo": "Page {{page}}"
 }
 

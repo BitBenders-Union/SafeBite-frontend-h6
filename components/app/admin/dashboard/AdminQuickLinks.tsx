@@ -21,7 +21,7 @@ export default function AdminQuickLinks() {
                     className="text-center font-semibold"
                     style={{ color: theme.active }}
                 >
-                    {t("links.manageUsers")}
+                    {t("manageUsers")}
                 </Text>
             </TouchableOpacity>
 
@@ -34,7 +34,7 @@ export default function AdminQuickLinks() {
                     className="text-center font-semibold"
                     style={{ color: theme.active }}
                 >
-                    {t("links.manageAllergies")}
+                    {t("manageAllergies")}
                 </Text>
             </TouchableOpacity>
         </View>

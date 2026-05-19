@@ -41,7 +41,7 @@ export default function AllergyIconPicker({
                 className="mb-2 text-sm font-medium"
                 style={{ color: theme.text }}
             >
-                {label ?? t("iconPicker.label")}
+                {label ?? t("IconPickerlabel")}
             </Text>
 
             <TouchableOpacity
@@ -65,7 +65,7 @@ export default function AllergyIconPicker({
                             className="ml-3"
                             style={{ color: theme.text }}
                         >
-                            {selectedOption?.label ?? t("iconPicker.placeholder", "Choose icon")}
+                            {selectedOption?.label ?? t("IconPickerplaceholder")}
                         </Text>
                     </View>
 

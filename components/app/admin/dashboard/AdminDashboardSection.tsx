@@ -73,7 +73,7 @@ export default function AdminDashboardSection() {
                 setUsers({
                     value: undefined,
                     isLoading: false,
-                    error: error.message || t("errors.failedToLoadUsers"),
+                    error: error.message || t("failedToLoadUsers"),
                 });
             }
         }
@@ -100,7 +100,7 @@ export default function AdminDashboardSection() {
                 setAllergies({
                     value: undefined,
                     isLoading: false,
-                    error: error.message || t("errors.failedToLoadAllergies"),
+                    error: error.message || t("failedToLoadAllergies"),
                 });
             }
         }
@@ -128,7 +128,7 @@ export default function AdminDashboardSection() {
                 setScans({
                     value: undefined,
                     isLoading: false,
-                    error: error.message || t("errors.failedToLoadScans"),
+                    error: error.message || t("failedToLoadScans"),
                 });
             }
         }
@@ -140,7 +140,7 @@ export default function AdminDashboardSection() {
                 className="mb-4 text-2xl font-bold"
                 style={{ color: theme.text }}
             >
-                {t("dashboard.title")}
+                {t("title")}
             </Text>
 
             <AdminStats

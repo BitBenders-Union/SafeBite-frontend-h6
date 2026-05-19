@@ -16,11 +16,11 @@ export default function AdminAllergies() {
             <View className="w-full max-w-[1100px] flex-1">
                 <View className="mb-4">
                     <Text className="text-2xl font-bold" style={{ color: theme.text }}>
-                        {t("allergiesScreen.title")}
+                        {t("Screentitle")}
                     </Text>
 
                     <Text className="mt-1 text-sm" style={{ color: theme.textMuted }}>
-                        {t("allergiesScreen.subtitle")}
+                        {t("Screensubtitle")}
                     </Text>
                 </View>
 

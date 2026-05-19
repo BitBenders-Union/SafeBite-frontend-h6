@@ -3,12 +3,24 @@ import { PageResponse } from "@/lib/types/api";
 import { UserList, UserRole } from "@/lib/types/user";
 import { apiClient } from "./apiClient";
 
-export async function getAllUsersAndRoles(signal?: AbortSignal): Promise<UserList[]> {
+export async function getAllUsersAndRoles(
+    page: number = 1, 
+    pageSize: number = 20, 
+    searchTerm: string = "",
+    signal?: AbortSignal
+): Promise<PageResponse<UserList>> {
     const response = await apiClient.get<PageResponse<UserList>>(
         "/api/User/UserManagement/GetAllUsersWithRoles",
-        { signal }
+        { 
+            params: { 
+                Page: page, 
+                PageSize: pageSize,
+                searchTerm: searchTerm || undefined
+            },
+            signal 
+        }
     );
-    return response.data.data;
+    return response.data;
 }
 
 export async function setRole(userRole: UserRole, signal?: AbortSignal) {

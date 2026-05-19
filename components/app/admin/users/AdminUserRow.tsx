@@ -50,7 +50,7 @@ export default function AdminUserRow({
                 >
                     UserId: {user.id}
                     <br />
-                    {t("userRow.roles")} {user.roles.map(r => r.roleName).join(", ")}
+                    {t("roles")} {user.roles.map(r => r.roleName).join(", ")}
                 </Text>
 
                 <Text
@@ -61,7 +61,7 @@ export default function AdminUserRow({
                             : theme.dangerText,
                     }}
                 >
-                    {isActive ? t("userRow.statusActive") : t("userRow.statusInactive")}
+                    {isActive ? t("statusActive") : t("statusInactive")}
                 </Text>
             </View>
 
@@ -77,7 +77,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            {t("userRow.removeAdmin")}
+                            {t("removeAdmin")}
                         </Text>
                     </TouchableOpacity>
                 ) : (
@@ -90,7 +90,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            {t("userRow.makeAdmin")}
+                            {t("makeAdmin")}
                         </Text>
                     </TouchableOpacity>
                 )}
@@ -109,7 +109,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.dangerText }}
                         >
-                            {t("userRow.deactivate")}
+                            {t("deactivate")}
                         </Text>
                     </TouchableOpacity>
                 ) : (
@@ -122,7 +122,7 @@ export default function AdminUserRow({
                             className="text-xs font-semibold"
                             style={{ color: theme.active }}
                         >
-                            {t("userRow.activate")}
+                            {t("activate")}
                         </Text>
                     </TouchableOpacity>
                 )}

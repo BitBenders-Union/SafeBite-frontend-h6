@@ -1,5 +1,4 @@
 {
-  "sidebar": {
     "appTitle": "SafeBite Admin",
     "controlPanel": "Kontrolpanel",
     "dashboard": "Dashboard",
@@ -8,5 +7,4 @@
     "settings": "Indstillinger",
     "userView": "Brugervisning",
     "logout": "Log ud"
-  }
 }
