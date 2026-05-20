@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 export const apiBaseUrl = "https://dev.chimpchonkserver.duckdns.org";
-// export const apiBaseUrl = "https://localhost:5093";
+// export const apiBaseUrl = "https://localhost:5093"; Old Local test
 
 
 export const apiClient = axios.create({

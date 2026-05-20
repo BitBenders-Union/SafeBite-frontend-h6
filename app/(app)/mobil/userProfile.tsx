@@ -48,24 +48,24 @@ export default function UserProfile() {
                     getMyCustomAllergies(signal)
                 ]);
 
-                const mappedStandard: Allergen[] = (standardRes || []).map((a: any) => ({
-                    id: a.allergyId || a.id,
-                    name: a.allergyName || a.name || "Unknown",
-                    icon: a.icon,
+                const mappedStandard: Allergen[] = (standardRes || []).map((allergy: any) => ({
+                    id: allergy.allergyId || allergy.id,
+                    name: allergy.allergyName || allergy.name || "Unknown",
+                    icon: allergy.icon,
                     isCustom: false
                 }));
 
-                const mappedCustom: Allergen[] = (customRes || []).map((a: any) => ({
-                    id: a.id,
-                    name: a.name || "Custom Allergy",
-                    icon: a.icon || "pencil-outline",
+                const mappedCustom: Allergen[] = (customRes || []).map((allergy: any) => ({
+                    id: allergy.id,
+                    name: allergy.name || "Custom Allergy",
+                    icon: allergy.icon || "pencil-outline",
                     isCustom: true
                 }));
 
                 setUserAllergens([...mappedStandard, ...mappedCustom]);
             } catch (error) {
                 if (axios.isCancel(error)) return;
-                console.error("Fejl ved hentning af allergidata:", error);
+                console.error("Error with fetching allergy data", error);
             } finally {
                 setIsLoadingAllergies(false);
             }
@@ -134,7 +134,7 @@ export default function UserProfile() {
             }
         } catch (error) {
             if (axios.isCancel(error)) return;
-            console.error("Fejl ved hentning af historik:", error);
+            console.error("Error fetching History:", error);
         } finally {
             setIsLoadingHistory(false);
         }

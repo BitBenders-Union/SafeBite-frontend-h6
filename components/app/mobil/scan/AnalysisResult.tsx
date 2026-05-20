@@ -1,7 +1,7 @@
 // components/scan/AnalysisCard.tsx
 import { DefaultCard } from "@/components/Shared/DefaultCard";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
-import { ScanHistoryResponseDTO, DetectedAllergy } from "@/lib/types/scan"; 
+import { DetectedAllergy, ScanHistoryResponseDTO } from "@/lib/types/scan";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActivityIndicator, Text, View } from "react-native";
@@ -36,14 +36,14 @@ export default function AnalysisResult({
 
     const parsed: ScanHistoryResponseDTO | null = analysisResult ? JSON.parse(analysisResult) : null;
 
-    // 1. Jeg splitter kun på kommaer der IKKE er inde i parenteser
+    // 1. I splt only on commas that are NOT inside parentheses
     const ingredientString = parsed?.scannedIngredientsText || "";
     const ingredients = ingredientString 
         ? ingredientString.split(/,(?![^\(]*\))/g) 
             .map((ingrediens: string) => ingrediens.trim())
             .filter((ingrediens: string) => ingrediens.length > 0): [];
 
-    // 2. Jeg laver en flad liste af ord der skal være røde
+    // 2. I make a flat list of words that should be red
     const flagged = parsed?.detectedAllergies?.flatMap((allergy: DetectedAllergy) => 
         allergy.matchedIngredients?.map((match) => match.ingredientText.toLowerCase())) || [];
 
@@ -97,8 +97,8 @@ export default function AnalysisResult({
                         <View className="flex-row flex-wrap">
                             {ingredients.length > 0 ? (
                                 ingredients.map((item: string, index: number) => {
-                                    // Tjekker om ingrediensen (eller en del af den) findes i flagged-listen
-                                    const isRed = flagged.some(f => item.toLowerCase().includes(f));
+                                    // checks if the ingredient (or part of it) is found in the flagged list
+                                    const isRed = flagged.some(flagged => item.toLowerCase().includes(flagged));
                                     const separator = index === ingredients.length - 1 ? "" : ", ";
 
                                     return (

@@ -14,10 +14,10 @@ import {
 
 import AllergyAlert from "@/components/app/mobil/scan/Alert";
 import { useAppTheme } from "@/lib/theme/useAppTheme";
+import { analyzeImage } from "@/services/api/scanApi";
 import AnalysisResult from "../../../components/app/mobil/scan/AnalysisResult";
 import HourglassLoader from "../../../components/app/mobil/scan/HourglassLoader";
 import PermissionRequest from "../../../components/app/mobil/scan/PermissionRequest";
-import { analyzeImage } from "@/services/api/scanApi";
 
 export default function Scan() {
     const { theme } = useAppTheme();
@@ -43,7 +43,7 @@ export default function Scan() {
     const cameraHeight = screenHeight * 0.28;
     const buttonOverlap = cameraHeight * 0.18;
 
-    // Validerer billedkvalitet baseret på dimensioner
+    // Validate Picture Quality Based on Dimensions 
     const validatePhotoQuality = (photo: any) => {
         const width = photo.width || photo.exif?.PixelXDimension || 0;
         const height =
@@ -51,7 +51,7 @@ export default function Scan() {
             photo.exif?.PixelYDimension ||
             0;
 
-        if (width < 400 || height < 400) {
+        if (width < 800 || height < 800) {
             setIsCameraTooWeak(true);
             setQualityMessage(t("FailedCameraResToLow"));
             return false;
@@ -107,7 +107,6 @@ export default function Scan() {
         });
 
         try {
-            // Kalder den rigtige API service
             const apiPromise = analyzeImage(photo, {
                 timeoutMs: HARD_FAIL_MS + 2000,
             });
@@ -119,20 +118,19 @@ export default function Scan() {
 
             setQualityMessage(null);
 
-            // Mapper detectedAllergies fra DTO til en liste af navne
-            // Dette løser TS-fejlen "Property 'aiResult' does not exist"
-            const detectedNames = result.detectedAllergies?.map(a => a.allergyName) || [];
+            // Maps detectedAllergies from DTO to a list of names
+            const detectedNames = result.detectedAllergies?.map(allergi => allergi.allergyName) || [];
             
             setDetectedAllergens(detectedNames);
             
-            // Vis kun modal hvis der faktisk er fundet allergener
+            // show alert only if allergens were detected
             if (detectedNames.length > 0) {
                 setShowAlert(true);
             } else {
                 setShowAlert(false);
             }
 
-            // Gemmer hele resultatet som tekst til AnalysisResult komponenten
+            // saves the entire result as text for the AnalysisResult component
             setAnalysisResult(JSON.stringify(result, null, 2));
         } catch (error: unknown) {
             const ms = Date.now() - startedAt;
@@ -155,6 +153,7 @@ export default function Scan() {
         }
     };
 
+    // Tests camera hardware on initial ready
     const handleCameraReady = async () => {
         if (hasTestedHardware) return;
         setHasTestedHardware(true);
@@ -186,7 +185,7 @@ export default function Scan() {
 
     return (
         <View className="flex-1 bg-transparent">
-            {/* Viser kun advarsel hvis der er fundet allergener */}
+            {/* Show only alert if there is found allergy */}
             {showAlert && (
                 <AllergyAlert
                     allergens={detectedAllergens}

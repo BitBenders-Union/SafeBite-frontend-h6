@@ -106,7 +106,7 @@ export default function UserAllergyList({
             setCustomAllergen("");
             Keyboard.dismiss();
         } catch (error) {
-            console.error("Kunne ikke oprette custom allergi:", error);
+            console.error("Couldnt create the Custom allergy", error);
         } finally {
             setIsActionLoading(false);
         }
