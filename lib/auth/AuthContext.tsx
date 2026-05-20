@@ -18,7 +18,6 @@ type LoginData = {
     keepSignedIn: boolean;
 };
 
-
 type AuthContextType = {
     user: UserInfo | null;
     isLoggedIn: boolean;
