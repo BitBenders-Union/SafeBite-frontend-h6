@@ -74,8 +74,6 @@ export async function analyzeImage(
 /**
  * Gets the users scan history
  */
-
-
 export async function getMyScanHistory(
   params: ScanHistoryParameters = {},
   signal?: AbortSignal
