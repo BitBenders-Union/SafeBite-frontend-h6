@@ -51,7 +51,7 @@ export default function Scan() {
             photo.exif?.PixelYDimension ||
             0;
 
-        if (width < 800 || height < 800) {
+        if (width < 600 || height < 600) {
             setIsCameraTooWeak(true);
             setQualityMessage(t("FailedCameraResToLow"));
             return false;

@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.BitBenders.SafeBite"
     },
     "android": {
       "softwareKeyboardLayoutMode": "resize",
@@ -25,7 +26,7 @@
     },
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/safebite-48x48.png"
     },
     "plugins": [
       "expo-router",
