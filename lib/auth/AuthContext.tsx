@@ -69,7 +69,7 @@ export function AuthState({ children }: { children: React.ReactNode }) {
 
 
         } catch (error) {
-            if ( axios.isCancel(error) ) return;
+            if (axios.isCancel(error)) return;
 
             await clearTokens();
             setUser(null);
@@ -95,11 +95,17 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             );
 
             const userInfo = await getUserInfo();
-            
+
             setUser(userInfo);
 
-        } catch (error) {
-            console.error("Login error:", error instanceof Error ? error.message : error);
+        } catch (error: any) {
+            console.log("LOGIN FAILED:", {
+                status: error?.response?.status,
+                data: error?.response?.data,
+                message: error?.message,
+            });
+
+            throw error;
         } finally {
             setIsLoading(false);
         }

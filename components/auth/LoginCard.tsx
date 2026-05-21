@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { AuthCard } from "../Shared/AuthCard";
 
+let loginErrorBackup: string | null = null;
 
 type Props = {
     onToggleAuth: () => void;
@@ -49,6 +50,13 @@ export function LoginCard({
 
     const isDisabled = isLoading || disabledLinks;
 
+    const [loginMessage, setLoginMessage] = useState<string | null>(null);
+
+
+    const currentLoginError = loginError || loginErrorBackup || "";
+
+
+
     async function handleLogin() {
         if (isDisabled) return;
 
@@ -76,10 +84,19 @@ export function LoginCard({
                 keepSignedIn
             });
 
+            // Clear any previous login error message on successful login
+            loginErrorBackup = null;
+            setLoginError("");
+            // Reset global sign-up result backup when logging in successfully
             onLoginSuccess?.();
 
         } catch {
-            setLoginError(t("invalidCredentials"));
+            const message = t("loginFailed");
+
+            loginErrorBackup = message;
+            setLoginError(message);
+            console.log(message);
+
         } finally {
             setIsLoading(false);
         }
@@ -105,6 +122,23 @@ export function LoginCard({
                     </Text>
                 </View>
             )}
+
+            {currentLoginError ? (
+                <View
+                    className="p-3 rounded-lg mb-4 border"
+                    style={{
+                        backgroundColor: theme.dangerBg,
+                        borderColor: theme.dangerBorder,
+                    }}
+                >
+                    <Text
+                        className="text-base font-medium text-center"
+                        style={{ color: theme.dangerText }}
+                    >
+                        {currentLoginError}
+                    </Text>
+                </View>
+            ) : null}
 
             <View className="mb-6 items-center justify-center">
                 <Text
@@ -137,7 +171,7 @@ export function LoginCard({
                     autoComplete="email"
                     importantForAutofill="yes"
                 />
-                <View className="mt-1 min-h-[18px]">
+                {/* <View className="mt-1 min-h-[18px]">
                     {emailError ? (
                         <Text
                             className="text-xs"
@@ -146,7 +180,7 @@ export function LoginCard({
                             {emailError}
                         </Text>
                     ) : null}
-                </View>
+                </View> */}
             </View>
 
             <View className="mb-2">
