@@ -99,11 +99,11 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             setUser(userInfo);
 
         } catch (error: any) {
-            console.log("LOGIN FAILED:", {
-                status: error?.response?.status,
-                data: error?.response?.data,
-                message: error?.message,
-            });
+            // console.log("LOGIN FAILED:", {
+            //     status: error?.response?.status,
+            //     data: error?.response?.data,
+            //     message: error?.message,
+            // });
 
             throw error;
         } finally {

@@ -95,7 +95,6 @@ export function LoginCard({
 
             loginErrorBackup = message;
             setLoginError(message);
-            console.log(message);
 
         } finally {
             setIsLoading(false);
