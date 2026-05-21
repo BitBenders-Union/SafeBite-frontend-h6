@@ -14,6 +14,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+let signUpResultBackup: boolean | null = null;
+
 export default function AuthScreen() {
     const { t } = useTranslation("auth");
     const { theme } = useAppTheme();
@@ -43,22 +45,30 @@ export default function AuthScreen() {
 
     function toggleAuthMode(isSuccess?: boolean) {
 
-        if (isSuccess === true) {            
+        if (isSuccess === true) {
+            signUpResultBackup = true;
             setSignUpResult(true);
             setIsLogin(true);
             runAnimation(true);
         }
         else if (isSuccess === false) {
+            signUpResultBackup = false;
             setSignUpResult(false);
             setIsLogin(true);
             runAnimation(true);
         }
-        else {            
+        else {
+            signUpResultBackup = null;
             setSignUpResult(undefined);
             const nextMode = !isLogin;
             setIsLogin(nextMode);
             runAnimation(nextMode);
         }
+    }
+
+    function resetSignUpMessage() {
+        signUpResultBackup = null;
+        setSignUpResult(undefined);
     }
 
     function makeCardStyle(animValue: Animated.Value) {
@@ -111,7 +121,9 @@ export default function AuthScreen() {
                                         key="stable-login-card"
                                         onToggleAuth={() => toggleAuthMode()}
                                         disabledLinks={false}
-                                        signUpResult={signUpResult}
+                                        signUpResult={signUpResult !== undefined ? signUpResult : (signUpResultBackup ?? undefined)}
+                                        onLoginSuccess={resetSignUpMessage}
+
                                     />
                                 </Animated.View>
 
