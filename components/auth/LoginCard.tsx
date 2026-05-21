@@ -21,14 +21,13 @@ type Props = {
     onToggleAuth: () => void;
     disabledLinks?: boolean;
     signUpResult?: boolean;
-    backupSignUpResult?: boolean | null;
 };
 
 export function LoginCard({
     onToggleAuth,
     disabledLinks = false,
     signUpResult,
-    backupSignUpResult
+    
 }: Props) {
     const { theme } = useAppTheme();
     const { t } = useTranslation("auth");

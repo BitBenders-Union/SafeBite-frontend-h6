@@ -14,8 +14,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-let signUpResultBackup: boolean | null = null;
-
 export default function AuthScreen() {
     const { t } = useTranslation("auth");
     const { theme } = useAppTheme();
@@ -45,20 +43,17 @@ export default function AuthScreen() {
 
     function toggleAuthMode(isSuccess?: boolean) {
 
-        if (isSuccess === true) {
-            signUpResultBackup = true;
+        if (isSuccess === true) {            
             setSignUpResult(true);
             setIsLogin(true);
             runAnimation(true);
         }
         else if (isSuccess === false) {
-            signUpResultBackup = false;
             setSignUpResult(false);
             setIsLogin(true);
             runAnimation(true);
         }
-        else {
-            signUpResultBackup = null;
+        else {            
             setSignUpResult(undefined);
             const nextMode = !isLogin;
             setIsLogin(nextMode);
@@ -116,7 +111,7 @@ export default function AuthScreen() {
                                         key="stable-login-card"
                                         onToggleAuth={() => toggleAuthMode()}
                                         disabledLinks={false}
-                                        signUpResult={signUpResult !== undefined ? signUpResult : (signUpResultBackup ?? undefined)}
+                                        signUpResult={signUpResult}
                                     />
                                 </Animated.View>
 

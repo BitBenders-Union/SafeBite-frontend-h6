@@ -1,6 +1,7 @@
 // /components/auth/SignupCard.tsx
 import { AuthCard } from "@/components/Shared/AuthCard";
 import { PrimaryButton } from "@/components/Shared/PrimaryButton";
+import { TosModal } from "@/components/Shared/TosModal";
 import { useAuth } from "@/lib/auth/AuthContext";
 import {
     hasSignupErrors,
@@ -19,7 +20,6 @@ import {
     TextInput,
     View
 } from "react-native";
-import { TosModal } from "../Shared/TosModal";
 
 type Props = {
     onSignUpResult: (success?: boolean) => void;
