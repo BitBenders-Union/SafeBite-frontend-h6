@@ -21,13 +21,15 @@ type Props = {
     onToggleAuth: () => void;
     disabledLinks?: boolean;
     signUpResult?: boolean;
+    onLoginSuccess?: () => void;
+
 };
 
 export function LoginCard({
     onToggleAuth,
     disabledLinks = false,
     signUpResult,
-    
+    onLoginSuccess,
 }: Props) {
     const { theme } = useAppTheme();
     const { t } = useTranslation("auth");
@@ -73,6 +75,8 @@ export function LoginCard({
                 password,
                 keepSignedIn
             });
+
+            onLoginSuccess?.();
 
         } catch {
             setLoginError(t("invalidCredentials"));
