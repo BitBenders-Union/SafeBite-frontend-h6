@@ -21,9 +21,7 @@ export default function DeActivateAccountButton() {
 
             await deactivateUser();
 
-            console.log("User deactivated successfully");
         } catch (error) {
-            console.error("Deactivate account error:", error);
 
             setError(t("deActivateAccountError"));
         } finally {

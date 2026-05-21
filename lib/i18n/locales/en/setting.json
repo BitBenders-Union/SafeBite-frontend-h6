@@ -12,6 +12,7 @@
     "deActivateAccountTitle": "Deactivate Account",
     "deActivateAccountButton": "Deactivate Account",
     "deActivateAccountConfirmText": "Are you sure you want to deactivate your account? This action cannot be undone.",
+    "deActivateAccountError": "Something went wrong. Please try again.",
     "cancel": "Cancel",
     "loading": "Loading..."
 

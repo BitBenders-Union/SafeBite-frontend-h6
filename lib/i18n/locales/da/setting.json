@@ -12,6 +12,7 @@
     "deActivateAccountTitle": "Deaktiver konto",
     "deActivateAccountButton": "Deaktiver konto",
     "deActivateAccountConfirmText": "Er du sikker på, at du vil deaktivere din konto? Denne handling kan ikke fortrydes.",
+    "deActivateAccountError": "Noget gik galt. Prøv igen.",
     "cancel": "Annuller",
     "loading": "Indlæser..."
 }
