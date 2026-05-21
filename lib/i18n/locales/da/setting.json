@@ -9,6 +9,9 @@
     "logoutTitle": "Log ud",
     "logoutButton": "Log ud",
     "logoutLoading": "Logger ud...",
-    "deActivateAccountTitle": "Deaktivere konto",
-    "deActivateAccountButton": "Deaktivere konto"
+    "deActivateAccountTitle": "Deaktiver konto",
+    "deActivateAccountButton": "Deaktiver konto",
+    "deActivateAccountConfirmText": "Er du sikker på, at du vil deaktivere din konto? Denne handling kan ikke fortrydes.",
+    "cancel": "Annuller",
+    "loading": "Indlæser..."
 }

@@ -9,6 +9,7 @@ import {
 import { SignupRequest } from "@/lib/types/auth";
 import { UserInfo } from "@/lib/types/user";
 import { getUserInfo, login, signUp as signUpApi } from "@/services/api/authApi";
+import { deactivateUser as deactivateUserApi } from "@/services/api/settingsApi";
 import axios from "axios";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
@@ -25,6 +26,8 @@ type AuthContextType = {
     signIn: (loginData: LoginData) => Promise<void>;
     signOut: () => Promise<void>;
     signUp: (signupData: SignupRequest) => Promise<{ success: boolean } | void>;
+    deactivateUser: () => Promise<void>;
+
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -56,10 +59,10 @@ export function AuthState({ children }: { children: React.ReactNode }) {
             const accessToken = await getAccessToken();
 
             if (!accessToken) {
-
-                setUser(null);
-                return;
-            }
+            setUser(null);
+            setIsLoading(false);
+            return;
+}
 
             const userInfo = await getUserInfo(signal);
             setUser(userInfo);
@@ -119,6 +122,21 @@ export function AuthState({ children }: { children: React.ReactNode }) {
         }
     }
 
+    async function deactivateUser() {
+    try {
+        setIsLoading(true);
+
+        await deactivateUserApi();
+
+        await clearTokens();
+        await clearKeepSignedIn();
+
+        setUser(null);
+    } finally {
+        setIsLoading(false);
+    }
+}
+
     return (
         <AuthContext.Provider
             value={{
@@ -128,6 +146,7 @@ export function AuthState({ children }: { children: React.ReactNode }) {
                 signIn,
                 signOut,
                 signUp,
+                deactivateUser,
             }}
         >
             {children}
